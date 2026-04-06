@@ -1,0 +1,318 @@
+/* Esoterica — shared design tokens, grain, sub-hero, surfaces */
+
+:root {
+  --es-bg-deep: #070714;
+  --es-bg-void: #030308;
+  --es-bg-card: #0f0c23;
+  --es-bg-card-soft: rgba(15, 12, 35, 0.85);
+  --es-text: #e8e0d4;
+  --es-text-rgb: 232, 224, 212;
+  --es-text-muted: rgba(var(--es-text-rgb), 0.72);
+  --es-text-soft: rgba(var(--es-text-rgb), 0.55);
+  --es-text-faint: rgba(var(--es-text-rgb), 0.4);
+  --es-text-dim: rgba(var(--es-text-rgb), 0.35);
+  --es-gold: #d4a853;
+  --es-gold-light: #e8c97a;
+  --es-white: #ffffff;
+  --es-bg-rgb: 7, 7, 20;
+  --es-violet: #8c64c8;
+  --es-violet-deep: rgba(90, 50, 140, 0.15);
+  --es-radius-hero: 24px;
+  --es-radius-card: 20px;
+  --es-radius-card-sm: 16px;
+  --es-font-display: "Cinzel", serif;
+  --es-font-serif: "Cormorant Garamond", serif;
+  --es-font-body: "Inter", sans-serif;
+  --es-section-pad: 8rem;
+  --es-border-card: color-mix(in srgb, var(--es-gold) 14%, transparent);
+  --es-border-card-hover: color-mix(in srgb, var(--es-gold) 28%, transparent);
+  --es-shadow-card-hover: 0 20px 60px rgba(90, 50, 140, 0.18),
+    0 0 40px color-mix(in srgb, var(--es-gold) 8%, transparent);
+  --es-max-prose: 42rem;
+  /* Title hover shimmer */
+  --es-shimmer-silver: #c5ccd6;
+  --es-shimmer-silver-bright: #eef1f5;
+  --es-shimmer-gold-deep: color-mix(in srgb, var(--es-gold) 42%, #2a1f0a);
+  --es-shimmer-gold-mid: color-mix(in srgb, var(--es-gold) 65%, #4a3510);
+}
+
+/* ---- Display titles: silver sweep on hover (white base) ---- */
+body.esoterica
+  :is(
+    .hero-title,
+    .section-heading,
+    .product-card-title,
+    .class-name,
+    .reading-name,
+    .format-title,
+    .how-title
+  ) {
+  display: inline-block;
+  background-image: linear-gradient(
+    90deg,
+    var(--es-white) 0%,
+    var(--es-white) 42%,
+    var(--es-shimmer-silver) 50%,
+    var(--es-shimmer-silver-bright) 52%,
+    var(--es-shimmer-silver) 54%,
+    var(--es-white) 62%,
+    var(--es-white) 100%
+  );
+  background-size: 260% 100%;
+  background-position: 100% 50%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: default;
+}
+
+body.esoterica
+  :is(
+    .hero-title,
+    .section-heading,
+    .product-card-title,
+    .class-name,
+    .reading-name,
+    .format-title,
+    .how-title
+  ):hover {
+  background-position: 0% 50%;
+}
+
+/* Centered headings: keep layout */
+body.esoterica .section-heading {
+  display: block;
+}
+
+body.esoterica .product-card-title {
+  display: block;
+}
+
+/* ---- Gold labels / wordmark: deep-gold sweep on hover ---- */
+body.esoterica :is(.section-label, .footer-logo-text) {
+  display: inline-block;
+  background-image: linear-gradient(
+    90deg,
+    var(--es-gold) 0%,
+    var(--es-gold) 40%,
+    var(--es-shimmer-gold-deep) 50%,
+    var(--es-shimmer-gold-mid) 52%,
+    var(--es-shimmer-gold-deep) 54%,
+    var(--es-gold) 63%,
+    var(--es-gold) 100%
+  );
+  background-size: 260% 100%;
+  background-position: 100% 50%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: default;
+}
+
+body.esoterica :is(.section-label, .footer-logo-text):hover {
+  background-position: 0% 50%;
+}
+
+body.esoterica .section-label {
+  display: block;
+}
+
+body.esoterica .footer-logo {
+  display: flex;
+  align-items: center;
+}
+
+body.esoterica .footer-logo-text {
+  font-family: var(--es-font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Film grain — sits above starfield, below page content */
+body.esoterica::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+body.esoterica .page {
+  position: relative;
+  z-index: 2;
+}
+
+/* Inner-page hero card (Option A — CSS-only, matches homepage mood) */
+.page-hero {
+  padding: 6rem 1.25rem 3rem;
+}
+
+.sub-hero-cosmos {
+  position: relative;
+  width: 100%;
+  max-width: min(96vw, 1200px);
+  margin: 0 auto;
+  min-height: min(58vh, 520px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  border-radius: var(--es-radius-hero);
+  border: 1px solid color-mix(in srgb, var(--es-violet) 22%, transparent);
+  background: radial-gradient(
+      ellipse at 50% 50%,
+      #0d0a1f 0%,
+      var(--es-bg-deep) 50%,
+      var(--es-bg-void) 100%
+    );
+  box-shadow: inset 0 0 80px rgba(100, 60, 200, 0.08);
+  overflow: hidden;
+}
+
+.sub-hero-cosmos::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+      ellipse 40% 35% at 50% 45%,
+      rgba(180, 150, 230, 0.2) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 50% 50%,
+      rgba(100, 60, 180, 0.1) 0%,
+      transparent 70%
+    );
+  pointer-events: none;
+  animation: esSubHeroAura 14s ease-in-out infinite alternate;
+}
+
+.sub-hero-cosmos::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 255, 255, 0.06) 0%,
+      transparent 45%
+    );
+  pointer-events: none;
+}
+
+@keyframes esSubHeroAura {
+  0% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+.sub-hero-cosmos-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sub-hero-cosmos::before {
+    animation: none;
+    opacity: 0.88;
+    transform: none;
+  }
+
+  body.esoterica::before {
+    opacity: 0.02;
+  }
+
+  body.esoterica
+    :is(
+      .hero-title,
+      .section-heading,
+      .product-card-title,
+      .class-name,
+      .reading-name,
+      .format-title,
+      .how-title,
+      .section-label,
+      .footer-logo-text
+    ) {
+    transition: none;
+    background-position: 100% 50%;
+  }
+
+  body.esoterica
+    :is(
+      .hero-title,
+      .section-heading,
+      .product-card-title,
+      .class-name,
+      .reading-name,
+      .format-title,
+      .how-title,
+      .section-label,
+      .footer-logo-text
+    ):hover {
+    background-position: 100% 50%;
+  }
+}
+
+/* Unified prose width */
+.es-prose {
+  max-width: var(--es-max-prose);
+}
+
+/* Testimonial avatar initials (replaces inline styles) */
+.testimonial-avatar-initial {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--es-font-display);
+  font-size: 1rem;
+  color: var(--es-white);
+  border: 2px solid color-mix(in srgb, var(--es-gold) 22%, transparent);
+}
+
+.testimonial-avatar-initial--warm {
+  background: linear-gradient(135deg, var(--es-gold), #6a4c93);
+}
+
+.testimonial-avatar-initial--cool {
+  background: linear-gradient(135deg, #6a4c93, #2d1b4e);
+}
+
+.testimonial-avatar-initial--twilight {
+  background: linear-gradient(135deg, #1a1a3e, var(--es-gold));
+}
+
+/* Product / content image treatment */
+.es-media-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}

@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classes &amp; Workshops — Esoterica</title>
+    <meta name="description"
+        content="Immersive esoteric classes and workshops. Learn crystal healing, tarot, sacred geometry, and alchemical arts with Esoterica." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollToPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.23/bundled/lenis.min.js"></script>
+
+    <style>
+        /* ===== RESET ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background: var(--es-bg-deep);
+            color: var(--es-text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            cursor: none;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            cursor: none;
+        }
+
+        /* Custom cursor */
+        .cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 14px;
+            height: 14px;
+            background: radial-gradient(circle at 30% 30%, var(--es-white) 0%, var(--es-gold) 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 0 20px rgba(212, 168, 83, 0.3), 0 0 40px rgba(140, 100, 200, 0.15);
+        }
+
+        .cursor-dot.is-hover {
+            width: 40px;
+            height: 40px;
+            background: rgba(212, 168, 83, 0.1);
+            border: 1px solid rgba(212, 168, 83, 0.4);
+            box-shadow: 0 0 20px rgba(212, 168, 83, 0.5);
+            backdrop-filter: blur(2px);
+        }
+
+        @media (max-width: 768px),
+        (pointer: coarse) {
+            .cursor-dot {
+                display: none;
+            }
+
+            body,
+            a,
+            .class-cta {
+                cursor: auto;
+            }
+        }
+
+        /* ===== STARFIELD ===== */
+        #starfield {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== FLOATING ORBS ===== */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: rgba(90, 50, 140, 0.3);
+            top: -100px;
+            left: -100px;
+            animation: floatOrb1 20s ease-in-out infinite alternate;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(60, 30, 120, 0.2);
+            bottom: -50px;
+            right: -50px;
+            animation: floatOrb2 25s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatOrb1 {
+            to {
+                transform: translate(100px, 150px);
+            }
+        }
+
+        @keyframes floatOrb2 {
+            to {
+                transform: translate(-80px, -120px);
+            }
+        }
+
+        /* ===== NAV ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+        }
+
+        .nav-gradient {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(180deg, var(--es-bg-deep) 12.89%, rgba(var(--es-bg-rgb), 0.1) 56.74%, rgba(var(--es-bg-rgb), 0) 68.05%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .nav-layout {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-logo img {
+            height: 36px;
+            width: 36px;
+            object-fit: cover;
+            object-position: center 58%;
+            border-radius: 50%;
+        }
+
+        .nav-links-wrap {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .nav-link-block {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            cursor: pointer;
+            position: relative;
+            padding: 0.4rem 0;
+        }
+
+        .bracket-left,
+        .bracket-right {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: rgba(232, 224, 212, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-link-block:hover .bracket-left,
+        .nav-link-block:hover .bracket-right {
+            opacity: 1;
+        }
+
+        .nav-middle-text {
+            overflow: hidden;
+            height: 1.2em;
+            position: relative;
+        }
+
+        .text-nav {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(232, 224, 212, 0.6);
+            line-height: 1.2em;
+            transition: transform 0.35s cubic-bezier(0.77, 0, 0.175, 1);
+            padding: 0 0.4rem;
+        }
+
+        .text-nav.is-duplicate {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateY(120%);
+        }
+
+        .nav-link-block:hover .text-nav {
+            transform: translateY(-120%);
+            color: var(--es-text);
+        }
+
+        .nav-link-block:hover .text-nav.is-duplicate {
+            transform: translateY(0);
+            color: var(--es-text);
+        }
+
+        /* ===== PAGE ===== */
+        .page {
+            position: relative;
+        }
+
+        /* ===== HERO (outer shell; inner .sub-hero-cosmos in styles.css) ===== */
+        .page-hero {
+            padding: 5.5rem 1.25rem 2.5rem;
+            position: relative;
+        }
+
+        .hero-sigil {
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-sigil img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            object-position: center 58%;
+            border-radius: 50%;
+            filter: drop-shadow(0 0 16px rgba(212, 168, 83, 0.3)) drop-shadow(0 0 40px rgba(90, 50, 140, 0.15));
+        }
+
+        .hero-breadcrumb {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(232, 224, 212, 0.35);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-breadcrumb a {
+            color: rgba(232, 224, 212, 0.5);
+            transition: color 0.3s;
+        }
+
+        .hero-breadcrumb a:hover {
+            color: var(--es-gold);
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            max-width: 700px;
+        }
+
+        .hero-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--es-text-muted);
+            max-width: var(--es-max-prose);
+            margin: 0 auto;
+        }
+
+        /* ===== SECTION SHARED ===== */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--es-gold), transparent);
+            margin: 0 auto 2rem;
+        }
+
+        .section-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-heading {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-description {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--es-text-muted);
+            text-align: center;
+            max-width: var(--es-max-prose);
+            margin: 0 auto 3rem;
+        }
+
+        /* ===== CLASS CARDS GRID ===== */
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .class-card {
+            background: var(--es-bg-card-soft);
+            border: 1px solid var(--es-border-card);
+            border-radius: var(--es-radius-card-sm);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+        }
+
+        .class-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--es-border-card-hover);
+            box-shadow: var(--es-shadow-card-hover);
+        }
+
+        .class-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 20%, rgba(100, 60, 180, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .class-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.2rem;
+            display: block;
+            color: var(--es-gold);
+        }
+
+        .class-icon svg {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .class-badge {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--es-bg-deep);
+            background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            margin-bottom: 1rem;
+        }
+
+        .class-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .class-type {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--es-gold);
+            margin-bottom: 1rem;
+        }
+
+        .class-desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.6;
+            color: rgba(var(--es-text-rgb), 0.68);
+            margin-bottom: 1.5rem;
+        }
+
+        .class-details {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: rgba(232, 224, 212, 0.4);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .class-price {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--es-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .class-cta {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--es-bg-deep);
+            background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .class-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(212, 168, 83, 0.25);
+        }
+
+        /* ===== FORMAT SECTION ===== */
+        .format-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2.5rem;
+            text-align: center;
+        }
+
+        .format-item {
+            position: relative;
+        }
+
+        .format-icon {
+            font-size: 2rem;
+            color: rgba(212, 168, 83, 0.6);
+            margin-bottom: 1rem;
+        }
+
+        .format-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.6rem;
+        }
+
+        .format-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.6;
+            color: rgba(232, 224, 212, 0.45);
+        }
+
+        /* ===== QUOTE ===== */
+        .quote-section {
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .quote-mark {
+            font-family: 'Cinzel', serif;
+            font-size: 5rem;
+            line-height: 1;
+            color: rgba(212, 168, 83, 0.15);
+        }
+
+        .quote-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.7;
+            color: rgba(232, 224, 212, 0.6);
+            max-width: 600px;
+            margin: 0 auto 1rem;
+        }
+
+        .quote-author {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(232, 224, 212, 0.25);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            color: rgba(232, 224, 212, 0.2);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links-wrap {
+                display: none;
+            }
+
+            .classes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .format-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ===== FOCUS STATES (a11y) ===== */
+        .nav-link-block:focus-visible,
+        .class-cta:focus-visible {
+            outline: 2px solid var(--es-gold);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* ===== REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            #starfield,
+            .orb {
+                display: none;
+            }
+        }
+
+        /* ===== GLOBAL CURSOR OVERRIDE ===== */
+        @media (pointer: fine) {
+
+            *,
+            *::before,
+            *::after {
+                cursor: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="esoterica">
+
+    <!-- ===== CUSTOM CURSOR ===== -->
+    <div class="cursor-dot"></div>
+
+    <!-- ===== STARFIELD ===== -->
+    <canvas id="starfield"></canvas>
+
+    <!-- ===== FLOATING ORBS ===== -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <!-- ===== PAGE ===== -->
+    <div class="page">
+
+        <!-- ===== NAV ===== -->
+        <nav class="nav" aria-label="Main navigation">
+            <div class="nav-gradient"></div>
+            <div class="nav-layout">
+                <a class="nav-logo" href="index.html">
+                    <img src="logo.png" alt="Esoterica" />
+                    Esoterica
+                </a>
+                <div class="nav-links-wrap">
+                    <a class="nav-link-block" href="index.html">
+                        <div class="bracket-left">(</div>
+                        <div class="nav-middle-text">
+                            <div class="text-nav">home</div>
+                            <div class="text-nav is-duplicate">home</div>
+                        </div>
+                        <div class="bracket-right">)</div>
+                    </a>
+                    <a class="nav-link-block" href="index.html#shop">
+                        <div class="bracket-left">(</div>
+                        <div class="nav-middle-text">
+                            <div class="text-nav">shop</div>
+                            <div class="text-nav is-duplicate">shop</div>
+                        </div>
+                        <div class="bracket-right">)</div>
+                    </a>
+                    <a class="nav-link-block" href="tarot-readings.html">
+                        <div class="bracket-left">(</div>
+                        <div class="nav-middle-text">
+                            <div class="text-nav">tarot</div>
+                            <div class="text-nav is-duplicate">tarot</div>
+                        </div>
+                        <div class="bracket-right">)</div>
+                    </a>
+                    <a class="nav-link-block" href="classes.html">
+                        <div class="bracket-left">(</div>
+                        <div class="nav-middle-text">
+                            <div class="text-nav">classes</div>
+                            <div class="text-nav is-duplicate">classes</div>
+                        </div>
+                        <div class="bracket-right">)</div>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ===== HERO ===== -->
+        <section class="page-hero">
+            <div class="sub-hero-cosmos">
+                <div class="sub-hero-cosmos-inner">
+                    <div class="hero-sigil">
+                        <img src="logo.png" alt="Esoterica" width="100" height="100" />
+                    </div>
+                    <div class="hero-breadcrumb">
+                        <a href="index.html">Home</a> &nbsp;/&nbsp; Classes &amp; Workshops
+                    </div>
+                    <h1 class="hero-title">Knowledge Is the Most Sacred Offering</h1>
+                    <p class="hero-subtitle">
+                        Step into the circle. These immersive workshops are gateways to living practice — where ancient wisdom
+                        becomes embodied knowing.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CLASSES GRID ===== -->
+        <section class="section" id="classes">
+            <div class="section-divider"></div>
+            <p class="section-label">Choose Your Path</p>
+            <h2 class="section-heading">Sacred Workshops</h2>
+            <p class="section-description">
+                Each class is a ritual in itself — a container of transformation guided by those who have walked the
+                path
+                before you.
+            </p>
+
+            <div class="classes-grid">
+
+                <div class="class-card">
+                    <span class="class-icon" aria-hidden="true">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
+                    </span>
+                    <span class="class-badge">Beginner Friendly</span>
+                    <h3 class="class-name">Tarot Foundations</h3>
+                    <p class="class-type">4-Week Series</p>
+                    <p class="class-desc">Learn to read the cards as a living language. From Major Arcana archetypes to
+                        intuitive spreads — this course transforms you from curious to confident.</p>
+                    <div class="class-details">
+                        4 Sessions · 90 min each<br>
+                        Study deck provided · Up to 10 students
+                    </div>
+                    <p class="class-price">$180</p>
+                    <a class="class-cta" href="#">Enroll Now</a>
+                </div>
+
+                <div class="class-card">
+                    <span class="class-icon" aria-hidden="true">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="4" />
+                            <path
+                                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                        </svg>
+                    </span>
+                    <span class="class-badge">Intermediate</span>
+                    <h3 class="class-name">Crystal Healing Arts</h3>
+                    <p class="class-type">Workshop · 1 Day</p>
+                    <p class="class-desc">Understand the energetic language of stones. Map chakras to crystals, build
+                        grids for intention, and attune to the mineral kingdom through hands-on practice.</p>
+                    <div class="class-details">
+                        6 Hours · Saturday Immersive<br>
+                        Crystal kit included · Up to 12 students
+                    </div>
+                    <p class="class-price">$145</p>
+                    <a class="class-cta" href="#">Enroll Now</a>
+                </div>
+
+                <div class="class-card">
+                    <span class="class-icon" aria-hidden="true">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                        </svg>
+                    </span>
+                    <span class="class-badge">All Levels</span>
+                    <h3 class="class-name">Lunar Ritual Craft</h3>
+                    <p class="class-type">Monthly Ceremony</p>
+                    <p class="class-desc">Work with the Moon's cycle as your spiritual calendar. Each month we gather
+                        under the new or full moon to set intentions, release, and commune with the cosmos.</p>
+                    <div class="class-details">
+                        2.5 Hours · Monthly<br>
+                        Ritual supplies provided · Up to 15 students
+                    </div>
+                    <p class="class-price">$75</p>
+                    <a class="class-cta" href="#">Join Circle</a>
+                </div>
+
+                <div class="class-card">
+                    <span class="class-icon" aria-hidden="true">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3" />
+                            <path d="M8 6h8M7 3h10" />
+                        </svg>
+                    </span>
+                    <span class="class-badge">Advanced</span>
+                    <h3 class="class-name">Alchemical Herbalism</h3>
+                    <p class="class-type">6-Week Series</p>
+                    <p class="class-desc">Blend the physical and the mystical. Learn to craft ritual tinctures, smudge
+                        bundles, and dream teas using plant spirits and alchemical principles.</p>
+                    <div class="class-details">
+                        6 Sessions · 2 Hours each<br>
+                        Herb kit &amp; recipe book included
+                    </div>
+                    <p class="class-price">$265</p>
+                    <a class="class-cta" href="#">Enroll Now</a>
+                </div>
+
+                <div class="class-card">
+                    <span class="class-icon" aria-hidden="true">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 3 21 3 21 21 3 21 3 3" />
+                            <path d="M9 3v18M15 3v18M3 9h18M3 15h18" />
+                        </svg>
+                    </span>
+                    <span class="class-badge">Intermediate</span>
+                    <h3 class="class-name">Sacred Geometry</h3>
+                    <p class="class-type">Workshop · 1 Day</p>
+                    <p class="class-desc">Discover the hidden patterns woven into the fabric of creation. Draw, meditate
+                        with, and activate the Flower of Life, Metatron's Cube, and the Sri Yantra.</p>
+                    <div class="class-details">
+                        5 Hours · Sunday Immersive<br>
+                        Drawing kit &amp; workbook provided
+                    </div>
+                    <p class="class-price">$120</p>
+                    <a class="class-cta" href="#">Enroll Now</a>
+                </div>
+
+                <div class="class-card">
+                    <span class="class-icon" aria-hidden="true">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+                            <path d="M9 18h6M10 22h4" />
+                        </svg>
+                    </span>
+                    <span class="class-badge">All Levels</span>
+                    <h3 class="class-name">Intuition Awakening</h3>
+                    <p class="class-type">2-Week Intensive</p>
+                    <p class="class-desc">A dedicated practice to unlock and trust your inner knowing. Includes psychic
+                        development exercises, dreamwork journaling, and guided meditations.</p>
+                    <div class="class-details">
+                        4 Sessions · 90 min each<br>
+                        Dream journal included · Live &amp; recorded
+                    </div>
+                    <p class="class-price">$155</p>
+                    <a class="class-cta" href="#">Enroll Now</a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===== WHAT TO EXPECT ===== -->
+        <section class="section" id="format">
+            <div class="section-divider"></div>
+            <p class="section-label">The Experience</p>
+            <h2 class="section-heading">What to Expect</h2>
+            <p class="section-description">
+                Every class is designed as sacred space — intimate, embodied, and transformative.
+            </p>
+
+            <div class="format-grid">
+                <div class="format-item">
+                    <div class="format-icon">🕯</div>
+                    <h3 class="format-title">Ritual Opening</h3>
+                    <p class="format-text">Each session begins with an intentional ceremony — grounding, smudging, and
+                        invocation of the directions.</p>
+                </div>
+                <div class="format-item">
+                    <div class="format-icon">📿</div>
+                    <h3 class="format-title">Embodied Learning</h3>
+                    <p class="format-text">We move beyond theory into direct experience. Every concept is felt,
+                        practiced, and integrated in real time.</p>
+                </div>
+                <div class="format-item">
+                    <div class="format-icon">🌙</div>
+                    <h3 class="format-title">Small Circles</h3>
+                    <p class="format-text">Capped enrollment ensures every student receives personal attention and the
+                        energy of true community.</p>
+                </div>
+                <div class="format-item">
+                    <div class="format-icon">✨</div>
+                    <h3 class="format-title">Take It Home</h3>
+                    <p class="format-text">Materials, ritual kits, and recordings are included so your practice
+                        continues long after the circle closes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== QUOTE ===== -->
+        <div class="quote-section">
+            <div class="quote-mark">"</div>
+            <p class="quote-text">To teach is to create a corridor between what is known and what yearns to be
+                discovered.</p>
+            <p class="quote-author">— The Keeper of Veils</p>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer>
+            <div>
+                <img src="logo.png" alt="Esoterica"
+                    style="height:36px;width:36px;object-fit:cover;object-position:center 58%;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:8px;">
+                <span>© 2026 Esoterica. All rights reserved.</span>
+            </div>
+            <div class="footer-links">
+                <a class="nav-link-block" href="index.html">
+                    <div class="bracket-left">(</div>
+                    <div class="nav-middle-text">
+                        <div class="text-nav">home</div>
+                        <div class="text-nav is-duplicate">home</div>
+                    </div>
+                    <div class="bracket-right">)</div>
+                </a>
+                <a class="nav-link-block" href="tarot-readings.html">
+                    <div class="bracket-left">(</div>
+                    <div class="nav-middle-text">
+                        <div class="text-nav">tarot</div>
+                        <div class="text-nav is-duplicate">tarot</div>
+                    </div>
+                    <div class="bracket-right">)</div>
+                </a>
+            </div>
+        </footer>
+
+    </div><!-- /page -->
+
+    <script>
+        /* ===== STARFIELD ===== */
+        (function () {
+            const canvas = document.getElementById('starfield');
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+            const STAR_COUNT = 120;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            function init() {
+                stars = Array.from({ length: STAR_COUNT }, () => ({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 1.2 + 0.3,
+                    alpha: Math.random() * 0.6 + 0.1,
+                    speed: Math.random() * 0.008 + 0.004,
+                    phase: Math.random() * Math.PI * 2,
+                }));
+            }
+
+            function draw(t) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(s => {
+                    const a = s.alpha * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(232,224,212,${a})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(draw);
+            }
+
+            resize();
+            init();
+            window.addEventListener('resize', () => { resize(); init(); });
+            requestAnimationFrame(draw);
+        })();
+
+        /* ===== CUSTOM CURSOR ===== */
+        (function () {
+            const dot = document.querySelector('.cursor-dot');
+            if (!dot) return;
+            document.addEventListener('mousemove', e => {
+                dot.style.left = e.clientX + 'px';
+                dot.style.top = e.clientY + 'px';
+            });
+            const interactables = 'a, button, .class-card, .class-cta, .nav-link-block';
+            document.querySelectorAll(interactables).forEach(el => {
+                el.addEventListener('mouseenter', () => dot.classList.add('is-hover'));
+                el.addEventListener('mouseleave', () => dot.classList.remove('is-hover'));
+            });
+        })();
+
+        /* ===== GSAP ANIMATIONS ===== */
+        (function () {
+            if (typeof gsap === 'undefined') return;
+
+            gsap.registerPlugin(ScrollTrigger);
+
+            gsap.from('.page-hero .hero-sigil', { opacity: 0, y: -20, duration: 1, ease: 'power3.out', delay: 0.3 });
+            gsap.from('.page-hero .hero-breadcrumb', { opacity: 0, y: 10, duration: 0.8, ease: 'power3.out', delay: 0.5 });
+            gsap.from('.page-hero .hero-title', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.7 });
+            gsap.from('.page-hero .hero-subtitle', { opacity: 0, y: 15, duration: 0.8, ease: 'power3.out', delay: 0.9 });
+
+            document.querySelectorAll('.class-card').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: { trigger: card, start: 'top 85%' },
+                    opacity: 0, y: 30, duration: 0.7, ease: 'power3.out', delay: i * 0.08
+                });
+            });
+
+            document.querySelectorAll('.format-item').forEach((item, i) => {
+                gsap.from(item, {
+                    scrollTrigger: { trigger: item, start: 'top 88%' },
+                    opacity: 0, y: 20, duration: 0.6, ease: 'power2.out', delay: i * 0.1
+                });
+            });
+        })();
+    </script>
+
+</body>
+
+</html>

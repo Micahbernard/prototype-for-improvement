@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tarot Readings — Esoterica</title>
+    <meta name="description"
+        content="Intuitive tarot readings channeled through the mystic arts. Discover clarity, guidance, and cosmic insight." />
+
+    <!-- Fonts (same as main site) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollToPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.23/bundled/lenis.min.js"></script>
+
+    <style>
+        /* ===== RESET ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background: var(--es-bg-deep);
+            color: var(--es-text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            cursor: none;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            cursor: none;
+        }
+
+        /* Custom cursor elements */
+        .cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 14px;
+            height: 14px;
+            /* Soft white/gold gradient */
+            background: radial-gradient(circle at 30% 30%, var(--es-white) 0%, var(--es-gold) 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            /* Removed transform transition to eliminate lag */
+            transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
+            /* Cosmic glow */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.4),
+                0 0 20px rgba(212, 168, 83, 0.3),
+                0 0 40px rgba(140, 100, 200, 0.15);
+            mix-blend-mode: normal;
+        }
+
+        .cursor-dot.is-hover {
+            width: 40px;
+            height: 40px;
+            background: rgba(212, 168, 83, 0.1);
+            border: 1px solid rgba(212, 168, 83, 0.4);
+            box-shadow: 0 0 20px rgba(212, 168, 83, 0.5);
+            backdrop-filter: blur(2px);
+        }
+
+        @media (max-width: 768px),
+        (pointer: coarse) {
+            .cursor-dot {
+                display: none;
+            }
+
+            body,
+            a,
+            .reading-cta {
+                cursor: auto;
+            }
+        }
+
+        /* ===== STARFIELD ===== */
+        #starfield {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== FLOATING ORBS ===== */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: rgba(90, 50, 140, 0.3);
+            top: -100px;
+            left: -100px;
+            animation: floatOrb1 20s ease-in-out infinite alternate;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(60, 30, 120, 0.2);
+            bottom: -50px;
+            right: -50px;
+            animation: floatOrb2 25s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatOrb1 {
+            to {
+                transform: translate(100px, 150px);
+            }
+        }
+
+        @keyframes floatOrb2 {
+            to {
+                transform: translate(-80px, -120px);
+            }
+        }
+
+        /* ===== NAV ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+        }
+
+        .nav-gradient {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(180deg, var(--es-bg-deep) 12.89%, rgba(var(--es-bg-rgb), 0.1) 56.74%, rgba(var(--es-bg-rgb), 0) 68.05%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .nav-layout {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .nav-logo img {
+            height: 36px;
+            width: 36px;
+            object-fit: cover;
+            object-position: center 58%;
+            border-radius: 50%;
+        }
+
+        .nav-links-wrap {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        /* Bracket hover links (same as main site) */
+        .nav-link-block {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            cursor: pointer;
+            position: relative;
+            padding: 0.4rem 0;
+        }
+
+        .bracket-left,
+        .bracket-right {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: rgba(232, 224, 212, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-link-block:hover .bracket-left,
+        .nav-link-block:hover .bracket-right {
+            opacity: 1;
+        }
+
+        .nav-middle-text {
+            overflow: hidden;
+            height: 1.2em;
+            position: relative;
+        }
+
+        .text-nav {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(232, 224, 212, 0.6);
+            line-height: 1.2em;
+            transition: transform 0.35s cubic-bezier(0.77, 0, 0.175, 1);
+            padding: 0 0.4rem;
+        }
+
+        .text-nav.is-duplicate {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateY(120%);
+        }
+
+        .nav-link-block:hover .text-nav {
+            transform: translateY(-120%);
+            color: var(--es-text);
+        }
+
+        .nav-link-block:hover .text-nav.is-duplicate {
+            transform: translateY(0);
+            color: var(--es-text);
+        }
+
+        /* ===== PAGE ===== */
+        .page {
+            position: relative;
+        }
+
+        /* ===== HERO (inner .sub-hero-cosmos in styles.css) ===== */
+        .page-hero {
+            padding: 5.5rem 1.25rem 2.5rem;
+            position: relative;
+        }
+
+        .hero-sigil {
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-sigil img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            object-position: center 58%;
+            border-radius: 50%;
+            filter: drop-shadow(0 0 16px rgba(212, 168, 83, 0.3)) drop-shadow(0 0 40px rgba(90, 50, 140, 0.15));
+        }
+
+        .hero-breadcrumb {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(232, 224, 212, 0.35);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-breadcrumb a {
+            color: rgba(232, 224, 212, 0.5);
+            transition: color 0.3s;
+        }
+
+        .hero-breadcrumb a:hover {
+            color: var(--es-gold);
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            max-width: 700px;
+        }
+
+        .hero-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--es-text-muted);
+            max-width: var(--es-max-prose);
+            margin: 0 auto;
+        }
+
+        /* ===== SECTION SHARED ===== */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--es-gold), transparent);
+            margin: 0 auto 2rem;
+        }
+
+        .section-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-heading {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-description {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--es-text-muted);
+            text-align: center;
+            max-width: var(--es-max-prose);
+            margin: 0 auto 3rem;
+        }
+
+        /* ===== READING CARDS GRID ===== */
+        .readings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        .reading-card {
+            background: var(--es-bg-card-soft);
+            border: 1px solid var(--es-border-card);
+            border-radius: var(--es-radius-card-sm);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .reading-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--es-border-card-hover);
+            box-shadow: var(--es-shadow-card-hover);
+        }
+
+        .reading-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 20%, rgba(100, 60, 180, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .reading-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.2rem;
+            display: block;
+            color: var(--es-gold);
+        }
+
+        .reading-icon svg {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .reading-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .reading-type {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--es-gold);
+            margin-bottom: 1rem;
+        }
+
+        .reading-desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.6;
+            color: rgba(var(--es-text-rgb), 0.68);
+            margin-bottom: 1.5rem;
+        }
+
+        .reading-details {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: rgba(232, 224, 212, 0.4);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .reading-price {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--es-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .reading-cta {
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--es-bg-deep);
+            background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .reading-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(212, 168, 83, 0.2);
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2.5rem;
+            text-align: center;
+        }
+
+        .how-step {
+            position: relative;
+        }
+
+        .how-number {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: rgba(120, 80, 180, 0.2);
+            margin-bottom: 0.8rem;
+        }
+
+        .how-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.6rem;
+        }
+
+        .how-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.6;
+            color: rgba(232, 224, 212, 0.45);
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: rgba(15, 11, 36, 0.5);
+            border: 1px solid rgba(120, 80, 180, 0.08);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .testimonial-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.7;
+            color: rgba(232, 224, 212, 0.6);
+            margin-bottom: 1.2rem;
+        }
+
+        .testimonial-author {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(232, 224, 212, 0.3);
+        }
+
+        /* ===== QUOTE ===== */
+        .quote-section {
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .quote-mark {
+            font-family: 'Cinzel', serif;
+            font-size: 5rem;
+            line-height: 1;
+            color: rgba(212, 168, 83, 0.15);
+        }
+
+        .quote-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.7;
+            color: rgba(232, 224, 212, 0.6);
+            max-width: 600px;
+            margin: 0 auto 1rem;
+        }
+
+        .quote-author {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(232, 224, 212, 0.25);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            color: rgba(232, 224, 212, 0.2);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* ===== FOCUS STATES (a11y) ===== */
+        .nav-link-block:focus-visible,
+        .reading-cta:focus-visible,
+        .hero-breadcrumb a:focus-visible {
+            outline: 2px solid var(--es-gold);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* ===== CURSOR ===== */
+        .reading-card {
+            cursor: pointer;
+        }
+
+        .reading-cta {
+            cursor: pointer;
+        }
+
+        /* ===== WILL-CHANGE (GPU performance) ===== */
+        .reading-card {
+            will-change: transform;
+        }
+
+        .orb {
+            will-change: transform;
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links-wrap {
+                display: none;
+            }
+
+            .readings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .how-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ===== REDUCED MOTION (a11y) ===== */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            #starfield,
+            .orb {
+                display: none;
+            }
+        }
+
+        /* ===== GLOBAL CURSOR OVERRIDE ===== */
+        @media (pointer: fine) {
+
+            *,
+            *::before,
+            *::after {
+                cursor: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="esoterica">
+
+    <!-- ===== CUSTOM CURSOR (Radiant Orb) ===== -->
+    <div class="cursor-dot"></div>
+
+    <!-- ===== STARFIELD ===== -->
+    <canvas id="starfield"></canvas>
+
+    <!-- ===== FLOATING ORBS ===== -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <!-- ===== PAGE ===== -->
+    <div class="page">
+
+        <!-- ===== NAV ===== -->
+        <nav class="nav" aria-label="Main navigation">
+            <div class="nav-gradient"></div>
+            <div class="nav-layout">
+                <a class="nav-logo" href="index.html">
+                    <img src="logo.png" alt="Esoterica" width="36" height="36" />
+                    Esoterica
+                </a>
+                <div class="nav-links-wrap">
+                    <a class="nav-link-block" href="index.html">
+                        <div class="bracket-left">(</div>
+                        <div class="nav-middle-text">
+                            <div class="text-nav">home</div>
+                            <div class="text-nav is-duplicate">home</div>
+                        </div>
+                        <div class="bracket-right">)</div>
+                    </a>
+                    <a class="nav-link-block" href="index.html#shop">
+                        <div class="bracket-left">(</div>
+                        <div class="nav-middle-text">
+                            <div class="text-nav">shop</div>
+                            <div class="text-nav is-duplicate">shop</div>
+                        </div>
+                        <div class="bracket-right">)</div>
+                    </a>
+                    <a class="nav-link-block" href="#readings">
+                        <div class="bracket-left">(</div>
+                        <div class="nav-middle-text">
+                            <div class="text-nav">readings</div>
+                            <div class="text-nav is-duplicate">readings</div>
+                        </div>
+                        <div class="bracket-right">)</div>
+                    </a>
+                    <a class="nav-link-block" href="#how">
+                        <div class="bracket-left">(</div>
+                        <div class="nav-middle-text">
+                            <div class="text-nav">process</div>
+                            <div class="text-nav is-duplicate">process</div>
+                        </div>
+                        <div class="bracket-right">)</div>
+                    </a>
+                    <a class="nav-link-block" href="#testimonials">
+                        <div class="bracket-left">(</div>
+                        <div class="nav-middle-text">
+                            <div class="text-nav">voices</div>
+                            <div class="text-nav is-duplicate">voices</div>
+                        </div>
+                        <div class="bracket-right">)</div>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ===== HERO ===== -->
+        <section class="page-hero">
+            <div class="sub-hero-cosmos">
+                <div class="sub-hero-cosmos-inner">
+                    <div class="hero-sigil">
+                        <img src="logo.png" alt="Esoterica" width="100" height="100" />
+                    </div>
+                    <div class="hero-breadcrumb">
+                        <a href="index.html">Home</a> &nbsp;/&nbsp; Tarot Readings
+                    </div>
+                    <h1 class="hero-title">The Cards Remember What You've Forgotten</h1>
+                    <p class="hero-subtitle">
+                        Each reading is a mirror held to the soul — revealing patterns, illuminating crossroads, and whispering
+                        truths your conscious mind may overlook.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== READINGS GRID ===== -->
+        <section class="section" id="readings">
+            <div class="section-divider"></div>
+            <p class="section-label">Choose Your Path</p>
+            <h2 class="section-heading">Sacred Readings</h2>
+            <p class="section-description">
+                Every reading is performed intuitively, guided by the energy you bring and the questions your spirit
+                yearns to answer.
+            </p>
+
+            <div class="readings-grid">
+                <div class="reading-card">
+                    <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                        </svg></span>
+                    <h3 class="reading-name">Celtic Cross</h3>
+                    <p class="reading-type">Deep Guidance</p>
+                    <p class="reading-desc">The ancient 10-card spread that maps your past, present, and future. Reveals
+                        hidden influences and the path of highest potential.</p>
+                    <div class="reading-details">
+                        10 Cards · 60 min session<br>
+                        Written summary included
+                    </div>
+                    <p class="reading-price">$95</p>
+                    <a class="reading-cta" href="#">Book Reading</a>
+                </div>
+
+                <div class="reading-card">
+                    <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <circle cx="12" cy="12" r="4" />
+                            <line x1="12" y1="2" x2="12" y2="6" />
+                            <line x1="12" y1="18" x2="12" y2="22" />
+                            <line x1="2" y1="12" x2="6" y2="12" />
+                            <line x1="18" y1="12" x2="22" y2="12" />
+                        </svg></span>
+                    <h3 class="reading-name">Past Life</h3>
+                    <p class="reading-type">Soul Archaeology</p>
+                    <p class="reading-desc">A specialized spread that peers through the veil of time, uncovering karmic
+                        patterns and soul contracts from previous incarnations.</p>
+                    <div class="reading-details">
+                        7 Cards · 45 min session<br>
+                        Past life meditation included
+                    </div>
+                    <p class="reading-price">$120</p>
+                    <a class="reading-cta" href="#">Book Reading</a>
+                </div>
+
+                <div class="reading-card">
+                    <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M12 2c.5 3-2.5 5.5-2 8.5.5 3 3.5 4.5 3.5 4.5s3-1.5 3.5-4.5c.5-3-2.5-5.5-2-8.5" />
+                            <path d="M9 17h6" />
+                            <path d="M10 20h4" />
+                            <path d="M11 22h2" />
+                        </svg></span>
+                    <h3 class="reading-name">Shadow Work</h3>
+                    <p class="reading-type">Inner Alchemy</p>
+                    <p class="reading-desc">Confront the unconscious. This reading illuminates your shadow self — the
+                        parts hidden from sight that hold the keys to transformation.</p>
+                    <div class="reading-details">
+                        5 Cards · 40 min session<br>
+                        Integration ritual guide
+                    </div>
+                    <p class="reading-price">$75</p>
+                    <a class="reading-cta" href="#">Book Reading</a>
+                </div>
+
+                <div class="reading-card">
+                    <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg></span>
+                    <h3 class="reading-name">Cosmic Love</h3>
+                    <p class="reading-type">Heart Cartography</p>
+                    <p class="reading-desc">Whether seeking connection or deepening an existing bond, this spread maps
+                        the terrain of your heart's truest desires.</p>
+                    <div class="reading-details">
+                        6 Cards · 45 min session<br>
+                        Love spell candle included
+                    </div>
+                    <p class="reading-price">$85</p>
+                    <a class="reading-cta" href="#">Book Reading</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== QUOTE ===== -->
+        <section class="quote-section">
+            <div class="quote-mark">"</div>
+            <p class="quote-text">The cards do not predict the future — they illuminate the choices that create it.</p>
+            <p class="quote-author">— The Keeper of Veils</p>
+        </section>
+
+        <!-- ===== HOW IT WORKS ===== -->
+        <section class="section" id="how">
+            <div class="section-divider"></div>
+            <p class="section-label">The Sacred Process</p>
+            <h2 class="section-heading">How It Works</h2>
+            <p class="section-description">
+                From booking to revelation, every step is held with intention and care.
+            </p>
+
+            <div class="how-grid">
+                <div class="how-step">
+                    <div class="how-number">I</div>
+                    <h3 class="how-title">Set Your Intention</h3>
+                    <p class="how-text">Choose your reading type and share what weighs on your heart. Your question
+                        shapes the lens through which the cards speak.</p>
+                </div>
+                <div class="how-step">
+                    <div class="how-number">II</div>
+                    <h3 class="how-title">The Channeling</h3>
+                    <p class="how-text">Your reader enters a meditative state, shuffling the deck while holding your
+                        energy. The cards fall where they must.</p>
+                </div>
+                <div class="how-step">
+                    <div class="how-number">III</div>
+                    <h3 class="how-title">The Unveiling</h3>
+                    <p class="how-text">Each card is revealed and interpreted in the context of your question. Patterns
+                        emerge. Truths crystallize.</p>
+                </div>
+                <div class="how-step">
+                    <div class="how-number">IV</div>
+                    <h3 class="how-title">Integration</h3>
+                    <p class="how-text">Receive your written summary, recommended rituals, and guidance for weaving the
+                        reading's wisdom into your daily life.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TESTIMONIALS ===== -->
+        <section class="section" id="testimonials">
+            <div class="section-divider"></div>
+            <p class="section-label">Voices from the Veil</p>
+            <h2 class="section-heading">What Seekers Say</h2>
+            <p class="section-description">
+                Words from those who dared to look beyond the surface.
+            </p>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"The Celtic Cross reading shook me to my core. Cards that a stranger
+                        pulled somehow knew the exact crossroads I was standing at. I've never felt so seen."</p>
+                    <p class="testimonial-author">— Luna M.</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"My past life reading revealed a pattern I've been repeating for
+                        decades without realizing. The clarity was immediate and profound."</p>
+                    <p class="testimonial-author">— Sage R.</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">"I was skeptical, honestly. But the shadow work reading named things I
+                        hadn't told anyone. The integration ritual changed my journaling practice forever."</p>
+                    <p class="testimonial-author">— Ember K.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== FOOTER ===== -->
+        <footer>
+            <span>© 2026 Esoterica</span>
+            <div class="footer-links">
+                <a class="nav-link-block" href="index.html">
+                    <div class="bracket-left">(</div>
+                    <div class="nav-middle-text">
+                        <div class="text-nav">home</div>
+                        <div class="text-nav is-duplicate">home</div>
+                    </div>
+                    <div class="bracket-right">)</div>
+                </a>
+                <a class="nav-link-block" href="index.html#privacy">
+                    <div class="bracket-left">(</div>
+                    <div class="nav-middle-text">
+                        <div class="text-nav">privacy</div>
+                        <div class="text-nav is-duplicate">privacy</div>
+                    </div>
+                    <div class="bracket-right">)</div>
+                </a>
+                <a class="nav-link-block" href="index.html#contact">
+                    <div class="bracket-left">(</div>
+                    <div class="nav-middle-text">
+                        <div class="text-nav">contact</div>
+                        <div class="text-nav is-duplicate">contact</div>
+                    </div>
+                    <div class="bracket-right">)</div>
+                </a>
+            </div>
+        </footer>
+    </div><!-- /page -->
+
+    <script>
+        /* ================================================================
+           STARFIELD — Same as main site
+        ================================================================ */
+        (function () {
+            const canvas = document.getElementById('starfield');
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+            const STAR_COUNT = 180;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            function createStars() {
+                stars = [];
+                for (let i = 0; i < STAR_COUNT; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        r: Math.random() * 1.5 + 0.3,
+                        alpha: Math.random(),
+                        speed: Math.random() * 0.005 + 0.001,
+                        phase: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+            createStars();
+
+            function drawStars(time) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const grd = ctx.createRadialGradient(
+                    canvas.width * 0.3, canvas.height * 0.4, 0,
+                    canvas.width * 0.3, canvas.height * 0.4, canvas.width * 0.5
+                );
+                grd.addColorStop(0, 'rgba(60, 20, 100, 0.03)');
+                grd.addColorStop(1, 'transparent');
+                ctx.fillStyle = grd;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                for (const star of stars) {
+                    const twinkle = Math.sin(time * star.speed + star.phase) * 0.5 + 0.5;
+                    const alpha = star.alpha * twinkle * 0.8 + 0.1;
+
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(232, 224, 212, ${alpha})`;
+                    ctx.fill();
+
+                    if (star.r > 1.2) {
+                        ctx.beginPath();
+                        ctx.arc(star.x, star.y, star.r * 3, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(160, 130, 200, ${alpha * 0.08})`;
+                        ctx.fill();
+                    }
+                }
+                requestAnimationFrame(drawStars);
+            }
+            requestAnimationFrame(drawStars);
+        })();
+
+        /* ================================================================
+           GSAP SCROLL ANIMATIONS
+        ================================================================ */
+        document.addEventListener("DOMContentLoaded", function () {
+            gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+            // Native smooth scroll — no Lenis needed on this page
+
+            // Fade-up all sections
+            document.querySelectorAll('.section, .quote-section').forEach(section => {
+                const els = section.querySelectorAll('.section-divider, .section-label, .section-heading, .section-description, .reading-card, .how-step, .testimonial-card, .quote-mark, .quote-text, .quote-author');
+                els.forEach((el, i) => {
+                    gsap.from(el, {
+                        y: 50,
+                        opacity: 0,
+                        duration: 0.8,
+                        delay: i * 0.08,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top 88%",
+                            toggleActions: "play none none none"
+                        }
+                    });
+                });
+            });
+
+            // Hero fade in
+            gsap.from('.page-hero .hero-sigil', { y: 30, opacity: 0, duration: 1, delay: 0.3, ease: 'power3.out' });
+            gsap.from('.page-hero .hero-breadcrumb', { y: 30, opacity: 0, duration: 1, delay: 0.5, ease: 'power3.out' });
+            gsap.from('.page-hero .hero-title', { y: 40, opacity: 0, duration: 1.2, delay: 0.6, ease: 'power3.out' });
+            gsap.from('.page-hero .hero-subtitle', { y: 40, opacity: 0, duration: 1.2, delay: 0.8, ease: 'power3.out' });
+
+            // Bracket hover animations
+            document.querySelectorAll('.nav-link-block').forEach(link => {
+                const bracketL = link.querySelector('.bracket-left');
+                const bracketR = link.querySelector('.bracket-right');
+                const textOrig = link.querySelector('.text-nav:not(.is-duplicate)');
+                const textDup = link.querySelector('.text-nav.is-duplicate');
+
+                if (!bracketL || !bracketR || !textOrig || !textDup) return;
+
+                gsap.set(bracketL, { x: '1rem', opacity: 0 });
+                gsap.set(bracketR, { x: '-1rem', opacity: 0 });
+                gsap.set(textDup, { y: '120%' });
+
+                link.addEventListener('mouseenter', () => {
+                    gsap.to(bracketL, { x: 0, opacity: 1, duration: 0.3, ease: 'power2.out' });
+                    gsap.to(bracketR, { x: 0, opacity: 1, duration: 0.3, ease: 'power2.out' });
+                    gsap.to(textOrig, { y: '-120%', duration: 0.35, ease: 'power2.inOut' });
+                    gsap.to(textDup, { y: 0, duration: 0.35, ease: 'power2.inOut' });
+                });
+
+                link.addEventListener('mouseleave', () => {
+                    gsap.to(bracketL, { x: '1rem', opacity: 0, duration: 0.3, ease: 'power2.out' });
+                    gsap.to(bracketR, { x: '-1rem', opacity: 0, duration: 0.3, ease: 'power2.out' });
+                    gsap.to(textOrig, { y: 0, duration: 0.35, ease: 'power2.inOut' });
+                    gsap.to(textDup, { y: '120%', duration: 0.35, ease: 'power2.inOut' });
+                });
+            });
+
+            /* ---- Radiant Orb Cursor (desktop only, no lag) ---- */
+            if (window.matchMedia("(pointer: fine)").matches) {
+                const dot = document.querySelector(".cursor-dot");
+
+                // Direct 1:1 hardware cursor following (instant)
+                window.addEventListener("mousemove", (e) => {
+                    dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+                });
+
+                // Simple hover state (scale up)
+                const interactables = "a, button, .reading-card, .reading-cta, .nav-logo, .nav-link-block";
+                document.querySelectorAll(interactables).forEach(el => {
+                    el.addEventListener("mouseenter", () => dot.classList.add("is-hover"));
+                    el.addEventListener("mouseleave", () => dot.classList.remove("is-hover"));
+                });
+
+                // Click effect
+                window.addEventListener("mousedown", () => dot.style.transform += " scale(0.8)");
+                window.addEventListener("mouseup", () => dot.style.transform = dot.style.transform.replace(" scale(0.8)", ""));
+            }
+        });
+    </script>
+</body>
+
+</html>
