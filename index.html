@@ -14,14 +14,22 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- GSAP + ScrollTrigger + ScrollToPlugin (same versions as SideStage) -->
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollToPlugin.min.js"></script>
+  <!-- GSAP + ScrollTrigger + ScrollToPlugin (same versions as SideStage); SRI sha384 from CDN bytes -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"
+    integrity="sha384-pEQB1h4Zmn9xhS6jotzltHSIQq6N0Oh3BXkCNOH5LKI81R2NRbb9efarAJYw9gTY"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"
+    integrity="sha384-TgZ1GoXcDnrw/czNfaiSZSFV1zgIRv8aQOevBA8ppS4SkNONmzYfjARpXsDfdnUE"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollToPlugin.min.js"
+    integrity="sha384-YY6eh3HcwX3eP3uj3yhZIjt5UBePPmXrYcxT0y0232SA5OGaun9Ivi45Dbm+Z/CQ"
+    crossorigin="anonymous"></script>
   <!-- Lenis Smooth Scroll (same version as SideStage) -->
-  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.23/bundled/lenis.min.js"></script>
-  <!-- GlslCanvas (same as SideStage for WebGL shader background) -->
-  <script src="https://usoqkbujetjfbg6x.public.blob.vercel-storage.com/GlslCanvas.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.23/bundled/lenis.min.js"
+    integrity="sha384-GuiQQtSonx5JfFrW04viv7KCVyTAZZKHCXVtcve0DYt8fUPKLdigmPuBh9XBEUD+"
+    crossorigin="anonymous"></script>
+  <!-- GlslCanvas: vendored locally (previously third-party blob URL) -->
+  <script src="js/GlslCanvas.js"></script>
 
   <script>
     // Disable browser scroll restoration — SideStage pattern
