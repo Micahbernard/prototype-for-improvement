@@ -1047,6 +1047,8 @@ void main(void) {
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
         document.querySelectorAll(".section-heading").forEach(heading => {
+          if (heading.querySelector(".char")) return;
+
           const inner = document.createElement("span");
           inner.className = "es-reveal-inner";
           inner.innerHTML = heading.innerHTML;
@@ -1088,6 +1090,14 @@ void main(void) {
             }
           });
         });
+
+        setTimeout(() => {
+          document.querySelectorAll(".es-reveal-inner").forEach(el => {
+            if (getComputedStyle(el).transform === "none" || el.style.transform.includes("105")) {
+              gsap.set(el, { y: "0%" });
+            }
+          });
+        }, 2000);
       })();
 
       /* ---- F) Nav Link Bracket Hover Animation (exact SideStage pattern) ---- */
