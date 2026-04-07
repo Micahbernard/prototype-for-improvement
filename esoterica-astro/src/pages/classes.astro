@@ -171,6 +171,7 @@ import Layout from '../layouts/Layout.astro';
             line-height: 1.6;
             color: var(--es-text-subtle);
             margin-bottom: 1.5rem;
+            flex: 1;
         }
 
         .class-details {
@@ -206,6 +207,48 @@ import Layout from '../layouts/Layout.astro';
         .class-cta:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 30px rgba(212, 168, 83, 0.25);
+        }
+
+        .reading-card,
+        .class-card {
+            position: relative;
+            overflow: hidden;
+            height: 420px;
+            z-index: 0;
+        }
+
+        .reading-card-reveal,
+        .class-card-reveal {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 1.75rem 1.75rem;
+            background: linear-gradient(
+                to top,
+                var(--es-bg-card) 0%,
+                var(--es-bg-card) 75%,
+                transparent 100%
+            );
+            transform: translateY(100%);
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            border-top: 1px solid color-mix(in srgb, var(--es-gold) 18%, transparent);
+            backdrop-filter: blur(0px);
+        }
+
+        .reading-card:hover .reading-card-reveal,
+        .class-card:hover .class-card-reveal {
+            transform: translateY(0);
+        }
+
+        .reading-card-body,
+        .class-card-body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         /* ===== FORMAT SECTION ===== */
@@ -340,130 +383,154 @@ import Layout from '../layouts/Layout.astro';
             <div class="classes-grid">
 
                 <div class="class-card">
-                    <span class="class-icon" aria-hidden="true">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <polygon
-                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                        </svg>
-                    </span>
-                    <span class="class-badge">Beginner Friendly</span>
-                    <h3 class="class-name">Tarot Foundations</h3>
-                    <p class="class-type">4-Week Series</p>
-                    <p class="class-desc">Learn to read the cards as a living language. From Major Arcana archetypes to
-                        intuitive spreads — this course transforms you from curious to confident.</p>
-                    <div class="class-details">
-                        4 Sessions · 90 min each<br>
-                        Study deck provided · Up to 10 students
+                    <div class="class-card-body">
+                        <span class="class-icon" aria-hidden="true">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            </svg>
+                        </span>
+                        <span class="class-badge">Beginner Friendly</span>
+                        <h3 class="class-name">Tarot Foundations</h3>
+                        <p class="class-type">4-Week Series</p>
+                        <p class="class-desc">Learn to read the cards as a living language. From Major Arcana archetypes to
+                            intuitive spreads — this course transforms you from curious to confident.</p>
+                        <div class="class-card-reveal">
+                            <div class="class-details">
+                                4 Sessions · 90 min each<br>
+                                Study deck provided · Up to 10 students
+                            </div>
+                            <p class="class-price">$180</p>
+                            <a class="class-cta" href="#">Enroll Now</a>
+                        </div>
                     </div>
-                    <p class="class-price">$180</p>
-                    <a class="class-cta" href="#">Enroll Now</a>
                 </div>
 
                 <div class="class-card">
-                    <span class="class-icon" aria-hidden="true">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="4" />
-                            <path
-                                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-                        </svg>
-                    </span>
-                    <span class="class-badge">Intermediate</span>
-                    <h3 class="class-name">Crystal Healing Arts</h3>
-                    <p class="class-type">Workshop · 1 Day</p>
-                    <p class="class-desc">Understand the energetic language of stones. Map chakras to crystals, build
-                        grids for intention, and attune to the mineral kingdom through hands-on practice.</p>
-                    <div class="class-details">
-                        6 Hours · Saturday Immersive<br>
-                        Crystal kit included · Up to 12 students
+                    <div class="class-card-body">
+                        <span class="class-icon" aria-hidden="true">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="4" />
+                                <path
+                                    d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                            </svg>
+                        </span>
+                        <span class="class-badge">Intermediate</span>
+                        <h3 class="class-name">Crystal Healing Arts</h3>
+                        <p class="class-type">Workshop · 1 Day</p>
+                        <p class="class-desc">Understand the energetic language of stones. Map chakras to crystals, build
+                            grids for intention, and attune to the mineral kingdom through hands-on practice.</p>
+                        <div class="class-card-reveal">
+                            <div class="class-details">
+                                6 Hours · Saturday Immersive<br>
+                                Crystal kit included · Up to 12 students
+                            </div>
+                            <p class="class-price">$145</p>
+                            <a class="class-cta" href="#">Enroll Now</a>
+                        </div>
                     </div>
-                    <p class="class-price">$145</p>
-                    <a class="class-cta" href="#">Enroll Now</a>
                 </div>
 
                 <div class="class-card">
-                    <span class="class-icon" aria-hidden="true">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-                        </svg>
-                    </span>
-                    <span class="class-badge">All Levels</span>
-                    <h3 class="class-name">Lunar Ritual Craft</h3>
-                    <p class="class-type">Monthly Ceremony</p>
-                    <p class="class-desc">Work with the Moon's cycle as your spiritual calendar. Each month we gather
-                        under the new or full moon to set intentions, release, and commune with the cosmos.</p>
-                    <div class="class-details">
-                        2.5 Hours · Monthly<br>
-                        Ritual supplies provided · Up to 15 students
+                    <div class="class-card-body">
+                        <span class="class-icon" aria-hidden="true">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                            </svg>
+                        </span>
+                        <span class="class-badge">All Levels</span>
+                        <h3 class="class-name">Lunar Ritual Craft</h3>
+                        <p class="class-type">Monthly Ceremony</p>
+                        <p class="class-desc">Work with the Moon's cycle as your spiritual calendar. Each month we gather
+                            under the new or full moon to set intentions, release, and commune with the cosmos.</p>
+                        <div class="class-card-reveal">
+                            <div class="class-details">
+                                2.5 Hours · Monthly<br>
+                                Ritual supplies provided · Up to 15 students
+                            </div>
+                            <p class="class-price">$75</p>
+                            <a class="class-cta" href="#">Join Circle</a>
+                        </div>
                     </div>
-                    <p class="class-price">$75</p>
-                    <a class="class-cta" href="#">Join Circle</a>
                 </div>
 
                 <div class="class-card">
-                    <span class="class-icon" aria-hidden="true">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3" />
-                            <path d="M8 6h8M7 3h10" />
-                        </svg>
-                    </span>
-                    <span class="class-badge">Advanced</span>
-                    <h3 class="class-name">Alchemical Herbalism</h3>
-                    <p class="class-type">6-Week Series</p>
-                    <p class="class-desc">Blend the physical and the mystical. Learn to craft ritual tinctures, smudge
-                        bundles, and dream teas using plant spirits and alchemical principles.</p>
-                    <div class="class-details">
-                        6 Sessions · 2 Hours each<br>
-                        Herb kit &amp; recipe book included
+                    <div class="class-card-body">
+                        <span class="class-icon" aria-hidden="true">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3" />
+                                <path d="M8 6h8M7 3h10" />
+                            </svg>
+                        </span>
+                        <span class="class-badge">Advanced</span>
+                        <h3 class="class-name">Alchemical Herbalism</h3>
+                        <p class="class-type">6-Week Series</p>
+                        <p class="class-desc">Blend the physical and the mystical. Learn to craft ritual tinctures, smudge
+                            bundles, and dream teas using plant spirits and alchemical principles.</p>
+                        <div class="class-card-reveal">
+                            <div class="class-details">
+                                6 Sessions · 2 Hours each<br>
+                                Herb kit &amp; recipe book included
+                            </div>
+                            <p class="class-price">$265</p>
+                            <a class="class-cta" href="#">Enroll Now</a>
+                        </div>
                     </div>
-                    <p class="class-price">$265</p>
-                    <a class="class-cta" href="#">Enroll Now</a>
                 </div>
 
                 <div class="class-card">
-                    <span class="class-icon" aria-hidden="true">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="3 3 21 3 21 21 3 21 3 3" />
-                            <path d="M9 3v18M15 3v18M3 9h18M3 15h18" />
-                        </svg>
-                    </span>
-                    <span class="class-badge">Intermediate</span>
-                    <h3 class="class-name">Sacred Geometry</h3>
-                    <p class="class-type">Workshop · 1 Day</p>
-                    <p class="class-desc">Discover the hidden patterns woven into the fabric of creation. Draw, meditate
-                        with, and activate the Flower of Life, Metatron's Cube, and the Sri Yantra.</p>
-                    <div class="class-details">
-                        5 Hours · Sunday Immersive<br>
-                        Drawing kit &amp; workbook provided
+                    <div class="class-card-body">
+                        <span class="class-icon" aria-hidden="true">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="3 3 21 3 21 21 3 21 3 3" />
+                                <path d="M9 3v18M15 3v18M3 9h18M3 15h18" />
+                            </svg>
+                        </span>
+                        <span class="class-badge">Intermediate</span>
+                        <h3 class="class-name">Sacred Geometry</h3>
+                        <p class="class-type">Workshop · 1 Day</p>
+                        <p class="class-desc">Discover the hidden patterns woven into the fabric of creation. Draw, meditate
+                            with, and activate the Flower of Life, Metatron's Cube, and the Sri Yantra.</p>
+                        <div class="class-card-reveal">
+                            <div class="class-details">
+                                5 Hours · Sunday Immersive<br>
+                                Drawing kit &amp; workbook provided
+                            </div>
+                            <p class="class-price">$120</p>
+                            <a class="class-cta" href="#">Enroll Now</a>
+                        </div>
                     </div>
-                    <p class="class-price">$120</p>
-                    <a class="class-cta" href="#">Enroll Now</a>
                 </div>
 
                 <div class="class-card">
-                    <span class="class-icon" aria-hidden="true">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path
-                                d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
-                            <path d="M9 18h6M10 22h4" />
-                        </svg>
-                    </span>
-                    <span class="class-badge">All Levels</span>
-                    <h3 class="class-name">Intuition Awakening</h3>
-                    <p class="class-type">2-Week Intensive</p>
-                    <p class="class-desc">A dedicated practice to unlock and trust your inner knowing. Includes psychic
-                        development exercises, dreamwork journaling, and guided meditations.</p>
-                    <div class="class-details">
-                        4 Sessions · 90 min each<br>
-                        Dream journal included · Live &amp; recorded
+                    <div class="class-card-body">
+                        <span class="class-icon" aria-hidden="true">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+                                <path d="M9 18h6M10 22h4" />
+                            </svg>
+                        </span>
+                        <span class="class-badge">All Levels</span>
+                        <h3 class="class-name">Intuition Awakening</h3>
+                        <p class="class-type">2-Week Intensive</p>
+                        <p class="class-desc">A dedicated practice to unlock and trust your inner knowing. Includes psychic
+                            development exercises, dreamwork journaling, and guided meditations.</p>
+                        <div class="class-card-reveal">
+                            <div class="class-details">
+                                4 Sessions · 90 min each<br>
+                                Dream journal included · Live &amp; recorded
+                            </div>
+                            <p class="class-price">$155</p>
+                            <a class="class-cta" href="#">Enroll Now</a>
+                        </div>
                     </div>
-                    <p class="class-price">$155</p>
-                    <a class="class-cta" href="#">Enroll Now</a>
                 </div>
 
             </div>
@@ -580,6 +647,55 @@ import Layout from '../layouts/Layout.astro';
             gsap.from('.page-hero .hero-breadcrumb', { opacity: 0, y: 10, duration: 0.8, ease: 'power3.out', delay: 0.5 });
             gsap.from('.page-hero .hero-title', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.7 });
             gsap.from('.page-hero .hero-subtitle', { opacity: 0, y: 15, duration: 0.8, ease: 'power3.out', delay: 0.9 });
+
+            // Sub-hero parallax depth
+            if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                const subHero = document.querySelector(".sub-hero-cosmos");
+                const subHeroInner = document.querySelector(".sub-hero-cosmos-inner");
+                const subHeroSigil = document.querySelector(".hero-sigil");
+                const subHeroBefore = document.querySelector(".sub-hero-cosmos");
+
+                if (subHero && subHeroInner) {
+                    // Layer 1 — background glow (slowest, 15% scroll rate)
+                    gsap.to(subHero, {
+                        backgroundPositionY: "30%",
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: subHero,
+                            start: "top top",
+                            end: "bottom top",
+                            scrub: true
+                        }
+                    });
+
+                    // Layer 2 — sigil logo (medium, 25% scroll rate)
+                    if (subHeroSigil) {
+                        gsap.to(subHeroSigil, {
+                            y: -40,
+                            ease: "none",
+                            scrollTrigger: {
+                                trigger: subHero,
+                                start: "top top",
+                                end: "bottom top",
+                                scrub: true
+                            }
+                        });
+                    }
+
+                    // Layer 3 — text content (fastest, 45% scroll rate)
+                    gsap.to(subHeroInner, {
+                        y: -70,
+                        opacity: 0,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: subHero,
+                            start: "top top",
+                            end: "60% top",
+                            scrub: true
+                        }
+                    });
+                }
+            }
 
             (function initClassesGridReveal() {
                 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;

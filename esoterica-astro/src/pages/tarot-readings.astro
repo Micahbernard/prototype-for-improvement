@@ -156,6 +156,7 @@ import Layout from '../layouts/Layout.astro';
             line-height: 1.6;
             color: var(--es-text-subtle);
             margin-bottom: 1.5rem;
+            flex: 1;
         }
 
         .reading-details {
@@ -192,40 +193,145 @@ import Layout from '../layouts/Layout.astro';
             box-shadow: 0 8px 30px rgba(212, 168, 83, 0.2);
         }
 
-        /* ===== HOW IT WORKS ===== */
-        .how-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2.5rem;
-            text-align: center;
+        .reading-card,
+        .class-card {
+            position: relative;
+            overflow: hidden;
+            height: 420px;
+            z-index: 0;
+        }
+
+        .reading-card-reveal,
+        .class-card-reveal {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 1.75rem 1.75rem;
+            background: linear-gradient(
+                to top,
+                var(--es-bg-card) 0%,
+                var(--es-bg-card) 75%,
+                transparent 100%
+            );
+            transform: translateY(100%);
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            border-top: 1px solid color-mix(in srgb, var(--es-gold) 18%, transparent);
+            backdrop-filter: blur(0px);
+        }
+
+        .reading-card:hover .reading-card-reveal,
+        .class-card:hover .class-card-reveal {
+            transform: translateY(0);
+        }
+
+        .reading-card-body,
+        .class-card-body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== HOW IT WORKS (scroll timeline) ===== */
+        .how-timeline {
+            position: relative;
+            max-width: 680px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .how-timeline-line {
+            position: absolute;
+            left: 2.5rem;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: color-mix(in srgb, var(--es-gold) 12%, transparent);
+        }
+
+        .how-timeline-progress {
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(180deg, var(--es-gold), var(--es-violet));
+            transition: height 0.1s linear;
         }
 
         .how-step {
-            position: relative;
+            display: grid;
+            grid-template-columns: 5rem 1fr;
+            gap: 2rem;
+            padding: 3rem 0;
+            border-bottom: 1px solid color-mix(in srgb, var(--es-gold) 8%, transparent);
+            opacity: 0.35;
+            transition: opacity 0.5s ease;
         }
 
-        .how-number {
-            font-family: 'Cinzel', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: rgba(120, 80, 180, 0.2);
-            margin-bottom: 0.8rem;
+        .how-step.is-active {
+            opacity: 1;
+        }
+
+        .how-step:last-child {
+            border-bottom: none;
+        }
+
+        .how-step-number {
+            font-family: var(--es-font-display);
+            font-size: 3.5rem;
+            font-weight: 400;
+            color: var(--es-gold);
+            opacity: 0.25;
+            line-height: 1;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(4px);
+            padding-top: 0.25rem;
+        }
+
+        .how-step.is-active .how-step-number {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .how-step-content {
+            padding-top: 0.5rem;
         }
 
         .how-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
+            font-family: var(--es-font-display);
+            font-size: 1.1rem;
             font-weight: 500;
-            margin-bottom: 0.6rem;
+            letter-spacing: 0.05em;
+            color: var(--es-white);
+            margin-bottom: 0.75rem;
         }
 
         .how-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.95rem;
+            font-family: var(--es-font-serif);
+            font-size: 1.05rem;
             font-weight: 300;
-            font-style: italic;
-            line-height: 1.6;
-            color: var(--es-text-faint);
+            line-height: 1.8;
+            color: var(--es-text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .how-timeline-line {
+                display: none;
+            }
+
+            .how-step {
+                grid-template-columns: 3rem 1fr;
+                gap: 1rem;
+                opacity: 1;
+            }
+
+            .how-step-number {
+                font-size: 2rem;
+                opacity: 0.5;
+            }
         }
 
         /* ===== TESTIMONIALS ===== */
@@ -329,10 +435,6 @@ import Layout from '../layouts/Layout.astro';
             .readings-grid {
                 grid-template-columns: 1fr;
             }
-
-            .how-grid {
-                grid-template-columns: 1fr 1fr;
-            }
         }
 </style>
 
@@ -378,84 +480,100 @@ import Layout from '../layouts/Layout.astro';
 
             <div class="readings-grid">
                 <div class="reading-card">
-                    <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-                        </svg></span>
-                    <h3 class="reading-name">Celtic Cross</h3>
-                    <p class="reading-type">Deep Guidance</p>
-                    <p class="reading-desc">The ancient 10-card spread that maps your past, present, and future. Reveals
-                        hidden influences and the path of highest potential.</p>
-                    <div class="reading-details">
-                        10 Cards · 60 min session<br>
-                        Written summary included
+                    <div class="reading-card-body">
+                        <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                            </svg></span>
+                        <h3 class="reading-name">Celtic Cross</h3>
+                        <p class="reading-type">Deep Guidance</p>
+                        <p class="reading-desc">The ancient 10-card spread that maps your past, present, and future. Reveals
+                            hidden influences and the path of highest potential.</p>
+                        <div class="reading-card-reveal">
+                            <div class="reading-details">
+                                10 Cards · 60 min session<br>
+                                Written summary included
+                            </div>
+                            <p class="reading-price">$95</p>
+                            <a class="reading-cta" href="#">Book Reading</a>
+                        </div>
                     </div>
-                    <p class="reading-price">$95</p>
-                    <a class="reading-cta" href="#">Book Reading</a>
                 </div>
 
                 <div class="reading-card">
-                    <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <circle cx="12" cy="12" r="4" />
-                            <line x1="12" y1="2" x2="12" y2="6" />
-                            <line x1="12" y1="18" x2="12" y2="22" />
-                            <line x1="2" y1="12" x2="6" y2="12" />
-                            <line x1="18" y1="12" x2="22" y2="12" />
-                        </svg></span>
-                    <h3 class="reading-name">Past Life</h3>
-                    <p class="reading-type">Soul Archaeology</p>
-                    <p class="reading-desc">A specialized spread that peers through the veil of time, uncovering karmic
-                        patterns and soul contracts from previous incarnations.</p>
-                    <div class="reading-details">
-                        7 Cards · 45 min session<br>
-                        Past life meditation included
+                    <div class="reading-card-body">
+                        <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <circle cx="12" cy="12" r="4" />
+                                <line x1="12" y1="2" x2="12" y2="6" />
+                                <line x1="12" y1="18" x2="12" y2="22" />
+                                <line x1="2" y1="12" x2="6" y2="12" />
+                                <line x1="18" y1="12" x2="22" y2="12" />
+                            </svg></span>
+                        <h3 class="reading-name">Past Life</h3>
+                        <p class="reading-type">Soul Archaeology</p>
+                        <p class="reading-desc">A specialized spread that peers through the veil of time, uncovering karmic
+                            patterns and soul contracts from previous incarnations.</p>
+                        <div class="reading-card-reveal">
+                            <div class="reading-details">
+                                7 Cards · 45 min session<br>
+                                Past life meditation included
+                            </div>
+                            <p class="reading-price">$120</p>
+                            <a class="reading-cta" href="#">Book Reading</a>
+                        </div>
                     </div>
-                    <p class="reading-price">$120</p>
-                    <a class="reading-cta" href="#">Book Reading</a>
                 </div>
 
                 <div class="reading-card">
-                    <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path d="M12 2c.5 3-2.5 5.5-2 8.5.5 3 3.5 4.5 3.5 4.5s3-1.5 3.5-4.5c.5-3-2.5-5.5-2-8.5" />
-                            <path d="M9 17h6" />
-                            <path d="M10 20h4" />
-                            <path d="M11 22h2" />
-                        </svg></span>
-                    <h3 class="reading-name">Shadow Work</h3>
-                    <p class="reading-type">Inner Alchemy</p>
-                    <p class="reading-desc">Confront the unconscious. This reading illuminates your shadow self — the
-                        parts hidden from sight that hold the keys to transformation.</p>
-                    <div class="reading-details">
-                        5 Cards · 40 min session<br>
-                        Integration ritual guide
+                    <div class="reading-card-body">
+                        <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M12 2c.5 3-2.5 5.5-2 8.5.5 3 3.5 4.5 3.5 4.5s3-1.5 3.5-4.5c.5-3-2.5-5.5-2-8.5" />
+                                <path d="M9 17h6" />
+                                <path d="M10 20h4" />
+                                <path d="M11 22h2" />
+                            </svg></span>
+                        <h3 class="reading-name">Shadow Work</h3>
+                        <p class="reading-type">Inner Alchemy</p>
+                        <p class="reading-desc">Confront the unconscious. This reading illuminates your shadow self — the
+                            parts hidden from sight that hold the keys to transformation.</p>
+                        <div class="reading-card-reveal">
+                            <div class="reading-details">
+                                5 Cards · 40 min session<br>
+                                Integration ritual guide
+                            </div>
+                            <p class="reading-price">$75</p>
+                            <a class="reading-cta" href="#">Book Reading</a>
+                        </div>
                     </div>
-                    <p class="reading-price">$75</p>
-                    <a class="reading-cta" href="#">Book Reading</a>
                 </div>
 
                 <div class="reading-card">
-                    <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <polygon
-                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                        </svg></span>
-                    <h3 class="reading-name">Cosmic Love</h3>
-                    <p class="reading-type">Heart Cartography</p>
-                    <p class="reading-desc">Whether seeking connection or deepening an existing bond, this spread maps
-                        the terrain of your heart's truest desires.</p>
-                    <div class="reading-details">
-                        6 Cards · 45 min session<br>
-                        Love spell candle included
+                    <div class="reading-card-body">
+                        <span class="reading-icon" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            </svg></span>
+                        <h3 class="reading-name">Cosmic Love</h3>
+                        <p class="reading-type">Heart Cartography</p>
+                        <p class="reading-desc">Whether seeking connection or deepening an existing bond, this spread maps
+                            the terrain of your heart's truest desires.</p>
+                        <div class="reading-card-reveal">
+                            <div class="reading-details">
+                                6 Cards · 45 min session<br>
+                                Love spell candle included
+                            </div>
+                            <p class="reading-price">$85</p>
+                            <a class="reading-cta" href="#">Book Reading</a>
+                        </div>
                     </div>
-                    <p class="reading-price">$85</p>
-                    <a class="reading-cta" href="#">Book Reading</a>
                 </div>
             </div>
         </section>
@@ -476,30 +594,35 @@ import Layout from '../layouts/Layout.astro';
                 From booking to revelation, every step is held with intention and care.
             </p>
 
-            <div class="how-grid">
-                <div class="how-step">
-                    <div class="how-number">I</div>
-                    <h3 class="how-title">Set Your Intention</h3>
-                    <p class="how-text">Choose your reading type and share what weighs on your heart. Your question
-                        shapes the lens through which the cards speak.</p>
+            <div class="how-timeline">
+                <div class="how-timeline-line"><div class="how-timeline-progress"></div></div>
+                <div class="how-step" data-step="I">
+                    <div class="how-step-number">I</div>
+                    <div class="how-step-content">
+                        <h3 class="how-title">Set Your Intention</h3>
+                        <p class="how-text">Choose your reading type and share what weighs on your heart. Your question shapes the lens through which the cards speak.</p>
+                    </div>
                 </div>
-                <div class="how-step">
-                    <div class="how-number">II</div>
-                    <h3 class="how-title">The Channeling</h3>
-                    <p class="how-text">Your reader enters a meditative state, shuffling the deck while holding your
-                        energy. The cards fall where they must.</p>
+                <div class="how-step" data-step="II">
+                    <div class="how-step-number">II</div>
+                    <div class="how-step-content">
+                        <h3 class="how-title">The Channeling</h3>
+                        <p class="how-text">Your reader enters a meditative state, shuffling the deck while holding your energy. The cards fall where they must.</p>
+                    </div>
                 </div>
-                <div class="how-step">
-                    <div class="how-number">III</div>
-                    <h3 class="how-title">The Unveiling</h3>
-                    <p class="how-text">Each card is revealed and interpreted in the context of your question. Patterns
-                        emerge. Truths crystallize.</p>
+                <div class="how-step" data-step="III">
+                    <div class="how-step-number">III</div>
+                    <div class="how-step-content">
+                        <h3 class="how-title">The Unveiling</h3>
+                        <p class="how-text">Each card is revealed and interpreted in the context of your question. Patterns emerge. Truths crystallize.</p>
+                    </div>
                 </div>
-                <div class="how-step">
-                    <div class="how-number">IV</div>
-                    <h3 class="how-title">Integration</h3>
-                    <p class="how-text">Receive your written summary, recommended rituals, and guidance for weaving the
-                        reading's wisdom into your daily life.</p>
+                <div class="how-step" data-step="IV">
+                    <div class="how-step-number">IV</div>
+                    <div class="how-step-content">
+                        <h3 class="how-title">Integration</h3>
+                        <p class="how-text">Receive your written summary, recommended rituals, and guidance for weaving the reading's wisdom into your daily life.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -661,6 +784,55 @@ import Layout from '../layouts/Layout.astro';
             gsap.from('.page-hero .hero-title', { y: 40, opacity: 0, duration: 1.2, delay: 0.6, ease: 'power3.out' });
             gsap.from('.page-hero .hero-subtitle', { y: 40, opacity: 0, duration: 1.2, delay: 0.8, ease: 'power3.out' });
 
+            // Sub-hero parallax depth
+            if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                const subHero = document.querySelector(".sub-hero-cosmos");
+                const subHeroInner = document.querySelector(".sub-hero-cosmos-inner");
+                const subHeroSigil = document.querySelector(".hero-sigil");
+                const subHeroBefore = document.querySelector(".sub-hero-cosmos");
+
+                if (subHero && subHeroInner) {
+                    // Layer 1 — background glow (slowest, 15% scroll rate)
+                    gsap.to(subHero, {
+                        backgroundPositionY: "30%",
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: subHero,
+                            start: "top top",
+                            end: "bottom top",
+                            scrub: true
+                        }
+                    });
+
+                    // Layer 2 — sigil logo (medium, 25% scroll rate)
+                    if (subHeroSigil) {
+                        gsap.to(subHeroSigil, {
+                            y: -40,
+                            ease: "none",
+                            scrollTrigger: {
+                                trigger: subHero,
+                                start: "top top",
+                                end: "bottom top",
+                                scrub: true
+                            }
+                        });
+                    }
+
+                    // Layer 3 — text content (fastest, 45% scroll rate)
+                    gsap.to(subHeroInner, {
+                        y: -70,
+                        opacity: 0,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: subHero,
+                            start: "top top",
+                            end: "60% top",
+                            scrub: true
+                        }
+                    });
+                }
+            }
+
             // Bracket hover animations
             document.querySelectorAll('.nav-link-block').forEach(link => {
                 const bracketL = link.querySelector('.bracket-left');
@@ -708,6 +880,39 @@ import Layout from '../layouts/Layout.astro';
                 // Click effect
                 window.addEventListener("mousedown", () => dot.style.transform += " scale(0.8)");
                 window.addEventListener("mouseup", () => dot.style.transform = dot.style.transform.replace(" scale(0.8)", ""));
+            }
+
+            // Timeline scroll activation
+            const steps = document.querySelectorAll('.how-step');
+            const progressBar = document.querySelector('.how-timeline-progress');
+
+            if (steps.length && progressBar) {
+                steps.forEach(step => {
+                    ScrollTrigger.create({
+                        trigger: step,
+                        start: 'top 60%',
+                        end: 'bottom 40%',
+                        onEnter: () => step.classList.add('is-active'),
+                        onLeave: () => step.classList.remove('is-active'),
+                        onEnterBack: () => step.classList.add('is-active'),
+                        onLeaveBack: () => step.classList.remove('is-active'),
+                    });
+                });
+
+                // Progress line grows as you scroll through the timeline
+                const timeline = document.querySelector('.how-timeline');
+                if (timeline) {
+                    gsap.to(progressBar, {
+                        height: '100%',
+                        ease: 'none',
+                        scrollTrigger: {
+                            trigger: timeline,
+                            start: 'top 60%',
+                            end: 'bottom 60%',
+                            scrub: true
+                        }
+                    });
+                }
             }
         });
   </script>

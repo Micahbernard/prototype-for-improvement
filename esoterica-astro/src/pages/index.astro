@@ -887,14 +887,14 @@ void main(void) {
         if (hscrollSection && hscrollTrack && window.innerWidth > 768) {
           const trackWidth = hscrollTrack.scrollWidth;
           const viewportWidth = hscrollSection.offsetWidth;
-          const scrollDistance = trackWidth - viewportWidth + 128;
+          const scrollDistance = trackWidth - viewportWidth;
 
           gsap.to(hscrollTrack, {
             x: -scrollDistance,
             ease: "none",
             scrollTrigger: {
               trigger: hscrollSection,
-              start: "top top",
+              start: "bottom bottom",
               end: () => "+=" + scrollDistance,
               pin: true,
               scrub: 1,

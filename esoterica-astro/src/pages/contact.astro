@@ -372,6 +372,55 @@ import Layout from '../layouts/Layout.astro';
             gsap.from('.page-hero .hero-title', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.7 });
             gsap.from('.page-hero .hero-subtitle', { opacity: 0, y: 15, duration: 0.8, ease: 'power3.out', delay: 0.9 });
 
+            // Sub-hero parallax depth
+            if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                const subHero = document.querySelector(".sub-hero-cosmos");
+                const subHeroInner = document.querySelector(".sub-hero-cosmos-inner");
+                const subHeroSigil = document.querySelector(".hero-sigil");
+                const subHeroBefore = document.querySelector(".sub-hero-cosmos");
+
+                if (subHero && subHeroInner) {
+                    // Layer 1 — background glow (slowest, 15% scroll rate)
+                    gsap.to(subHero, {
+                        backgroundPositionY: "30%",
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: subHero,
+                            start: "top top",
+                            end: "bottom top",
+                            scrub: true
+                        }
+                    });
+
+                    // Layer 2 — sigil logo (medium, 25% scroll rate)
+                    if (subHeroSigil) {
+                        gsap.to(subHeroSigil, {
+                            y: -40,
+                            ease: "none",
+                            scrollTrigger: {
+                                trigger: subHero,
+                                start: "top top",
+                                end: "bottom top",
+                                scrub: true
+                            }
+                        });
+                    }
+
+                    // Layer 3 — text content (fastest, 45% scroll rate)
+                    gsap.to(subHeroInner, {
+                        y: -70,
+                        opacity: 0,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: subHero,
+                            start: "top top",
+                            end: "60% top",
+                            scrub: true
+                        }
+                    });
+                }
+            }
+
             document.querySelectorAll('.class-card').forEach((card, i) => {
                 gsap.from(card, {
                     scrollTrigger: { trigger: card, start: 'top 85%' },

@@ -1692,6 +1692,22 @@ footer a:hover {
   color: var(--es-gold);
 }
 
+.sub-hero-cosmos {
+  transform-style: preserve-3d;
+}
+
+.sub-hero-cosmos-inner {
+  will-change: transform;
+}
+
+.sub-hero-cosmos::before {
+  will-change: transform;
+}
+
+.hero-sigil {
+  will-change: transform;
+}
+
 .es-marquee-track {
   overflow: hidden;
   width: 100%;
@@ -1755,10 +1771,11 @@ footer a:hover {
 
 .es-hscroll-section {
   padding-bottom: 0;
+  overflow-x: clip;
 }
 
 .es-hscroll-viewport {
-  overflow: hidden;
+  overflow: visible;
   width: 100%;
   margin-top: 4rem;
 }
