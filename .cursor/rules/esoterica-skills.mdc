@@ -1,0 +1,19 @@
+---
+description: "Catalog of project skills (paths). @mention this rule when you want the list — not auto-applied."
+alwaysApply: false
+---
+
+# Project skills catalog
+
+Include this rule when the user @mentions **`esoterica-skills`** or asks what skills exist. Skills are **opt-in**; see `skills-opt-in.mdc`.
+
+| Area | Path |
+|------|------|
+| Ideation / exploration | `.cursor/skills/brainstorming/SKILL.md` |
+| System design & trade-offs | `.cursor/skills/architecture/SKILL.md` (plus linked `.md` in that folder) |
+| Linting & validation | `.cursor/skills/lint-and-validate/SKILL.md` (`scripts/` when relevant) |
+| Frontend implementation | `.cursor/skills/frontend-developer/SKILL.md` |
+| Visual craft | `.cursor/skills/frontend-design/SKILL.md` |
+| Accessibility (WCAG) | `.cursor/skills/wcag-audit-patterns/SKILL.md`, `resources/implementation-playbook.md` |
+
+To use one, @mention that skill or its path; do not assume skills apply without that.

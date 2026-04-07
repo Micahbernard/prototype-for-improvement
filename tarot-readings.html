@@ -23,27 +23,13 @@
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.23/bundled/lenis.min.js"></script>
 
     <style>
-        /* ===== RESET ===== */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         html {
             scroll-behavior: smooth;
             -webkit-font-smoothing: antialiased;
         }
 
         body {
-            background: var(--es-bg-deep);
-            color: var(--es-text);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
             min-height: 100vh;
-            cursor: none;
         }
 
         a {
@@ -205,7 +191,7 @@
             font-family: 'Inter', sans-serif;
             font-size: 0.75rem;
             font-weight: 300;
-            color: rgba(232, 224, 212, 0.3);
+            color: var(--es-text-dim);
             opacity: 0;
             transition: opacity 0.3s;
         }
@@ -227,7 +213,7 @@
             font-weight: 400;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: rgba(232, 224, 212, 0.6);
+            color: var(--es-text-subtle);
             line-height: 1.2em;
             transition: transform 0.35s cubic-bezier(0.77, 0, 0.175, 1);
             padding: 0 0.4rem;
@@ -248,11 +234,6 @@
         .nav-link-block:hover .text-nav.is-duplicate {
             transform: translateY(0);
             color: var(--es-text);
-        }
-
-        /* ===== PAGE ===== */
-        .page {
-            position: relative;
         }
 
         /* ===== HERO (inner .sub-hero-cosmos in styles.css) ===== */
@@ -279,12 +260,12 @@
             font-size: 0.7rem;
             letter-spacing: 0.25em;
             text-transform: uppercase;
-            color: rgba(232, 224, 212, 0.35);
+            color: var(--es-text-dim);
             margin-bottom: 1.5rem;
         }
 
         .hero-breadcrumb a {
-            color: rgba(232, 224, 212, 0.5);
+            color: var(--es-text-whisper);
             transition: color 0.3s;
         }
 
@@ -423,14 +404,14 @@
             font-weight: 300;
             font-style: italic;
             line-height: 1.6;
-            color: rgba(var(--es-text-rgb), 0.68);
+            color: var(--es-text-subtle);
             margin-bottom: 1.5rem;
         }
 
         .reading-details {
             font-family: 'Inter', sans-serif;
             font-size: 0.75rem;
-            color: rgba(232, 224, 212, 0.4);
+            color: var(--es-text-faint);
             margin-bottom: 1.5rem;
             line-height: 1.8;
         }
@@ -494,7 +475,7 @@
             font-weight: 300;
             font-style: italic;
             line-height: 1.6;
-            color: rgba(232, 224, 212, 0.45);
+            color: var(--es-text-faint);
         }
 
         /* ===== TESTIMONIALS ===== */
@@ -517,7 +498,7 @@
             font-weight: 300;
             font-style: italic;
             line-height: 1.7;
-            color: rgba(232, 224, 212, 0.6);
+            color: var(--es-text-subtle);
             margin-bottom: 1.2rem;
         }
 
@@ -527,7 +508,7 @@
             font-weight: 500;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            color: rgba(232, 224, 212, 0.3);
+            color: var(--es-text-dim);
         }
 
         /* ===== QUOTE ===== */
@@ -549,7 +530,7 @@
             font-weight: 300;
             font-style: italic;
             line-height: 1.7;
-            color: rgba(232, 224, 212, 0.6);
+            color: var(--es-text-subtle);
             max-width: 600px;
             margin: 0 auto 1rem;
         }
@@ -559,7 +540,7 @@
             font-size: 0.7rem;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: rgba(232, 224, 212, 0.25);
+            color: rgba(var(--es-text-rgb), 0.25);
         }
 
         /* ===== FOOTER ===== */
@@ -569,7 +550,7 @@
             font-family: 'Inter', sans-serif;
             font-size: 0.7rem;
             letter-spacing: 0.1em;
-            color: rgba(232, 224, 212, 0.2);
+            color: rgba(var(--es-text-rgb), 0.2);
         }
 
         .footer-links {
@@ -625,32 +606,6 @@
             }
         }
 
-        /* ===== REDUCED MOTION (a11y) ===== */
-        @media (prefers-reduced-motion: reduce) {
-
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-
-            #starfield,
-            .orb {
-                display: none;
-            }
-        }
-
-        /* ===== GLOBAL CURSOR OVERRIDE ===== */
-        @media (pointer: fine) {
-
-            *,
-            *::before,
-            *::after {
-                cursor: none !important;
-            }
-        }
     </style>
 </head>
 
@@ -919,7 +874,7 @@
                     </div>
                     <div class="bracket-right">)</div>
                 </a>
-                <a class="nav-link-block" href="index.html#privacy">
+                <a class="nav-link-block" href="privacy.html">
                     <div class="bracket-left">(</div>
                     <div class="nav-middle-text">
                         <div class="text-nav">privacy</div>
@@ -927,7 +882,15 @@
                     </div>
                     <div class="bracket-right">)</div>
                 </a>
-                <a class="nav-link-block" href="index.html#contact">
+                <a class="nav-link-block" href="terms.html">
+                    <div class="bracket-left">(</div>
+                    <div class="nav-middle-text">
+                        <div class="text-nav">terms</div>
+                        <div class="text-nav is-duplicate">terms</div>
+                    </div>
+                    <div class="bracket-right">)</div>
+                </a>
+                <a class="nav-link-block" href="contact.html">
                     <div class="bracket-left">(</div>
                     <div class="nav-middle-text">
                         <div class="text-nav">contact</div>

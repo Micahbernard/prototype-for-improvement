@@ -1,0 +1,17 @@
+---
+description: Project skills are opt-in only — do not load .cursor/skills unless the user @mentions them or names them.
+alwaysApply: true
+---
+
+# Skills opt-in (project)
+
+Files under `.cursor/skills/` (including `SKILL.md` and any nested resources) are **manual-only** for this workspace.
+
+**Do not** read, summarize, or follow any skill unless the user:
+
+1. **@mentions** that skill in chat (Cursor skill mention or `@` path to the skill folder / `SKILL.md`), or  
+2. **Explicitly asks** to use a named skill (e.g. “use the architecture skill”, “follow lint-and-validate”).
+
+This applies to **every** skill in `.cursor/skills/`, including any added in the future.
+
+If you need an overview of paths, ask the user to @mention the **`esoterica-skills`** rule (catalog) or to name the skill they want.

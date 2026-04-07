@@ -1,0 +1,48 @@
+---
+---
+
+    <!-- ===== NAV (SideStage structure: hidden initially, revealed by GSAP) ===== -->
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <div class="nav-gradient"></div>
+      <div class="nav-layout">
+        <button type="button" class="nav-logo" data-scroll="top">
+          <img src="logo.png" alt="Esoterica Logo" width="36" height="36" />
+          Esoterica
+        </button>
+        <button type="button" class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false"
+          aria-controls="mobileNav"><span></span><span></span><span></span></button>
+        <div class="nav-links-wrap">
+          <button type="button" class="nav-link-block" data-scroll="shop">
+            <div class="bracket-left">(</div>
+            <div class="nav-middle-text">
+              <div class="text-nav">shop</div>
+              <div class="text-nav is-duplicate">shop</div>
+            </div>
+            <div class="bracket-right">)</div>
+          </button>
+          <a class="nav-link-block" href="tarot-readings.html">
+            <div class="bracket-left">(</div>
+            <div class="nav-middle-text">
+              <div class="text-nav">tarot</div>
+              <div class="text-nav is-duplicate">tarot</div>
+            </div>
+            <div class="bracket-right">)</div>
+          </a>
+          <a class="nav-link-block" href="classes.html">
+            <div class="bracket-left">(</div>
+            <div class="nav-middle-text">
+              <div class="text-nav">classes</div>
+              <div class="text-nav is-duplicate">classes</div>
+            </div>
+            <div class="bracket-right">)</div>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ===== MOBILE NAV PANEL ===== -->
+    <div class="mobile-nav-panel" id="mobileNav" aria-hidden="true" inert>
+      <button type="button" data-scroll="shop">Shop</button>
+      <a href="tarot-readings.html">Tarot Readings</a>
+      <a href="classes.html">Classes</a>
+    </div>
