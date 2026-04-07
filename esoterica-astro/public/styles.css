@@ -1626,6 +1626,9 @@ footer a:hover {
 .nav-logo:focus-visible,
 .nav-link-block:focus-visible,
 .hero-cta:focus-visible,
+.hero-breadcrumb a:focus-visible,
+.reading-cta:focus-visible,
+.class-cta:focus-visible,
 .mobile-nav-panel button:focus-visible,
 .newsletter-btn:focus-visible,
 .newsletter-input:focus-visible {
@@ -1667,4 +1670,24 @@ footer a:hover {
   .skip-to-content:focus {
     cursor: pointer !important;
   }
+}
+
+/* ===== INNER PAGE SHARED ===== */
+/* Breadcrumb row above inner-page hero titles (tarot, classes, contact, privacy, terms). */
+.hero-breadcrumb {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--es-text-dim);
+  margin-bottom: 1.5rem;
+}
+
+.hero-breadcrumb a {
+  color: var(--es-text-whisper);
+  transition: color 0.3s;
+}
+
+.hero-breadcrumb a:hover {
+  color: var(--es-gold);
 }

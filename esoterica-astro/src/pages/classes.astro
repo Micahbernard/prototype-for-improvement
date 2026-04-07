@@ -4,15 +4,18 @@ import Layout from '../layouts/Layout.astro';
 
 <style is:global>
 /* ===== HERO (outer shell; inner .sub-hero-cosmos in styles.css) ===== */
+        /* inner-page override */
         .page-hero {
             padding: 5.5rem 1.25rem 2.5rem;
             position: relative;
         }
 
+        /* inner-page override */
         .hero-sigil {
             margin-bottom: 1.5rem;
         }
 
+        /* inner-page override */
         .hero-sigil img {
             width: 100px;
             height: 100px;
@@ -22,24 +25,7 @@ import Layout from '../layouts/Layout.astro';
             filter: drop-shadow(0 0 16px rgba(212, 168, 83, 0.3)) drop-shadow(0 0 40px rgba(90, 50, 140, 0.15));
         }
 
-        .hero-breadcrumb {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: var(--es-text-dim);
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-breadcrumb a {
-            color: var(--es-text-whisper);
-            transition: color 0.3s;
-        }
-
-        .hero-breadcrumb a:hover {
-            color: var(--es-gold);
-        }
-
+        /* inner-page override */
         .hero-title {
             font-family: 'Cinzel', serif;
             font-size: clamp(2rem, 5vw, 3.5rem);
@@ -49,6 +35,7 @@ import Layout from '../layouts/Layout.astro';
             max-width: 700px;
         }
 
+        /* inner-page override */
         .hero-subtitle {
             font-family: 'Cormorant Garamond', serif;
             font-size: clamp(1.05rem, 1.8vw, 1.3rem);
@@ -61,12 +48,14 @@ import Layout from '../layouts/Layout.astro';
         }
 
         /* ===== SECTION SHARED ===== */
+        /* inner-page override */
         .section {
             padding: 6rem 2rem;
             max-width: 1100px;
             margin: 0 auto;
         }
 
+        /* inner-page override */
         .section-divider {
             width: 60px;
             height: 1px;
@@ -74,6 +63,7 @@ import Layout from '../layouts/Layout.astro';
             margin: 0 auto 2rem;
         }
 
+        /* inner-page override */
         .section-label {
             font-family: 'Inter', sans-serif;
             font-size: 0.7rem;
@@ -84,6 +74,7 @@ import Layout from '../layouts/Layout.astro';
             margin-bottom: 1rem;
         }
 
+        /* inner-page override */
         .section-heading {
             font-family: 'Cinzel', serif;
             font-size: clamp(1.8rem, 3.5vw, 2.8rem);
@@ -92,6 +83,7 @@ import Layout from '../layouts/Layout.astro';
             margin-bottom: 1.5rem;
         }
 
+        /* inner-page override */
         .section-description {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.15rem;
@@ -260,11 +252,13 @@ import Layout from '../layouts/Layout.astro';
         }
 
         /* ===== QUOTE ===== */
+        /* inner-page override */
         .quote-section {
             text-align: center;
             padding: 5rem 2rem;
         }
 
+        /* inner-page override */
         .quote-mark {
             font-family: 'Cinzel', serif;
             font-size: 5rem;
@@ -272,6 +266,7 @@ import Layout from '../layouts/Layout.astro';
             color: rgba(var(--es-gold-rgb), 0.15);
         }
 
+        /* inner-page override */
         .quote-text {
             font-family: 'Cormorant Garamond', serif;
             font-size: clamp(1.2rem, 2.5vw, 1.6rem);
@@ -283,6 +278,7 @@ import Layout from '../layouts/Layout.astro';
             margin: 0 auto 1rem;
         }
 
+        /* inner-page override */
         .quote-author {
             font-family: 'Inter', sans-serif;
             font-size: 0.7rem;
@@ -293,6 +289,7 @@ import Layout from '../layouts/Layout.astro';
 
 /* ===== MOBILE ===== */
         @media (max-width: 768px) {
+            /* inner-page override */
             .nav {
                 padding: 1rem 1.5rem;
             }
@@ -306,13 +303,6 @@ import Layout from '../layouts/Layout.astro';
             }
         }
 
-        /* ===== FOCUS STATES (a11y) ===== */
-        .nav-link-block:focus-visible,
-        .class-cta:focus-visible {
-            outline: 2px solid var(--es-gold);
-            outline-offset: 3px;
-            border-radius: 4px;
-        }
 </style>
 
 <Layout
