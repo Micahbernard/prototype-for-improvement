@@ -601,6 +601,18 @@ import Layout from '../layouts/Layout.astro';
                 });
             })();
 
+            document.querySelectorAll('.class-card').forEach(card => {
+                const cta = card.querySelector('.class-cta');
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card, { y: -6, scale: 1.02, duration: 0.35, ease: 'power2.out' });
+                    if (cta) gsap.to(cta, { letterSpacing: '0.22em', duration: 0.3, ease: 'power2.out' });
+                });
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, { y: 0, scale: 1, duration: 0.5, ease: 'power2.out' });
+                    if (cta) gsap.to(cta, { letterSpacing: '0.15em', duration: 0.3, ease: 'power2.out' });
+                });
+            });
+
             document.querySelectorAll('.format-item').forEach((item, i) => {
                 gsap.from(item, {
                     scrollTrigger: { trigger: item, start: 'top 88%' },

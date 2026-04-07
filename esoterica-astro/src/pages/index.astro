@@ -769,30 +769,7 @@ void main(void) {
         }
       }).to(".nav-gradient", { opacity: 1, duration: 0.5 }, 0);
 
-      /* ---- E) Scroll-triggered section animations ---- */
-      const sections = document.querySelectorAll(".section, .quote-section, .newsletter");
-      sections.forEach(section => {
-        const children = section.querySelectorAll(
-          ".section-label, .section-heading, .section-description, .newsletter-form"
-        );
-
-        children.forEach((child, index) => {
-          gsap.from(child, {
-            opacity: 0,
-            y: 50,
-            duration: 0.9,
-            delay: index * 0.1,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: child,
-              start: "top 85%",
-              toggleActions: "play none none none"
-            }
-          });
-        });
-      });
-
-      /* ---- E2) Dividers, products, quote (Splitting), story, testimonials, magnetic tilt ---- */
+      /* ---- E2) Motion hierarchy: dividers, products, quote, story, testimonials, magnetic tilt, hero parallax ---- */
       (function initEnhancedScrollFx() {
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -800,38 +777,163 @@ void main(void) {
           Splitting({ target: ".quote-text", by: "words" });
         }
 
-        document.querySelectorAll(".section-divider").forEach(div => {
-          gsap.set(div, { scaleX: 0, transformOrigin: "center center" });
-          gsap.to(div, {
-            scaleX: 1,
-            duration: 0.8,
-            ease: "power2.inOut",
+        gsap.to(".hero-content", {
+          y: "30%",
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".hero-scroll",
+            start: "top top",
+            end: "bottom top",
+            scrub: 1
+          }
+        });
+        gsap.to(".hero-webgl-wrap", {
+          y: "15%",
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".hero-scroll",
+            start: "top top",
+            end: "bottom top",
+            scrub: 1
+          }
+        });
+        gsap.to(".hero-sun", {
+          y: "10%",
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".hero-scroll",
+            start: "top top",
+            end: "bottom top",
+            scrub: 1
+          }
+        });
+
+        document.querySelectorAll(".section-label").forEach(label => {
+          gsap.from(label, {
+            x: -16,
+            opacity: 0,
+            duration: 0.5,
+            ease: "power2.out",
             scrollTrigger: {
-              trigger: div,
-              start: "top 90%",
+              trigger: label,
+              start: "top 85%",
               toggleActions: "play none none none"
             }
           });
         });
 
-        document.querySelectorAll(".products-grid").forEach(grid => {
-          const cards = grid.querySelectorAll(".product-card");
-          if (!cards.length) return;
-          gsap.from(cards, {
-            y: 60,
+        if (typeof Splitting === "function") {
+          document.querySelectorAll(".section-heading").forEach(heading => {
+            Splitting({ target: heading, by: "chars" });
+          });
+        }
+        document.querySelectorAll(".section-heading").forEach(heading => {
+          const chars = heading.querySelectorAll(".char");
+          if (!chars.length) return;
+          gsap.from(chars, {
             opacity: 0,
-            rotateY: 8,
-            transformPerspective: 800,
-            stagger: 0.15,
-            duration: 1,
+            y: "60%",
+            rotateX: -40,
+            transformPerspective: 500,
+            stagger: 0.018,
+            duration: 0.7,
             ease: "power3.out",
             scrollTrigger: {
-              trigger: grid,
-              start: "top 75%",
+              trigger: heading,
+              start: "top 85%",
               toggleActions: "play none none none"
             }
           });
         });
+
+        document.querySelectorAll(".section-description").forEach(desc => {
+          const root = desc.closest(".section, .newsletter");
+          const heading = root && root.querySelector(".section-heading");
+          const triggerEl = heading || desc;
+          gsap.from(desc, {
+            opacity: 0,
+            y: 20,
+            duration: 0.8,
+            ease: "power2.out",
+            delay: 0.2,
+            scrollTrigger: {
+              trigger: triggerEl,
+              start: "top 85%",
+              toggleActions: "play none none none"
+            }
+          });
+        });
+
+        document.querySelectorAll(".newsletter-form").forEach(form => {
+          gsap.from(form, {
+            scaleX: 0.92,
+            opacity: 0,
+            duration: 0.7,
+            ease: "back.out(1.4)",
+            transformOrigin: "center center",
+            scrollTrigger: {
+              trigger: form,
+              start: "top 85%",
+              toggleActions: "play none none none"
+            }
+          });
+        });
+
+        document.querySelectorAll(".section-divider").forEach(div => {
+          gsap.set(div, { scaleX: 0, transformOrigin: "center center" });
+          gsap
+            .timeline({
+              scrollTrigger: {
+                trigger: div,
+                start: "top 90%",
+                toggleActions: "play none none none"
+              }
+            })
+            .to(div, { scaleX: 1, duration: 0.8, ease: "power2.inOut" })
+            .to(div, { opacity: 0.4, duration: 0.2, ease: "power2.inOut" })
+            .to(div, { opacity: 1, duration: 0.2, ease: "power2.inOut" });
+        });
+
+        const shopGrid = document.querySelector("#shop .products-grid");
+        if (shopGrid) {
+          const shopCards = shopGrid.querySelectorAll(".product-card");
+          if (shopCards.length) {
+            gsap.from(shopCards, {
+              y: 60,
+              opacity: 0,
+              rotateY: 8,
+              transformPerspective: 800,
+              stagger: 0.15,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: shopGrid,
+                start: "top 75%",
+                toggleActions: "play none none none"
+              }
+            });
+          }
+        }
+
+        const offeringsGrid = document.querySelector("#offerings .products-grid");
+        if (offeringsGrid) {
+          const offCards = offeringsGrid.querySelectorAll(".product-card");
+          if (offCards.length) {
+            gsap.from(offCards, {
+              y: 50,
+              opacity: 0,
+              rotate: 1,
+              stagger: 0.18,
+              duration: 1.1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: offeringsGrid,
+                start: "top 75%",
+                toggleActions: "play none none none"
+              }
+            });
+          }
+        }
 
         const quoteTl = gsap.timeline({
           scrollTrigger: {
@@ -854,33 +956,74 @@ void main(void) {
             "words+=0.5"
           );
 
-        gsap.timeline({
+        const storyParas = document.querySelectorAll(".story-text p");
+        const storyTl = gsap.timeline({
           scrollTrigger: {
             trigger: ".story-section",
-            start: "top 70%",
+            start: "top 65%",
             toggleActions: "play none none none"
           }
-        })
-          .from(".story-text", { x: -50, opacity: 0, duration: 1.1, ease: "power3.out" }, 0)
-          .from(".story-visual", { x: 50, opacity: 0, duration: 1.1, ease: "power3.out" }, 0);
+        });
+        if (storyParas.length) {
+          storyTl.from(
+            storyParas,
+            {
+              y: 24,
+              opacity: 0,
+              stagger: 0.18,
+              duration: 0.9,
+              ease: "power2.out"
+            },
+            0
+          );
+        }
+        storyTl.from(
+          ".story-visual",
+          {
+            x: 50,
+            opacity: 0,
+            scale: 0.96,
+            duration: 1.1,
+            ease: "power3.out"
+          },
+          0
+        );
 
         const testimonialsGrid = document.querySelector(".testimonials-grid");
         if (testimonialsGrid) {
           const tCards = testimonialsGrid.querySelectorAll(".testimonial-card");
-          if (tCards.length) {
-            gsap.from(tCards, {
-              opacity: 0,
-              y: 40,
-              filter: "blur(5px)",
-              stagger: 0.2,
-              duration: 0.9,
-              ease: "power2.out",
+          const testimonialStars = testimonialsGrid.querySelectorAll(".testimonial-stars svg");
+          if (tCards.length || testimonialStars.length) {
+            const testTl = gsap.timeline({
               scrollTrigger: {
                 trigger: testimonialsGrid,
                 start: "top 80%",
                 toggleActions: "play none none none"
               }
             });
+            if (testimonialStars.length) {
+              testTl.from(testimonialStars, {
+                scale: 0,
+                opacity: 0,
+                stagger: 0.07,
+                duration: 0.4,
+                ease: "back.out(2)"
+              });
+            }
+            if (tCards.length) {
+              testTl.from(
+                tCards,
+                {
+                  opacity: 0,
+                  y: 40,
+                  filter: "blur(5px)",
+                  stagger: 0.2,
+                  duration: 0.9,
+                  ease: "power2.out"
+                },
+                testimonialStars.length ? "+=0.3" : 0
+              );
+            }
           }
         }
 
