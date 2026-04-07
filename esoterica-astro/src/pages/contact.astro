@@ -47,263 +47,115 @@ import Layout from '../layouts/Layout.astro';
             margin: 0 auto;
         }
 
-        /* ===== SECTION SHARED ===== */
-        /* inner-page override */
-        .section {
-            padding: 6rem 2rem;
-            max-width: 1100px;
-            margin: 0 auto;
+        body.pg-contact .sub-hero-cosmos {
+            min-height: min(55vh, 480px);
+            border-color: rgba(37, 211, 102, 0.12);
+            box-shadow: inset 0 0 80px rgba(37, 211, 102, 0.04);
         }
-
-        /* inner-page override */
-        .section-divider {
-            width: 60px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--es-gold), transparent);
-            margin: 0 auto 2rem;
+        body.pg-contact .sub-hero-cosmos::before {
+            background:
+                radial-gradient(ellipse 40% 35% at 68% 68%, rgba(37, 211, 102, 0.09) 0%, transparent 60%),
+                radial-gradient(ellipse 70% 55% at 50% 55%, rgba(20, 100, 50, 0.05) 0%, transparent 72%);
         }
-
-        /* inner-page override */
-        .section-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            text-align: center;
-            margin-bottom: 1rem;
+        body.pg-contact .hero-sigil {
+            display: none;
         }
-
-        /* inner-page override */
-        .section-description {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.15rem;
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.7;
-            color: var(--es-text-muted);
-            text-align: center;
-            max-width: var(--es-max-prose);
-            margin: 0 auto 3rem;
-        }
-
-        /* ===== CLASS CARDS GRID ===== */
-        .classes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .class-card {
-            background: var(--es-bg-card-soft);
-            border: 1px solid var(--es-border-card);
-            border-radius: var(--es-radius-card-sm);
-            padding: 2.5rem 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-            cursor: pointer;
-        }
-
-        .class-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--es-border-card-hover);
-            box-shadow: var(--es-shadow-card-hover);
-        }
-
-        .class-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 50% 20%, rgba(100, 60, 180, 0.08) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .class-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1.2rem;
-            display: block;
-            color: var(--es-gold);
-        }
-
-        .class-icon svg {
-            display: block;
-            margin: 0 auto;
-        }
-
-        .class-badge {
-            display: inline-block;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--es-bg-deep);
-            background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            margin-bottom: 1rem;
-        }
-
-        .class-name {
-            font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .class-type {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 500;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--es-gold);
-            margin-bottom: 1rem;
-        }
-
-        .class-desc {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.6;
-            color: rgba(var(--es-text-rgb), 0.68);
+        body.pg-contact .hero-title {
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
             margin-bottom: 1.5rem;
-        }
-
-        .class-details {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            color: var(--es-text-faint);
-            margin-bottom: 1.5rem;
-            line-height: 1.8;
-        }
-
-        .class-price {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            color: var(--es-gold);
-            margin-bottom: 1.5rem;
-        }
-
-        .class-cta {
-            display: inline-block;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--es-bg-deep);
-            background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
-
-        .class-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(212, 168, 83, 0.25);
-        }
-
-        /* ===== FORMAT SECTION ===== */
-        .format-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2.5rem;
-            text-align: center;
-        }
-
-        .format-item {
-            position: relative;
-        }
-
-        .format-icon {
-            font-size: 2rem;
-            color: rgba(var(--es-gold-rgb), 0.6);
-            margin-bottom: 1rem;
-        }
-
-        .format-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 0.6rem;
-        }
-
-        .format-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.95rem;
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.6;
-            color: var(--es-text-faint);
-        }
-
-        /* ===== QUOTE ===== */
-        /* inner-page override */
-        .quote-section {
-            text-align: center;
-            padding: 5rem 2rem;
-        }
-
-        /* inner-page override */
-        .quote-mark {
-            font-family: 'Cinzel', serif;
-            font-size: 5rem;
-            line-height: 1;
-            color: rgba(var(--es-gold-rgb), 0.15);
-        }
-
-        /* inner-page override */
-        .quote-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.7;
-            color: var(--es-text-subtle);
-            max-width: 600px;
-            margin: 0 auto 1rem;
-        }
-
-        /* inner-page override */
-        .quote-author {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--es-text-dim);
         }
 </style>
 
-<Layout title="Contact — Esoterica" description="Contact — Esoterica.">
+<Layout title="Contact — Esoterica" description="Reach Esoterica directly — WhatsApp, email, and social." bodyClass="pg-contact">
   <div slot="chrome">
-  <div class="cursor-dot"></div>
+  <div class="cursor-rune" aria-hidden="true">
+    <div class="cursor-rune-ripple"></div>
+    <div class="cursor-rune-ring">
+      <div class="cursor-rune-h"></div>
+      <div class="cursor-rune-v"></div>
+      <div class="cursor-rune-center"></div>
+    </div>
+  </div>
   <canvas id="starfield"></canvas>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   </div>
 
-<!-- ===== HERO ===== -->
-        <section class="page-hero">
-            <div class="sub-hero-cosmos">
-                <div class="sub-hero-cosmos-inner">
-                    <div class="hero-sigil">
-                        <img src="/logo.png" alt="Esoterica" width="100" height="100" />
-                    </div>
-                    <div class="hero-breadcrumb">
-                        <a href="/">Home</a> &nbsp;/&nbsp; Contact
-                    </div>
-                    <h1 class="hero-title">Contact</h1>
-                    <p class="hero-subtitle">
-                        This page is a placeholder. Contact information may appear here.
-                    </p>
-                </div>
-            </div>
-        </section>
+<section class="page-hero">
+  <div class="sub-hero-cosmos">
+    <div class="sub-hero-cosmos-inner">
+      <div class="hero-breadcrumb">
+        <a href="/">Home</a> &nbsp;/&nbsp; Contact
+      </div>
+      <h1 class="hero-title">Speak Into the Veil</h1>
+      <p class="hero-subtitle">
+        We read every message. Reach us directly — no forms, no waiting rooms.<br/>
+        Just a conversation, held with intention.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="es-ct-section">
+
+  <!-- Left: WhatsApp CTA -->
+  <div class="es-ct-primary">
+    <div class="es-ct-wa-glow" aria-hidden="true"></div>
+    <div class="es-ct-wa-icon">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+    </div>
+    <p class="es-ct-wa-label">WhatsApp Direct</p>
+    <a href="https://wa.me/51919623179" target="_blank" rel="noopener" class="es-ct-wa-number">
+      +51 919 623 179
+    </a>
+    <p class="es-ct-wa-hint">Tap to open WhatsApp</p>
+    <a href="https://wa.me/51919623179?text=Hola%20Esoterica%2C%20me%20gustar%C3%ADa%20saber%20más%20sobre..." target="_blank" rel="noopener" class="es-ct-wa-btn">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      Start a Conversation
+    </a>
+  </div>
+
+  <!-- Right: Other channels -->
+  <div class="es-ct-secondary">
+    <p class="es-ct-secondary-label">Other Ways to Reach Us</p>
+    <div class="es-ct-channels">
+      <a href="mailto:commune@esoterica.com" class="es-ct-channel">
+        <span class="es-ct-channel-icon">✉</span>
+        <div class="es-ct-channel-info">
+          <span class="es-ct-channel-name">Email</span>
+          <span class="es-ct-channel-detail">commune@esoterica.com</span>
+        </div>
+        <span class="es-ct-channel-arrow">↗</span>
+      </a>
+      <a href="https://www.instagram.com/esoterica.cix/" target="_blank" rel="noopener" class="es-ct-channel">
+        <span class="es-ct-channel-icon">◎</span>
+        <div class="es-ct-channel-info">
+          <span class="es-ct-channel-name">Instagram</span>
+          <span class="es-ct-channel-detail">@esoterica.cix</span>
+        </div>
+        <span class="es-ct-channel-arrow">↗</span>
+      </a>
+      <a href="https://www.tiktok.com/@esoterica.cix" target="_blank" rel="noopener" class="es-ct-channel">
+        <span class="es-ct-channel-icon">▷</span>
+        <div class="es-ct-channel-info">
+          <span class="es-ct-channel-name">TikTok</span>
+          <span class="es-ct-channel-detail">@esoterica.cix</span>
+        </div>
+        <span class="es-ct-channel-arrow">↗</span>
+      </a>
+    </div>
+    <div class="es-ct-hours">
+      <p class="es-ct-hours-label">Response hours</p>
+      <p class="es-ct-hours-text">Monday — Saturday<br/>10:00 am · 7:00 pm PET</p>
+    </div>
+  </div>
+
+</section>
+
   <script is:inline slot="scripts">
 /* ===== STARFIELD ===== */
         (function () {
@@ -348,17 +200,19 @@ import Layout from '../layouts/Layout.astro';
 
         /* ===== CUSTOM CURSOR ===== */
         (function () {
-            const dot = document.querySelector('.cursor-dot');
+            const dot = document.querySelector('.cursor-rune');
             if (!dot) return;
             document.addEventListener('mousemove', e => {
                 dot.style.left = e.clientX + 'px';
                 dot.style.top = e.clientY + 'px';
             });
-            const interactables = 'a, button, .class-card, .class-cta, .nav-link-block';
+            const interactables = 'a, button, .es-ct-wa-btn, .es-ct-channel, .es-ct-wa-number, .nav-link-block';
             document.querySelectorAll(interactables).forEach(el => {
                 el.addEventListener('mouseenter', () => dot.classList.add('is-hover'));
                 el.addEventListener('mouseleave', () => dot.classList.remove('is-hover'));
             });
+            window.addEventListener('mousedown', () => dot.classList.add('is-click'));
+            window.addEventListener('mouseup', () => dot.classList.remove('is-click'));
         })();
 
         /* ===== GSAP ANIMATIONS ===== */
@@ -367,17 +221,18 @@ import Layout from '../layouts/Layout.astro';
 
             gsap.registerPlugin(ScrollTrigger);
 
-            gsap.from('.page-hero .hero-sigil', { opacity: 0, y: -20, duration: 1, ease: 'power3.out', delay: 0.3 });
-            gsap.from('.page-hero .hero-breadcrumb', { opacity: 0, y: 10, duration: 0.8, ease: 'power3.out', delay: 0.5 });
-            gsap.from('.page-hero .hero-title', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.7 });
-            gsap.from('.page-hero .hero-subtitle', { opacity: 0, y: 15, duration: 0.8, ease: 'power3.out', delay: 0.9 });
+            gsap.from('.page-hero .hero-breadcrumb', { opacity: 0, y: 10, duration: 0.8, ease: 'power3.out', delay: 0.3 });
+            gsap.from('.page-hero .hero-title', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.5 });
+            gsap.from('.page-hero .hero-subtitle', { opacity: 0, y: 15, duration: 0.8, ease: 'power3.out', delay: 0.7 });
+
+            gsap.from('.es-ct-primary', { opacity: 0, y: 40, duration: 1, ease: 'power3.out', delay: 0.3 });
+            gsap.from('.es-ct-secondary', { opacity: 0, x: 30, duration: 1, ease: 'power3.out', delay: 0.5 });
 
             // Sub-hero parallax depth
             if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
                 const subHero = document.querySelector(".sub-hero-cosmos");
                 const subHeroInner = document.querySelector(".sub-hero-cosmos-inner");
                 const subHeroSigil = document.querySelector(".hero-sigil");
-                const subHeroBefore = document.querySelector(".sub-hero-cosmos");
 
                 if (subHero && subHeroInner) {
                     // Layer 1 — background glow (slowest, 15% scroll rate)
@@ -420,20 +275,6 @@ import Layout from '../layouts/Layout.astro';
                     });
                 }
             }
-
-            document.querySelectorAll('.class-card').forEach((card, i) => {
-                gsap.from(card, {
-                    scrollTrigger: { trigger: card, start: 'top 85%' },
-                    opacity: 0, y: 30, duration: 0.7, ease: 'power3.out', delay: i * 0.08
-                });
-            });
-
-            document.querySelectorAll('.format-item').forEach((item, i) => {
-                gsap.from(item, {
-                    scrollTrigger: { trigger: item, start: 'top 88%' },
-                    opacity: 0, y: 20, duration: 0.6, ease: 'power2.out', delay: i * 0.1
-                });
-            });
         })();
   </script>
 </Layout>

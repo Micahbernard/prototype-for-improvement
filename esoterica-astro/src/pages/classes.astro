@@ -47,6 +47,41 @@ import Layout from '../layouts/Layout.astro';
             margin: 0 auto;
         }
 
+        body.pg-classes .sub-hero-cosmos {
+            min-height: min(52vh, 460px);
+            max-width: min(98vw, 1300px);
+            padding: 3.5rem 4rem;
+            border-color: color-mix(in srgb, var(--es-gold) 16%, transparent);
+        }
+        body.pg-classes .hero-sigil {
+            display: none;
+        }
+        body.pg-classes .hero-breadcrumb {
+            display: flex;
+            margin-bottom: 0;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid rgba(var(--es-gold-rgb), 0.2);
+            width: 100%;
+            max-width: 560px;
+            justify-content: center;
+        }
+        body.pg-classes .hero-title {
+            font-size: clamp(3rem, 6.5vw, 5rem);
+            margin-top: 1.5rem;
+            margin-bottom: 1.25rem;
+            letter-spacing: 0.04em;
+        }
+        body.pg-classes .sub-hero-cosmos::before {
+            background:
+                radial-gradient(ellipse 50% 45% at 50% 50%, rgba(212, 168, 83, 0.1) 0%, transparent 60%),
+                radial-gradient(ellipse 80% 60% at 50% 55%, rgba(140, 100, 50, 0.06) 0%, transparent 75%);
+            animation: esClassesAura2 10s ease-in-out infinite alternate;
+        }
+        @keyframes esClassesAura2 {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.04); }
+        }
+
         /* ===== SECTION SHARED ===== */
         /* inner-page override */
         .section {
@@ -342,9 +377,17 @@ import Layout from '../layouts/Layout.astro';
 <Layout
   title="Classes & Workshops — Esoterica"
   description="Immersive esoteric classes and workshops. Learn crystal healing, tarot, sacred geometry, and alchemical arts with Esoterica."
+  bodyClass="pg-classes"
 >
   <div slot="chrome">
-  <div class="cursor-dot"></div>
+  <div class="cursor-rune" aria-hidden="true">
+    <div class="cursor-rune-ripple"></div>
+    <div class="cursor-rune-ring">
+      <div class="cursor-rune-h"></div>
+      <div class="cursor-rune-v"></div>
+      <div class="cursor-rune-center"></div>
+    </div>
+  </div>
   <canvas id="starfield"></canvas>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
@@ -624,7 +667,7 @@ import Layout from '../layouts/Layout.astro';
 
         /* ===== CUSTOM CURSOR ===== */
         (function () {
-            const dot = document.querySelector('.cursor-dot');
+            const dot = document.querySelector('.cursor-rune');
             if (!dot) return;
             document.addEventListener('mousemove', e => {
                 dot.style.left = e.clientX + 'px';
@@ -635,6 +678,8 @@ import Layout from '../layouts/Layout.astro';
                 el.addEventListener('mouseenter', () => dot.classList.add('is-hover'));
                 el.addEventListener('mouseleave', () => dot.classList.remove('is-hover'));
             });
+            window.addEventListener('mousedown', () => dot.classList.add('is-click'));
+            window.addEventListener('mouseup', () => dot.classList.remove('is-click'));
         })();
 
         /* ===== GSAP ANIMATIONS ===== */

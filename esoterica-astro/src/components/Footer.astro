@@ -1,44 +1,85 @@
 ---
 ---
 
-    <!-- ===== FOOTER ===== -->
-    <footer>
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <div class="footer-logo">
-            <img src="/logo.png" alt="Esoterica Logo" width="40" height="40" loading="lazy"
-              style="margin-right: 12px;" />
-            <span class="footer-logo-text">Esoterica</span>
-          </div>
-          <div class="footer-tagline">Where the veil between worlds grows thin. Curated magic for the modern seeker.
-          </div>
-          <div class="footer-copyright">© 2026 Esoterica. All rights reserved.</div>
-        </div>
-        <div class="footer-links">
-          <a class="nav-link-block" href="/privacy">
-            <div class="bracket-left">(</div>
-            <div class="nav-middle-text">
-              <div class="text-nav">privacy</div>
-              <div class="text-nav is-duplicate">privacy</div>
-            </div>
-            <div class="bracket-right">)</div>
-          </a>
-          <a class="nav-link-block" href="/terms">
-            <div class="bracket-left">(</div>
-            <div class="nav-middle-text">
-              <div class="text-nav">terms</div>
-              <div class="text-nav is-duplicate">terms</div>
-            </div>
-            <div class="bracket-right">)</div>
-          </a>
-          <a class="nav-link-block" href="/contact">
-            <div class="bracket-left">(</div>
-            <div class="nav-middle-text">
-              <div class="text-nav">contact</div>
-              <div class="text-nav is-duplicate">contact</div>
-            </div>
-            <div class="bracket-right">)</div>
-          </a>
-        </div>
+<footer class="es-ft-root">
+
+  <!-- Atmosphere strip -->
+  <div class="es-ft-strip">
+    <span class="es-ft-strip-text">✦ Chiclayo, Perú</span>
+    <span class="es-ft-strip-dot">·</span>
+    <span class="es-ft-strip-italic">Where the veil grows thin</span>
+    <span class="es-ft-strip-dot">·</span>
+    <span class="es-ft-strip-text">Est. 2024 ✦</span>
+  </div>
+
+  <!-- Main body -->
+  <div class="es-ft-body">
+
+    <!-- Left col -->
+    <div class="es-ft-left">
+      <div class="es-ft-logo">
+        <img src="/logo.png" alt="Esoterica" width="36" height="36" loading="lazy" />
+        <span class="es-ft-logo-name">Esoterica</span>
       </div>
-    </footer>
+      <p class="es-ft-desc">Crystals, tarot, and ritual arts.<br/>A threshold, not just a shop.</p>
+      <nav class="es-ft-legal" aria-label="Legal links">
+        <a href="/privacy" class="es-ft-legal-link">Privacy</a>
+        <span class="es-ft-legal-sep">·</span>
+        <a href="/terms" class="es-ft-legal-link">Terms</a>
+        <span class="es-ft-legal-sep">·</span>
+        <a href="/contact" class="es-ft-legal-link">Contact</a>
+      </nav>
+      <p class="es-ft-copy">© 2026 Esoterica. All rights reserved.</p>
+    </div>
+
+    <!-- Right col: social rows -->
+    <div class="es-ft-right">
+      <p class="es-ft-find">Find us</p>
+      <a href="https://www.instagram.com/esoterica.cix/" target="_blank" rel="noopener" class="es-ft-row">
+        <span class="es-ft-row-num">01</span>
+        <span class="es-ft-row-label">Instagram</span>
+        <span class="es-ft-row-arrow">↗</span>
+      </a>
+      <a href="https://www.tiktok.com/@esoterica.cix" target="_blank" rel="noopener" class="es-ft-row">
+        <span class="es-ft-row-num">02</span>
+        <span class="es-ft-row-label">TikTok</span>
+        <span class="es-ft-row-arrow">↗</span>
+      </a>
+      <a href="https://pinterest.com/esoterica" target="_blank" rel="noopener" class="es-ft-row">
+        <span class="es-ft-row-num">03</span>
+        <span class="es-ft-row-label">Pinterest</span>
+        <span class="es-ft-row-arrow">↗</span>
+      </a>
+      <a href="mailto:commune@esoterica.com" class="es-ft-row es-ft-row--email">
+        <span class="es-ft-row-num">✉</span>
+        <span class="es-ft-row-label">commune@esoterica.com</span>
+        <span class="es-ft-row-arrow">↗</span>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Full-width wordmark -->
+  <div class="es-ft-wordmark-wrap">
+    <div class="es-ft-wordmark" aria-hidden="true">Esoterica</div>
+  </div>
+
+</footer>
+
+<script is:inline>
+(function() {
+  if (!window.matchMedia('(pointer: fine)').matches) return;
+  if (!window.gsap) return;
+  document.querySelectorAll('.es-ft-row').forEach(function(row) {
+    var label = row.querySelector('.es-ft-row-label');
+    row.addEventListener('mousemove', function(e) {
+      var rect = row.getBoundingClientRect();
+      var x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
+      gsap.to(label, { x: x, duration: 0.4, ease: 'power2.out' });
+    });
+    row.addEventListener('mouseleave', function() {
+      gsap.to(label, { x: 0, duration: 0.5, ease: 'power2.out' });
+    });
+  });
+})();
+</script>

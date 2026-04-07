@@ -5,9 +5,10 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title?: string;
   description?: string;
+  bodyClass?: string;
 }
 
-const { title = 'Esoterica', description } = Astro.props;
+const { title = 'Esoterica', description, bodyClass } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -58,7 +59,7 @@ const { title = 'Esoterica', description } = Astro.props;
     </script>
     <script is:inline src="https://unpkg.com/splitting/dist/splitting.js"></script>
   </head>
-  <body class="esoterica">
+  <body class={`esoterica ${bodyClass ?? ''}`.trim()}>
     <slot name="chrome" />
     <div class="page">
       <Nav />

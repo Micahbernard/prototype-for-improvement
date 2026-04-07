@@ -17,7 +17,14 @@ import Layout from '../layouts/Layout.astro';
   </div>
 
   <!-- ===== CUSTOM CURSOR (Radiant Orb) ===== -->
-  <div class="cursor-dot"></div>
+  <div class="cursor-rune" aria-hidden="true">
+    <div class="cursor-rune-ripple"></div>
+    <div class="cursor-rune-ring">
+      <div class="cursor-rune-h"></div>
+      <div class="cursor-rune-v"></div>
+      <div class="cursor-rune-center"></div>
+    </div>
+  </div>
 
   <!-- ===== STARFIELD CANVAS ===== -->
   <canvas id="starfield"></canvas>
@@ -1043,63 +1050,6 @@ void main(void) {
         }
       })();
 
-      (function initHeadingReveals() {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-        document.querySelectorAll(".section-heading").forEach(heading => {
-          if (heading.querySelector(".char")) return;
-
-          const inner = document.createElement("span");
-          inner.className = "es-reveal-inner";
-          inner.innerHTML = heading.innerHTML;
-          heading.innerHTML = "";
-          const wrap = document.createElement("span");
-          wrap.className = "es-reveal-wrap";
-          wrap.appendChild(inner);
-          heading.appendChild(wrap);
-
-          if (typeof Splitting === "function") {
-            Splitting({ target: inner, by: "chars" });
-          }
-          const chars = inner.querySelectorAll(".char");
-          if (chars.length) {
-            gsap.from(chars, {
-              opacity: 0,
-              y: "60%",
-              rotateX: -40,
-              transformPerspective: 500,
-              stagger: 0.018,
-              duration: 0.7,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: heading,
-                start: "top 85%",
-                toggleActions: "play none none none"
-              }
-            });
-          }
-
-          gsap.to(inner, {
-            y: "0%",
-            ease: "none",
-            scrollTrigger: {
-              trigger: heading,
-              start: "top 90%",
-              end: "top 40%",
-              scrub: 0.8
-            }
-          });
-        });
-
-        setTimeout(() => {
-          document.querySelectorAll(".es-reveal-inner").forEach(el => {
-            if (getComputedStyle(el).transform === "none" || el.style.transform.includes("105")) {
-              gsap.set(el, { y: "0%" });
-            }
-          });
-        }, 2000);
-      })();
-
       /* ---- F) Nav Link Bracket Hover Animation (exact SideStage pattern) ---- */
       if (window.matchMedia("(min-width: 992px)").matches) {
         const hoverDuration = 0.5;
@@ -1265,10 +1215,10 @@ void main(void) {
         });
       })();
 
-      /* ---- H) Radiant Orb Cursor (desktop only; position via master rAF) ---- */
+      /* ---- H) Crosshair rune cursor (desktop only; position via master rAF) ---- */
       let tickCursor = null;
       if (window.matchMedia("(pointer: fine)").matches) {
-        const dot = document.querySelector(".cursor-dot");
+        const dot = document.querySelector(".cursor-rune");
         if (dot) {
           let mx = 0, my = 0;
           window.addEventListener("mousemove", (e) => {
@@ -1287,8 +1237,8 @@ void main(void) {
             el.addEventListener("mouseleave", () => dot.classList.remove("is-hover"));
           });
 
-          window.addEventListener("mousedown", () => dot.style.transform = "translate(-50%, -50%) scale(0.8)");
-          window.addEventListener("mouseup", () => dot.style.transform = "translate(-50%, -50%)");
+          window.addEventListener("mousedown", () => dot.classList.add("is-click"));
+          window.addEventListener("mouseup", () => dot.classList.remove("is-click"));
         }
       }
 

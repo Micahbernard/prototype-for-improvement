@@ -47,6 +47,69 @@ import Layout from '../layouts/Layout.astro';
             margin: 0 auto;
         }
 
+        body.pg-tarot .sub-hero-cosmos {
+            min-height: min(68vh, 580px);
+            align-items: flex-start;
+            padding: 4rem 5rem;
+        }
+        body.pg-tarot .sub-hero-cosmos-inner {
+            text-align: left;
+            align-items: flex-start;
+            max-width: 640px;
+        }
+        body.pg-tarot .hero-breadcrumb {
+            display: flex;
+            justify-content: flex-start;
+        }
+        body.pg-tarot .hero-title {
+            text-align: left;
+            font-size: clamp(2.5rem, 5.5vw, 4rem);
+        }
+        body.pg-tarot .hero-subtitle {
+            text-align: left;
+            margin: 0;
+        }
+        body.pg-tarot .sub-hero-cosmos::before {
+            background:
+                radial-gradient(ellipse 50% 60% at 18% 80%, rgba(100, 60, 180, 0.28) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 35% at 80% 20%, rgba(140, 100, 200, 0.08) 0%, transparent 55%);
+        }
+        body.pg-tarot .sub-hero-cosmos::after {
+            background: none;
+        }
+        /* Decorative eye mark — top right corner */
+        body.pg-tarot .sub-hero-cosmos-inner::before {
+            content: '';
+            position: absolute;
+            top: 2rem;
+            right: 3rem;
+            width: 120px;
+            height: 60px;
+            border-radius: 50%;
+            border: 1px solid rgba(var(--es-gold-rgb), 0.15);
+            pointer-events: none;
+        }
+        body.pg-tarot .sub-hero-cosmos-inner::after {
+            content: '';
+            position: absolute;
+            top: calc(2rem + 24px);
+            right: calc(3rem + 48px);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(var(--es-gold-rgb), 0.2);
+            box-shadow: 0 0 12px rgba(var(--es-gold-rgb), 0.15);
+            pointer-events: none;
+        }
+        @media (max-width: 768px) {
+            body.pg-tarot .sub-hero-cosmos { padding: 3rem 1.5rem; align-items: center; }
+            body.pg-tarot .sub-hero-cosmos-inner { text-align: center; align-items: center; }
+            body.pg-tarot .hero-title { text-align: center; }
+            body.pg-tarot .hero-subtitle { text-align: center; }
+            body.pg-tarot .sub-hero-cosmos-inner::before,
+            body.pg-tarot .sub-hero-cosmos-inner::after { display: none; }
+        }
+
         /* ===== SECTION SHARED ===== */
         /* inner-page override */
         .section {
@@ -441,9 +504,17 @@ import Layout from '../layouts/Layout.astro';
 <Layout
   title="Tarot Readings — Esoterica"
   description="Intuitive tarot readings channeled through the mystic arts. Discover clarity, guidance, and cosmic insight."
+  bodyClass="pg-tarot"
 >
   <div slot="chrome">
-  <div class="cursor-dot"></div>
+  <div class="cursor-rune" aria-hidden="true">
+    <div class="cursor-rune-ripple"></div>
+    <div class="cursor-rune-ring">
+      <div class="cursor-rune-h"></div>
+      <div class="cursor-rune-v"></div>
+      <div class="cursor-rune-center"></div>
+    </div>
+  </div>
   <canvas id="starfield"></canvas>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
@@ -861,25 +932,24 @@ import Layout from '../layouts/Layout.astro';
                 });
             });
 
-            /* ---- Radiant Orb Cursor (desktop only, no lag) ---- */
+            /* ---- Crosshair rune cursor (desktop only) ---- */
             if (window.matchMedia("(pointer: fine)").matches) {
-                const dot = document.querySelector(".cursor-dot");
+                const dot = document.querySelector(".cursor-rune");
+                if (!dot) return;
 
-                // Direct 1:1 hardware cursor following (instant)
                 window.addEventListener("mousemove", (e) => {
-                    dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+                    dot.style.left = e.clientX + "px";
+                    dot.style.top = e.clientY + "px";
                 });
 
-                // Simple hover state (scale up)
                 const interactables = "a, button, .reading-card, .reading-cta, .nav-logo, .nav-link-block";
                 document.querySelectorAll(interactables).forEach(el => {
                     el.addEventListener("mouseenter", () => dot.classList.add("is-hover"));
                     el.addEventListener("mouseleave", () => dot.classList.remove("is-hover"));
                 });
 
-                // Click effect
-                window.addEventListener("mousedown", () => dot.style.transform += " scale(0.8)");
-                window.addEventListener("mouseup", () => dot.style.transform = dot.style.transform.replace(" scale(0.8)", ""));
+                window.addEventListener("mousedown", () => dot.classList.add("is-click"));
+                window.addEventListener("mouseup", () => dot.classList.remove("is-click"));
             }
 
             // Timeline scroll activation
