@@ -1,6 +1,13 @@
 ---
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'Esoterica', description } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -8,15 +15,54 @@ import Footer from '../components/Footer.astro';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    {description ? <meta name="description" content={description} /> : null}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/styles.css" />
-    <title>Esoterica</title>
+    <link rel="preload" as="image" href="/logo.png" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- GSAP + ScrollTrigger + ScrollToPlugin (same versions as SideStage); SRI sha384 from CDN bytes -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"
+      integrity="sha384-pEQB1h4Zmn9xhS6jotzltHSIQq6N0Oh3BXkCNOH5LKI81R2NRbb9efarAJYw9gTY"
+      crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"
+      integrity="sha384-TgZ1GoXcDnrw/czNfaiSZSFV1zgIRv8aQOevBA8ppS4SkNONmzYfjARpXsDfdnUE"
+      crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollToPlugin.min.js"
+      integrity="sha384-YY6eh3HcwX3eP3uj3yhZIjt5UBePPmXrYcxT0y0232SA5OGaun9Ivi45Dbm+Z/CQ"
+      crossorigin="anonymous"></script>
+    <!-- Lenis Smooth Scroll (same version as SideStage) -->
+    <script
+      src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.23/bundled/lenis.min.js"
+      integrity="sha384-GuiQQtSonx5JfFrW04viv7KCVyTAZZKHCXVtcve0DYt8fUPKLdigmPuBh9XBEUD+"
+      crossorigin="anonymous"></script>
+    <!-- GlslCanvas: vendored locally (previously third-party blob URL) -->
+    <script is:inline src="/js/GlslCanvas.js"></script>
+
+    <script is:inline>
+      // Disable browser scroll restoration — SideStage pattern
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+    </script>
   </head>
   <body class="esoterica">
+    <slot name="chrome" />
     <div class="page">
       <Nav />
       <slot />
       <Footer />
     </div>
+    <slot name="scripts" />
   </body>
 </html>

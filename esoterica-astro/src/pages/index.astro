@@ -1,11 +1,1003 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="Esoterica"
+  description="Explore a whimsical online magic shop offering mystical products like tarot cards and crystals, designed with enchanting aesthetics for a captivating shopping experience."
+>
+  <div slot="chrome">
+  <a href="#shop" class="skip-to-content">Skip to content</a>
+
+  <!-- ===== LOADING TRANSITION (cosmic core morph) ===== -->
+  <div class="transition">
+    <div class="loader-ring"></div>
+    <div class="loader-ray"></div>
+    <div class="loader-core"></div>
+  </div>
+
+  <!-- ===== CUSTOM CURSOR (Radiant Orb) ===== -->
+  <div class="cursor-dot"></div>
+
+  <!-- ===== STARFIELD CANVAS ===== -->
+  <canvas id="starfield"></canvas>
+
+  <!-- ===== FLOATING ORBS ===== -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  </div>
+
+    <!-- ===== HERO (SideStage card entrance pattern) ===== -->
+    <div id="top" class="hero-holder">
+      <div class="hero-scroll">
+        <section class="hero-section">
+          <div class="hero-layout">
+            <div class="hero-webgl-wrap">
+              <canvas id="heroShaderCanvas"></canvas>
+            </div>
+            <div class="hero-sun" aria-hidden="true"></div>
+            <!-- Blinking stars between the spirals (filled by initHeroStars on DOMContentLoaded) -->
+            <div class="hero-stars" aria-hidden="true"></div>
+            <div class="hero-content">
+              <div class="hero-sigil">
+                <img src="/logo.png" alt="Esoterica Eye Crystal Ball Logo" width="140" height="140" loading="eager"
+                  fetchpriority="high" />
+              </div>
+              <h1 class="hero-title">
+                Where the Veil Between Worlds Grows Thin
+              </h1>
+              <p class="hero-subtitle">
+                Curated crystals, hand-illustrated tarot, and alchemical blends — each artifact chosen to awaken what
+                already stirs within you.
+              </p>
+              <a href="#" data-scroll="shop" class="hero-cta">Enter the Shop</a>
+            </div>
+            <div class="hero-lower">
+              <div class="hero-links-wrap">
+                <button type="button" class="nav-link-block" data-scroll="shop">
+                  <div class="bracket-left">(</div>
+                  <div class="nav-middle-text">
+                    <div class="text-nav">shop</div>
+                    <div class="text-nav is-duplicate">shop</div>
+                  </div>
+                  <div class="bracket-right">)</div>
+                </button>
+                <button type="button" class="nav-link-block" data-scroll="story">
+                  <div class="bracket-left">(</div>
+                  <div class="nav-middle-text">
+                    <div class="text-nav">our story</div>
+                    <div class="text-nav is-duplicate">our story</div>
+                  </div>
+                  <div class="bracket-right">)</div>
+                </button>
+                <button type="button" class="nav-link-block" data-scroll="offerings">
+                  <div class="bracket-left">(</div>
+                  <div class="nav-middle-text">
+                    <div class="text-nav">offerings</div>
+                    <div class="text-nav is-duplicate">offerings</div>
+                  </div>
+                  <div class="bracket-right">)</div>
+                </button>
+                <button type="button" class="nav-link-block" data-scroll="commune">
+                  <div class="bracket-left">(</div>
+                  <div class="nav-middle-text">
+                    <div class="text-nav">commune</div>
+                    <div class="text-nav is-duplicate">commune</div>
+                  </div>
+                  <div class="bracket-right">)</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ===== PRODUCTS SECTION ===== -->
+    <section class="section" id="shop">
+      <div class="section-inner">
+        <div class="section-divider"></div>
+        <p class="section-label">Curated Collection</p>
+        <h2 class="section-heading">Sacred Instruments</h2>
+        <p class="section-description">
+          Tarot and oracle decks, crystals, and simple ritual supplies. Browse in the shop or order online.
+        </p>
+        <div class="products-grid">
+          <div class="product-card">
+            <div class="product-card-image">
+              <img class="es-media-cover" src="https://images.unsplash.com/photo-1600430188203-bbb0c2e6775e?w=600&h=400&fit=crop&crop=center"
+                alt="Tarot Cards" width="600" height="400" loading="lazy" />
+            </div>
+            <div class="product-card-body">
+              <p class="product-card-category">Divination</p>
+              <h3 class="product-card-title">Tarot and Oracle Decks</h3>
+              <p class="product-card-desc">Cards for tarot and oracle readings. We keep beginner-friendly decks next to
+                deeper sets so you can grow into what fits.</p>
+              <p class="product-card-tagline">Ask us for a recommendation</p>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-card-image">
+              <img class="es-media-cover" src="/crystals-pendulums.png"
+                alt="Hand holding five crystal pendulums on silver chains" width="800" height="1200" loading="lazy" />
+            </div>
+            <div class="product-card-body">
+              <p class="product-card-category">Crystals</p>
+              <h3 class="product-card-title">Crystals</h3>
+              <p class="product-card-desc">Stones, pendulums, and small pieces for your desk, pocket, or altar. Stock
+                changes as we get new lots in.</p>
+              <p class="product-card-tagline">Singles and sets</p>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-card-image">
+              <img class="es-media-cover" src="https://images.unsplash.com/photo-1596438459194-f275f413d6ff?w=600&h=400&fit=crop&crop=center"
+                alt="Ritual Candles" width="600" height="400" loading="lazy" />
+            </div>
+            <div class="product-card-body">
+              <p class="product-card-category">Ritual</p>
+              <h3 class="product-card-title">Rituals</h3>
+              <p class="product-card-desc">Candles, herbs, incense, and other basics for marking a moment or clearing a
+                space. Nothing complicated—just useful.</p>
+              <p class="product-card-tagline">Bundles when in season</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== QUOTE ===== -->
+    <section class="quote-section">
+      <div class="quote-mark">"</div>
+      <p class="quote-text">Magic is not about bending reality — it is about remembering that reality was never as rigid
+        as you were told.</p>
+      <p class="quote-author">— The Keeper of Veils</p>
+    </section>
+
+    <!-- ===== STORY ===== -->
+    <section class="section story-section" id="story">
+      <div class="section-inner">
+        <div class="section-divider"></div>
+        <p class="section-label">Our Origin</p>
+        <h2 class="section-heading">Born from Moonlight</h2>
+        <div class="story-content">
+          <div class="story-text">
+            <p>We began as a whisper between two alchemists who believed the world needed more <em>wonder</em> and less
+              noise.</p>
+            <br />
+            <p>Every crystal we source, every blend we craft, and every card we illustrate is an invitation to slow
+              down, turn inward, and <em>remember who you really are</em>.</p>
+            <br />
+            <p>This is not a shop. It is a threshold. Step through, and let the old magic find you.</p>
+          </div>
+          <div class="story-visual">
+            <img src="/origin.jpg" alt="Esoterica founder" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== OFFERINGS ===== -->
+    <section class="section" id="offerings">
+      <div class="section-inner">
+        <div class="section-divider"></div>
+        <p class="section-label">Beyond the Physical</p>
+        <h2 class="section-heading">Ethereal Offerings</h2>
+        <p class="section-description">
+          Not all magic can be held in your hands. Some must be experienced, felt, and woven into the fabric of your
+          daily rituals.
+        </p>
+        <div class="products-grid">
+          <div class="product-card">
+            <div class="product-card-image">
+              <img class="es-media-cover" src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&h=400&fit=crop&crop=center"
+                alt="Moon Reading" width="600" height="400" loading="lazy" />
+            </div>
+            <div class="product-card-body">
+              <p class="product-card-category">Readings</p>
+              <h3 class="product-card-title">Full Moon Oracle Reading</h3>
+              <p class="product-card-desc">A 45-minute intuitive reading performed during the full moon cycle. Delivered
+                via enchanted scroll (email).</p>
+              <p class="product-card-price">$65</p>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-card-image">
+              <img class="es-media-cover" src="https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=600&h=400&fit=crop&crop=center"
+                alt="Herbal Blends" width="600" height="400" loading="lazy" />
+            </div>
+            <div class="product-card-body">
+              <p class="product-card-category">Alchemy</p>
+              <h3 class="product-card-title">Dreamwalker Tea Blend</h3>
+              <p class="product-card-desc">Blue lotus, valerian root, and lavender. Crafted for lucid dreaming and
+                astral travel preparation.</p>
+              <p class="product-card-price">$28</p>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-card-image">
+              <img class="es-media-cover" src="https://images.unsplash.com/photo-1504691342899-4d92b50853e1?w=600&h=400&fit=crop&crop=center"
+                alt="Crystal Grid" width="600" height="400" loading="lazy" />
+            </div>
+            <div class="product-card-body">
+              <p class="product-card-category">Sacred Geometry</p>
+              <h3 class="product-card-title">Crystal Grid Templates</h3>
+              <p class="product-card-desc">Laser-engraved birchwood grids featuring Metatron's Cube and the Flower of
+                Life. Set your intentions in sacred form.</p>
+              <p class="product-card-price">$42</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS (Social Proof) ===== -->
+    <section class="testimonials">
+      <div class="section-inner" style="margin-bottom:3rem">
+        <div class="section-divider"></div>
+        <p class="section-label">Whispers of Praise</p>
+        <h2 class="section-heading">Seekers Speak</h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+          </div>
+          <p class="testimonial-text">"The tarot and oracle decks here are unlike anything I've held before. Each card feels
+            alive with intention. My readings have never been more vivid."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar-initial testimonial-avatar-initial--warm" aria-hidden="true">S</div>
+            <div>
+              <div class="testimonial-name">Selene M.</div>
+              <div class="testimonial-role">Intuitive Reader</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+          </div>
+          <p class="testimonial-text">"These crystals radiate a calm I've never experienced. My meditation
+            space was transformed the moment I placed them on my altar."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar-initial testimonial-avatar-initial--cool" aria-hidden="true">R</div>
+            <div>
+              <div class="testimonial-name">Rowan A.</div>
+              <div class="testimonial-role">Herbalist & Healer</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853" style="margin-right:2px">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4a853">
+              <polygon points="12,0 14.7,8.3 24,9.4 17,15.4 19,24 12,19.5 5,24 7,15.4 0,9.4 9.3,8.3" />
+            </svg>
+          </div>
+          <p class="testimonial-text">"Dreamwalker Tea opened a door I didn't know existed. I've been having the most
+            vivid, prophetic dreams. Esoterica understands the unseen."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar-initial testimonial-avatar-initial--twilight" aria-hidden="true">L</div>
+            <div>
+              <div class="testimonial-name">Luna V.</div>
+              <div class="testimonial-role">Dream Walker</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NEWSLETTER ===== -->
+    <section class="newsletter" id="commune">
+      <div class="section-divider"></div>
+      <p class="section-label">Join the Circle</p>
+      <h2 class="section-heading">Whispers from the Other Side</h2>
+      <p class="section-description">
+        Receive lunar forecasts, exclusive offerings, and arcane knowledge delivered to your inbox each new moon.
+      </p>
+      <form id="newsletter-form" class="newsletter-form" name="newsletter" method="POST" data-netlify="true" netlify
+        aria-label="Newsletter subscription">
+        <input type="hidden" name="form-name" value="newsletter" />
+        <input class="newsletter-input" type="email" name="email" placeholder="your@email.com"
+          aria-label="Email address" required autocomplete="email" />
+        <button class="newsletter-btn" type="submit">Subscribe</button>
+      </form>
+      <p id="newsletter-form-success" class="newsletter-form-status newsletter-form-status--success" role="status"
+        aria-live="polite" hidden>Thank you — you are on the list. Watch for the next new moon.</p>
+      <p id="newsletter-form-error" class="newsletter-form-status newsletter-form-status--error" role="alert"
+        aria-live="assertive" hidden>Something went wrong. Please try again in a moment.</p>
+    </section>
+
+  <script is:inline slot="scripts">
+    /* ================================================================
+       MOBILE HAMBURGER MENU
+    ================================================================ */
+    (function () {
+      const hamburger = document.querySelector('.nav-hamburger');
+      const mobileNav = document.getElementById('mobileNav');
+      if (!hamburger || !mobileNav) return;
+
+      function setMobileNavOpen(open) {
+        hamburger.classList.toggle('is-open', open);
+        mobileNav.classList.toggle('is-open', open);
+        hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (open) {
+          mobileNav.removeAttribute('aria-hidden');
+          mobileNav.removeAttribute('inert');
+        } else {
+          mobileNav.setAttribute('aria-hidden', 'true');
+          mobileNav.setAttribute('inert', '');
+        }
+      }
+
+      hamburger.addEventListener('click', () => {
+        setMobileNavOpen(!mobileNav.classList.contains('is-open'));
+      });
+      mobileNav.querySelectorAll('a, button').forEach(link => {
+        link.addEventListener('click', () => {
+          setMobileNavOpen(false);
+        });
+      });
+    })();
+
+    /* ================================================================
+       STARFIELD — Animated twinkling stars (throttled; tick via master rAF)
+    ================================================================ */
+    (function () {
+      window.__ESOTERICA_RAF__ = window.__ESOTERICA_RAF__ || {};
+      const canvas = document.getElementById('starfield');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      const STAR_COUNT = 120;
+      let frameSkip = 0;
+
+      // Offscreen nebula layer (drawn once, not every frame)
+      let nebulaCanvas, nebulaCtx;
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        drawNebula();
+      }
+
+      function drawNebula() {
+        nebulaCanvas = document.createElement('canvas');
+        nebulaCanvas.width = canvas.width;
+        nebulaCanvas.height = canvas.height;
+        nebulaCtx = nebulaCanvas.getContext('2d');
+
+        const grd = nebulaCtx.createRadialGradient(
+          canvas.width * 0.3, canvas.height * 0.4, 0,
+          canvas.width * 0.3, canvas.height * 0.4, canvas.width * 0.5
+        );
+        grd.addColorStop(0, 'rgba(60, 20, 100, 0.03)');
+        grd.addColorStop(1, 'transparent');
+        nebulaCtx.fillStyle = grd;
+        nebulaCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const grd2 = nebulaCtx.createRadialGradient(
+          canvas.width * 0.7, canvas.height * 0.6, 0,
+          canvas.width * 0.7, canvas.height * 0.6, canvas.width * 0.4
+        );
+        grd2.addColorStop(0, 'rgba(120, 80, 30, 0.02)');
+        grd2.addColorStop(1, 'transparent');
+        nebulaCtx.fillStyle = grd2;
+        nebulaCtx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      function createStars() {
+        stars = [];
+        for (let i = 0; i < STAR_COUNT; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 1.5 + 0.3,
+            alpha: Math.random(),
+            speed: Math.random() * 0.005 + 0.001,
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+      }
+      createStars();
+
+      ctx.fillStyle = 'rgb(232, 224, 212)';
+
+      /** Called each display frame from master rAF; draws every 3rd frame (~20fps). */
+      window.__ESOTERICA_RAF__.tickStarfield = function tickStarfield(time) {
+        frameSkip = (frameSkip + 1) % 3;
+        if (frameSkip !== 0) return;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (nebulaCanvas) ctx.drawImage(nebulaCanvas, 0, 0);
+
+        for (const star of stars) {
+          const twinkle = Math.sin(time * star.speed + star.phase) * 0.5 + 0.5;
+          const alpha = star.alpha * twinkle * 0.8 + 0.1;
+          ctx.globalAlpha = alpha;
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      };
+    })();
+
+
+
+    /* ================================================================
+       HERO CARD WebGL SHADER — SideStage pattern with cosmic palette
+       (Ported from SideStage's GlslCanvas shader, colors changed to cosmic)
+    ================================================================ */
+    (function () {
+      const canvas = document.getElementById('heroShaderCanvas');
+      if (!canvas || typeof GlslCanvas === 'undefined') return;
+
+      // Deferred: only initialize shader when entrance animation signals readiness
+      function initShader() {
+        const sandbox = new GlslCanvas(canvas);
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.0);
+        canvas.width = canvas.offsetWidth * dpr;
+        canvas.height = canvas.offsetHeight * dpr;
+
+        sandbox.load(`
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+uniform vec2 u_resolution;
+uniform float u_time;
+
+float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+}
+
+float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(
+        mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+        mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x),
+        f.y
+    );
+}
+
+void main(void) {
+    vec2 uv = gl_FragCoord.xy / u_resolution;
+    uv = uv * 2.0 - 1.0;
+    uv.x *= u_resolution.x / u_resolution.y;
+    // Compress Y to create elliptical galaxy (replaces CSS rotateX tilt)
+    uv.y *= 1.8;
+
+    float r = length(uv);
+    float angle = atan(uv.y, uv.x);
+    float rot = u_time * 0.1047;
+
+    // Spiral arms
+    float spiralAngle = angle - rot + log(r + 0.001) / 0.3;
+    float arms = max(
+        pow(max(0.0, 0.5 + 0.5 * cos(2.0 * spiralAngle)), 2.0),
+        pow(max(0.0, 0.5 + 0.5 * cos(2.0 * spiralAngle + 3.14159)), 2.0)
+    );
+
+    arms *= 0.5 + 0.5 * noise(uv * 4.0 + vec2(rot * 0.08));
+
+    float armFade = smoothstep(0.03, 0.10, r) * exp(-r * 0.6);
+    float armBright = arms * armFade;
+
+    // Core
+    float core = exp(-r * 6.0);
+    float coreGlow = exp(-r * 1.5);
+    float hotSpot = exp(-r * 18.0);
+
+    // Colors
+    vec3 spaceBlack   = vec3(0.02, 0.015, 0.05);
+    vec3 deepPurple   = vec3(0.20, 0.08, 0.40);
+    vec3 brightPurple = vec3(0.45, 0.22, 0.72);
+    vec3 armLavender  = vec3(0.70, 0.55, 0.90);
+    vec3 hotWhite     = vec3(1.0, 0.97, 0.94);
+
+    vec3 color = spaceBlack;
+    color += deepPurple * coreGlow * 0.4;
+
+    vec3 armCol = mix(deepPurple, brightPurple, armBright * 1.5);
+    armCol = mix(armCol, armLavender, armBright);
+    color += armCol * armBright * 1.2;
+
+    color += mix(vec3(1.0, 0.88, 0.60), hotWhite, core) * core * 0.9;
+    color += hotWhite * hotSpot * 1.5;
+
+    // Simple stars — single layer, no loop
+    vec2 grid = floor(uv * 150.0);
+    vec2 frac = fract(uv * 150.0) - 0.5;
+    float h = hash(grid);
+    if (h > 0.97) {
+        float d = length(frac);
+        color += vec3(0.8, 0.7, 0.95) * exp(-d * 12.0) * 0.35;
+    }
+
+    gl_FragColor = vec4(color, 1.0);
+}`);
+      }
+
+      // Wait for entrance animation to signal readiness
+      window.addEventListener('heroCanvasStart', initShader);
+    })();
+
+    /* ================================================================
+       MAIN ANIMATIONS — GSAP + Lenis + ScrollTrigger
+       (Ported directly from SideStage.vc source)
+    ================================================================ */
+    function initHeroStars() {
+      const wrap = document.querySelector(".hero-stars");
+      if (!wrap) return;
+      const count = 18;
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement("div");
+        el.className = "hero-star";
+        const top = 5 + Math.floor(Math.random() * 86);
+        const left = 5 + Math.floor(Math.random() * 88);
+        const size = (2 + Math.random()).toFixed(1);
+        const dur = (2.5 + Math.random() * 2).toFixed(1);
+        const delay = (Math.random() * 2.5).toFixed(1);
+        el.style.top = top + "%";
+        el.style.left = left + "%";
+        el.style.width = size + "px";
+        el.style.height = size + "px";
+        el.style.setProperty("--dur", dur + "s");
+        el.style.setProperty("--delay", delay + "s");
+        wrap.appendChild(el);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      initHeroStars();
+
+      /* ---- A) ScrollTrigger Global Config ---- */
+      gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+      ScrollTrigger.config({
+        ignoreMobileResize: true,
+        autoRefreshEvents: "visibilitychange,DOMContentLoaded,load"
+      });
+
+      const isTouch = ScrollTrigger.isTouch;
+
+      /* ---- Floating orbs: match former CSS keyframes; will-change only while tween runs ---- */
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        [
+          { sel: ".orb-1", x: 40, y: -30, halfDur: 10 },
+          { sel: ".orb-2", x: -30, y: 40, halfDur: 12.5 },
+          { sel: ".orb-3", x: 20, y: -50, halfDur: 15 },
+        ].forEach(({ sel, x, y, halfDur }) => {
+          const el = document.querySelector(sel);
+          if (!el) return;
+          gsap.timeline({ repeat: -1 })
+            .to(el, {
+              x,
+              y,
+              duration: halfDur,
+              ease: "sine.inOut",
+              onStart: () => {
+                el.style.willChange = "transform";
+              },
+            })
+            .to(el, {
+              x: 0,
+              y: 0,
+              duration: halfDur,
+              ease: "sine.inOut",
+              onComplete: () => {
+                el.style.willChange = "";
+              },
+            });
+        });
+      }
+
+      /* ---- B) Lenis on desktop only (SideStage pattern) ---- */
+      let lenis = null;
+      if (!isTouch) {
+        lenis = new Lenis({
+          lerp: 0.12,
+          wheelMultiplier: 0.8,
+          gestureOrientation: "vertical"
+        });
+
+        // Refresh on real width changes only
+        let lastWidth = window.innerWidth;
+        window.addEventListener("resize", () => {
+          if (window.innerWidth !== lastWidth) {
+            lastWidth = window.innerWidth;
+            lenis.resize();
+            ScrollTrigger.refresh(true);
+          }
+        });
+      } else {
+        // Mobile: use ScrollTrigger's built-in update (no manual rAF needed)
+        ScrollTrigger.defaults({ fastScrollEnd: true });
+      }
+
+      /* ---- C) Page Load + Hero Animation ---- */
+      if (lenis) lenis.stop();
+
+      // Set initial GSAP styles
+      gsap.set(".nav", { opacity: 0 });
+      gsap.set(".hero-scroll", { y: "0%", willChange: "transform" });
+      gsap.set(".hero-layout", { scale: 0.9 });
+      gsap.set(".hero-sigil", { opacity: 0, scale: 0.8 });
+      gsap.set(".hero-title", { opacity: 0, y: "40px" });
+      gsap.set(".hero-subtitle", { opacity: 0, y: "30px" });
+      gsap.set(".hero-cta", { opacity: 0, y: "20px" });
+      gsap.set(".hero-lower", { opacity: 0 });
+
+      // ScrollTrigger for hero shrink on scroll
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: ".hero-scroll",
+          start: "top top",
+          end: "bottom 30%",
+          scrub: true
+        }
+      }).to(".hero-layout", {
+        scale: 0.9,
+        ease: "none",
+        force3d: true
+      }, 0);
+
+      // Post-animation: clean up GPU hints
+      function onInitialComplete() {
+        const trans = document.querySelector(".transition");
+        if (trans) trans.style.display = "none";
+        gsap.set(".hero-scroll", { willChange: "auto" });
+        if (lenis) lenis.start();
+        ScrollTrigger.refresh();
+      }
+
+      // Main intro timeline — core-to-galaxy morph
+      const initialTimeline = gsap.timeline({
+        delay: 0.8,
+        onComplete: onInitialComplete
+      });
+
+      // Start galaxy canvases EARLY so they render during the crossfade
+      initialTimeline.call(() => {
+        window.dispatchEvent(new Event('heroCanvasStart'));
+      }, null, 0);
+
+      initialTimeline
+        .to(".loader-core", {
+          scale: 3, opacity: 0, duration: 1.0, ease: "power2.in"
+        }, 0.2)
+        .to(".loader-ray", {
+          scaleX: 8, opacity: 0, duration: 0.8, ease: "power2.in"
+        }, 0.2)
+        .to(".loader-ring", {
+          scale: 6, opacity: 0, duration: 0.8, ease: "power2.in"
+        }, 0.2)
+        .to(".transition", {
+          opacity: 0, duration: 1.2, ease: "power2.inOut", force3d: true
+        }, 0.5)
+        .add("reveal", 1.3)
+        .to(".hero-layout", {
+          scale: 1, duration: 1.2, ease: "power2.out", force3d: true
+        }, "reveal")
+        .to(".nav", {
+          opacity: 1, duration: 0.8, ease: "power2.out"
+        }, "reveal+=0.2")
+        .to(".hero-sigil", {
+          opacity: 1, scale: 1, duration: 0.5, ease: "power2.out"
+        }, "reveal+=0.3")
+        .to(".hero-title", {
+          opacity: 1, y: 0, duration: 0.7, ease: "power2.out"
+        }, "reveal+=0.4")
+        .to(".hero-subtitle", {
+          opacity: 1, y: 0, duration: 0.7, ease: "power2.out"
+        }, "reveal+=0.6")
+        .to(".hero-cta", {
+          opacity: 1, y: 0, duration: 0.5, ease: "power2.out"
+        }, "reveal+=0.8")
+        .to(".hero-lower", {
+          opacity: 1, duration: 0.6, ease: "power2.out"
+        }, "reveal+=0.9");
+
+      /* ---- D) Nav scroll-triggered slide-in (SideStage pattern) ---- */
+      gsap.set(".nav", { y: "-4.75rem" });
+      gsap.to(".nav", {
+        y: "0rem",
+        duration: 0.3,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#shop",
+          start: "top 2%",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // Nav gradient fade on scroll
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: "body",
+          start: () => (window.innerHeight * 0.02) + " top",
+          toggleActions: "play reverse play reverse"
+        }
+      }).to(".nav-gradient", { opacity: 1, duration: 0.5 }, 0);
+
+      /* ---- E) Scroll-triggered section animations ---- */
+      const sections = document.querySelectorAll(".section, .quote-section, .newsletter");
+      sections.forEach(section => {
+        const children = section.querySelectorAll(
+          ".section-divider, .section-label, .section-heading, .section-description, .product-card, .story-text, .story-visual, .quote-mark, .quote-text, .quote-author, .newsletter-form"
+        );
+
+        children.forEach((child, index) => {
+          gsap.from(child, {
+            opacity: 0,
+            y: 50,
+            duration: 0.9,
+            delay: index * 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: child,
+              start: "top 85%",
+              toggleActions: "play none none none"
+            }
+          });
+        });
+      });
+
+      /* ---- F) Nav Link Bracket Hover Animation (exact SideStage pattern) ---- */
+      if (window.matchMedia("(min-width: 992px)").matches) {
+        const hoverDuration = 0.5;
+        const hoverEase = "power3.out";
+
+        const navLinkBlocks = document.querySelectorAll(".nav-link-block");
+
+        navLinkBlocks.forEach(block => {
+          const bracketLeft = block.querySelector(".bracket-left");
+          const bracketRight = block.querySelector(".bracket-right");
+          const originalText = block.querySelector(".text-nav:not(.is-duplicate)");
+          const duplicateText = block.querySelector(".text-nav.is-duplicate");
+
+          if (!originalText || !duplicateText || !bracketLeft || !bracketRight) return;
+
+          // Hover In Timeline
+          const hoverInTimeline = gsap.timeline({ paused: true });
+          hoverInTimeline
+            .fromTo(originalText,
+              { y: "0%" },
+              { y: "-120%", duration: hoverDuration, ease: hoverEase, immediateRender: false },
+              0
+            )
+            .fromTo(duplicateText,
+              { y: "120%" },
+              { y: "0%", duration: hoverDuration, ease: hoverEase, immediateRender: false },
+              0
+            )
+            .fromTo(bracketLeft,
+              { x: "1rem", opacity: 0 },
+              { x: "0rem", opacity: 1, width: "auto", duration: hoverDuration, ease: hoverEase, immediateRender: false },
+              0
+            )
+            .fromTo(bracketRight,
+              { x: "-1rem", opacity: 0 },
+              { x: "0rem", opacity: 1, width: "auto", duration: hoverDuration, ease: hoverEase, immediateRender: false },
+              0
+            );
+
+          // Hover Out Timeline
+          const hoverOutTimeline = gsap.timeline({
+            paused: true,
+            onStart: () => {
+              gsap.set(originalText, { y: "120%" });
+            }
+          });
+          hoverOutTimeline
+            .fromTo(duplicateText,
+              { y: "0%" },
+              { y: "-120%", duration: hoverDuration, ease: hoverEase, immediateRender: false },
+              0
+            )
+            .fromTo(originalText,
+              { y: "120%" },
+              { y: "0%", duration: hoverDuration, ease: hoverEase, immediateRender: false },
+              0
+            )
+            .fromTo(bracketLeft,
+              { x: "0rem", opacity: 1 },
+              { x: "1rem", opacity: 0, width: 0, duration: hoverDuration, ease: hoverEase, immediateRender: false },
+              0
+            )
+            .fromTo(bracketRight,
+              { x: "0rem", opacity: 1 },
+              { x: "-1rem", opacity: 0, width: 0, duration: hoverDuration, ease: hoverEase, immediateRender: false },
+              0
+            );
+
+          block.addEventListener("mouseenter", () => hoverInTimeline.restart());
+          block.addEventListener("mouseleave", () => hoverOutTimeline.restart());
+        });
+      }
+
+      /* ---- G) Same-page scroll (anchors + button[data-scroll]) ---- */
+      document.querySelectorAll("a[data-scroll], button[data-scroll]").forEach(control => {
+        control.addEventListener("click", (e) => {
+          const targetID = control.getAttribute("data-scroll") || "";
+          if (!targetID) return;
+
+          e.preventDefault();
+
+          if (targetID === "top") {
+            if (lenis) {
+              lenis.stop();
+              gsap.to(window, {
+                scrollTo: { y: 0, autoKill: false },
+                duration: 1,
+                ease: "power2.out",
+                onComplete: () => lenis.start()
+              });
+            } else {
+              gsap.to(window, {
+                scrollTo: { y: 0, autoKill: false },
+                duration: 1,
+                ease: "power2.out"
+              });
+            }
+            return;
+          }
+
+          const targetSection = document.getElementById(targetID);
+          if (!targetSection) return;
+
+          if (lenis) {
+            lenis.stop();
+            gsap.to(window, {
+              scrollTo: { y: targetSection, autoKill: false },
+              duration: 1,
+              ease: "power2.out",
+              onComplete: () => lenis.start()
+            });
+          } else {
+            gsap.to(window, {
+              scrollTo: { y: targetSection, autoKill: false },
+              duration: 1,
+              ease: "power2.out"
+            });
+          }
+        });
+      });
+
+      /* ---- Newsletter — Netlify Forms (async POST) ---- */
+      (function () {
+        const form = document.getElementById("newsletter-form");
+        const successEl = document.getElementById("newsletter-form-success");
+        const errorEl = document.getElementById("newsletter-form-error");
+        if (!form || !successEl || !errorEl) return;
+
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          successEl.hidden = true;
+          errorEl.hidden = true;
+
+          const submitBtn = form.querySelector('button[type="submit"]');
+          if (submitBtn) submitBtn.disabled = true;
+
+          try {
+            const body = new URLSearchParams(new FormData(form)).toString();
+            const res = await fetch("/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                Accept: "application/json",
+              },
+              body,
+            });
+
+            if (!res.ok) throw new Error("Netlify form rejected");
+
+            const ct = res.headers.get("content-type") || "";
+            if (ct.includes("application/json")) {
+              const data = await res.json();
+              if (data && (data.error || data.ok === false)) throw new Error("Form error");
+            }
+
+            successEl.hidden = false;
+            form.reset();
+          } catch {
+            errorEl.hidden = false;
+          } finally {
+            if (submitBtn) submitBtn.disabled = false;
+          }
+        });
+      })();
+
+      /* ---- H) Radiant Orb Cursor (desktop only; position via master rAF) ---- */
+      let tickCursor = null;
+      if (window.matchMedia("(pointer: fine)").matches) {
+        const dot = document.querySelector(".cursor-dot");
+        if (dot) {
+          let mx = 0, my = 0;
+          window.addEventListener("mousemove", (e) => {
+            mx = e.clientX;
+            my = e.clientY;
+          }, { passive: true });
+
+          tickCursor = function () {
+            dot.style.left = mx + "px";
+            dot.style.top = my + "px";
+          };
+
+          const interactables = "a, button, [data-scroll], .nav-link-block, .product-card, .reading-cta";
+          document.querySelectorAll(interactables).forEach(el => {
+            el.addEventListener("mouseenter", () => dot.classList.add("is-hover"));
+            el.addEventListener("mouseleave", () => dot.classList.remove("is-hover"));
+          });
+
+          window.addEventListener("mousedown", () => dot.style.transform = "translate(-50%, -50%) scale(0.8)");
+          window.addEventListener("mouseup", () => dot.style.transform = "translate(-50%, -50%)");
+        }
+      }
+
+      /* ---- Master rAF: starfield, Lenis+ScrollTrigger, cursor (one loop) ---- */
+      const tickStarfield = window.__ESOTERICA_RAF__ && window.__ESOTERICA_RAF__.tickStarfield;
+      function esotericaMasterRaf(time) {
+        if (typeof tickStarfield === "function") tickStarfield(time);
+        if (lenis) {
+          lenis.raf(time);
+          ScrollTrigger.update();
+        }
+        if (typeof tickCursor === "function") tickCursor();
+        requestAnimationFrame(esotericaMasterRaf);
+      }
+      requestAnimationFrame(esotericaMasterRaf);
+    });
+
+</script>
+
 </Layout>
