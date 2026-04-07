@@ -95,8 +95,17 @@ import Layout from '../layouts/Layout.astro';
       </div>
     </div>
 
+    <div class="es-marquee-track">
+      <div class="es-marquee-inner">
+        <span>✦ Tarot</span><span class="es-marquee-sep">·</span><span>Crystals</span><span class="es-marquee-sep">·</span><span>Ritual</span><span class="es-marquee-sep">·</span><span>Readings</span><span class="es-marquee-sep">·</span><span>Pendulums</span><span class="es-marquee-sep">·</span><span>Oracle</span><span class="es-marquee-sep">·</span><span>✦ Tarot</span><span class="es-marquee-sep">·</span><span>Crystals</span><span class="es-marquee-sep">·</span><span>Ritual</span><span class="es-marquee-sep">·</span><span>Readings</span><span class="es-marquee-sep">·</span><span>Pendulums</span><span class="es-marquee-sep">·</span><span>Oracle</span><span class="es-marquee-sep">·</span><span>✦ Tarot</span><span class="es-marquee-sep">·</span><span>Crystals</span><span class="es-marquee-sep">·</span><span>Ritual</span><span class="es-marquee-sep">·</span><span>Readings</span><span class="es-marquee-sep">·</span><span>Pendulums</span><span class="es-marquee-sep">·</span><span>Oracle</span><span class="es-marquee-sep">·</span><span>✦ Tarot</span><span class="es-marquee-sep">·</span><span>Crystals</span><span class="es-marquee-sep">·</span><span>Ritual</span><span class="es-marquee-sep">·</span><span>Readings</span><span class="es-marquee-sep">·</span><span>Pendulums</span><span class="es-marquee-sep">·</span><span>Oracle</span>
+      </div>
+      <div class="es-marquee-inner">
+        <span>✦ Tarot</span><span class="es-marquee-sep">·</span><span>Crystals</span><span class="es-marquee-sep">·</span><span>Ritual</span><span class="es-marquee-sep">·</span><span>Readings</span><span class="es-marquee-sep">·</span><span>Pendulums</span><span class="es-marquee-sep">·</span><span>Oracle</span><span class="es-marquee-sep">·</span><span>✦ Tarot</span><span class="es-marquee-sep">·</span><span>Crystals</span><span class="es-marquee-sep">·</span><span>Ritual</span><span class="es-marquee-sep">·</span><span>Readings</span><span class="es-marquee-sep">·</span><span>Pendulums</span><span class="es-marquee-sep">·</span><span>Oracle</span><span class="es-marquee-sep">·</span><span>✦ Tarot</span><span class="es-marquee-sep">·</span><span>Crystals</span><span class="es-marquee-sep">·</span><span>Ritual</span><span class="es-marquee-sep">·</span><span>Readings</span><span class="es-marquee-sep">·</span><span>Pendulums</span><span class="es-marquee-sep">·</span><span>Oracle</span><span class="es-marquee-sep">·</span><span>✦ Tarot</span><span class="es-marquee-sep">·</span><span>Crystals</span><span class="es-marquee-sep">·</span><span>Ritual</span><span class="es-marquee-sep">·</span><span>Readings</span><span class="es-marquee-sep">·</span><span>Pendulums</span><span class="es-marquee-sep">·</span><span>Oracle</span>
+      </div>
+    </div>
+
     <!-- ===== PRODUCTS SECTION ===== -->
-    <section class="section" id="shop">
+    <section class="section es-hscroll-section" id="shop">
       <div class="section-inner">
         <div class="section-divider"></div>
         <p class="section-label">Curated Collection</p>
@@ -104,7 +113,9 @@ import Layout from '../layouts/Layout.astro';
         <p class="section-description">
           Tarot and oracle decks, crystals, and simple ritual supplies. Browse in the shop or order online.
         </p>
-        <div class="products-grid">
+      </div>
+      <div class="es-hscroll-viewport">
+        <div class="es-hscroll-track">
           <div class="product-card">
             <div class="product-card-image">
               <img class="es-media-cover" src="https://images.unsplash.com/photo-1600430188203-bbb0c2e6775e?w=600&h=400&fit=crop&crop=center"
@@ -822,30 +833,6 @@ void main(void) {
           });
         });
 
-        if (typeof Splitting === "function") {
-          document.querySelectorAll(".section-heading").forEach(heading => {
-            Splitting({ target: heading, by: "chars" });
-          });
-        }
-        document.querySelectorAll(".section-heading").forEach(heading => {
-          const chars = heading.querySelectorAll(".char");
-          if (!chars.length) return;
-          gsap.from(chars, {
-            opacity: 0,
-            y: "60%",
-            rotateX: -40,
-            transformPerspective: 500,
-            stagger: 0.018,
-            duration: 0.7,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: heading,
-              start: "top 85%",
-              toggleActions: "play none none none"
-            }
-          });
-        });
-
         document.querySelectorAll(".section-description").forEach(desc => {
           const root = desc.closest(".section, .newsletter");
           const heading = root && root.querySelector(".section-heading");
@@ -894,25 +881,26 @@ void main(void) {
             .to(div, { opacity: 1, duration: 0.2, ease: "power2.inOut" });
         });
 
-        const shopGrid = document.querySelector("#shop .products-grid");
-        if (shopGrid) {
-          const shopCards = shopGrid.querySelectorAll(".product-card");
-          if (shopCards.length) {
-            gsap.from(shopCards, {
-              y: 60,
-              opacity: 0,
-              rotateY: 8,
-              transformPerspective: 800,
-              stagger: 0.15,
-              duration: 1,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: shopGrid,
-                start: "top 75%",
-                toggleActions: "play none none none"
-              }
-            });
-          }
+        const hscrollSection = document.querySelector(".es-hscroll-section");
+        const hscrollTrack = document.querySelector(".es-hscroll-track");
+
+        if (hscrollSection && hscrollTrack && window.innerWidth > 768) {
+          const trackWidth = hscrollTrack.scrollWidth;
+          const viewportWidth = hscrollSection.offsetWidth;
+          const scrollDistance = trackWidth - viewportWidth + 128;
+
+          gsap.to(hscrollTrack, {
+            x: -scrollDistance,
+            ease: "none",
+            scrollTrigger: {
+              trigger: hscrollSection,
+              start: "top top",
+              end: () => "+=" + scrollDistance,
+              pin: true,
+              scrub: 1,
+              invalidateOnRefresh: true
+            }
+          });
         }
 
         const offeringsGrid = document.querySelector("#offerings .products-grid");
@@ -1053,6 +1041,53 @@ void main(void) {
             });
           });
         }
+      })();
+
+      (function initHeadingReveals() {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        document.querySelectorAll(".section-heading").forEach(heading => {
+          const inner = document.createElement("span");
+          inner.className = "es-reveal-inner";
+          inner.innerHTML = heading.innerHTML;
+          heading.innerHTML = "";
+          const wrap = document.createElement("span");
+          wrap.className = "es-reveal-wrap";
+          wrap.appendChild(inner);
+          heading.appendChild(wrap);
+
+          if (typeof Splitting === "function") {
+            Splitting({ target: inner, by: "chars" });
+          }
+          const chars = inner.querySelectorAll(".char");
+          if (chars.length) {
+            gsap.from(chars, {
+              opacity: 0,
+              y: "60%",
+              rotateX: -40,
+              transformPerspective: 500,
+              stagger: 0.018,
+              duration: 0.7,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: heading,
+                start: "top 85%",
+                toggleActions: "play none none none"
+              }
+            });
+          }
+
+          gsap.to(inner, {
+            y: "0%",
+            ease: "none",
+            scrollTrigger: {
+              trigger: heading,
+              start: "top 90%",
+              end: "top 40%",
+              scrub: 0.8
+            }
+          });
+        });
       })();
 
       /* ---- F) Nav Link Bracket Hover Animation (exact SideStage pattern) ---- */

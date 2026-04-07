@@ -1691,3 +1691,99 @@ footer a:hover {
 .hero-breadcrumb a:hover {
   color: var(--es-gold);
 }
+
+.es-marquee-track {
+  overflow: hidden;
+  width: 100%;
+  padding: 1.5rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--es-gold) 10%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--es-gold) 10%, transparent);
+  display: flex;
+  mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.es-marquee-inner {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  animation: esMarqueeScroll 28s linear infinite;
+}
+
+.es-marquee-track span {
+  font-family: var(--es-font-display);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--es-text-faint);
+}
+
+.es-marquee-sep {
+  color: var(--es-gold) !important;
+  opacity: 0.4;
+}
+
+@keyframes esMarqueeScroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .es-marquee-inner {
+    animation: none;
+  }
+}
+
+.es-reveal-wrap {
+  overflow: hidden;
+  display: block;
+}
+
+.es-reveal-inner {
+  display: block;
+  transform: translateY(105%);
+  will-change: transform;
+}
+
+.es-hscroll-section {
+  padding-bottom: 0;
+}
+
+.es-hscroll-viewport {
+  overflow: hidden;
+  width: 100%;
+  margin-top: 4rem;
+}
+
+.es-hscroll-track {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
+  padding: 0 4rem 4rem;
+  will-change: transform;
+}
+
+.es-hscroll-track .product-card {
+  width: 380px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .es-hscroll-track {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 1.25rem 3rem;
+  }
+
+  .es-hscroll-track .product-card {
+    width: 100%;
+  }
+}
