@@ -606,7 +606,7 @@ import Layout from '../layouts/Layout.astro';
 
             // Fade-up all sections
             document.querySelectorAll('.section, .quote-section').forEach(section => {
-                const els = section.querySelectorAll('.section-divider, .section-label, .section-heading, .section-description, .reading-card, .how-step, .testimonial-card, .quote-mark, .quote-text, .quote-author');
+                const els = section.querySelectorAll('.section-divider, .section-label, .section-heading, .section-description, .how-step, .testimonial-card, .quote-mark, .quote-text, .quote-author');
                 els.forEach((el, i) => {
                     gsap.from(el, {
                         y: 50,
@@ -622,6 +622,26 @@ import Layout from '../layouts/Layout.astro';
                     });
                 });
             });
+
+            (function initReadingGridReveal() {
+                if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+                document.querySelectorAll('.readings-grid').forEach(grid => {
+                    const cards = grid.querySelectorAll('.reading-card');
+                    if (!cards.length) return;
+                    gsap.from(cards, {
+                        y: 50,
+                        opacity: 0,
+                        duration: 0.9,
+                        stagger: 0.12,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: grid,
+                            start: "top 78%",
+                            toggleActions: "play none none none"
+                        }
+                    });
+                });
+            })();
 
             // Hero fade in
             gsap.from('.page-hero .hero-sigil', { y: 30, opacity: 0, duration: 1, delay: 0.3, ease: 'power3.out' });

@@ -773,7 +773,7 @@ void main(void) {
       const sections = document.querySelectorAll(".section, .quote-section, .newsletter");
       sections.forEach(section => {
         const children = section.querySelectorAll(
-          ".section-divider, .section-label, .section-heading, .section-description, .product-card, .story-text, .story-visual, .quote-mark, .quote-text, .quote-author, .newsletter-form"
+          ".section-label, .section-heading, .section-description, .newsletter-form"
         );
 
         children.forEach((child, index) => {
@@ -791,6 +791,126 @@ void main(void) {
           });
         });
       });
+
+      /* ---- E2) Dividers, products, quote (Splitting), story, testimonials, magnetic tilt ---- */
+      (function initEnhancedScrollFx() {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        if (typeof Splitting === "function") {
+          Splitting({ target: ".quote-text", by: "words" });
+        }
+
+        document.querySelectorAll(".section-divider").forEach(div => {
+          gsap.set(div, { scaleX: 0, transformOrigin: "center center" });
+          gsap.to(div, {
+            scaleX: 1,
+            duration: 0.8,
+            ease: "power2.inOut",
+            scrollTrigger: {
+              trigger: div,
+              start: "top 90%",
+              toggleActions: "play none none none"
+            }
+          });
+        });
+
+        document.querySelectorAll(".products-grid").forEach(grid => {
+          const cards = grid.querySelectorAll(".product-card");
+          if (!cards.length) return;
+          gsap.from(cards, {
+            y: 60,
+            opacity: 0,
+            rotateY: 8,
+            transformPerspective: 800,
+            stagger: 0.15,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: grid,
+              start: "top 75%",
+              toggleActions: "play none none none"
+            }
+          });
+        });
+
+        const quoteTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".quote-section",
+            start: "top 70%",
+            toggleActions: "play none none none"
+          }
+        });
+        quoteTl
+          .from(".quote-mark", { scale: 1.4, opacity: 0, duration: 0.6, ease: "power2.out" })
+          .addLabel("words")
+          .from(
+            ".quote-text .word",
+            { opacity: 0, y: 20, duration: 0.6, stagger: 0.05, ease: "power2.out" },
+            "words"
+          )
+          .from(
+            ".quote-author",
+            { opacity: 0, duration: 0.6, ease: "power2.out" },
+            "words+=0.5"
+          );
+
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: ".story-section",
+            start: "top 70%",
+            toggleActions: "play none none none"
+          }
+        })
+          .from(".story-text", { x: -50, opacity: 0, duration: 1.1, ease: "power3.out" }, 0)
+          .from(".story-visual", { x: 50, opacity: 0, duration: 1.1, ease: "power3.out" }, 0);
+
+        const testimonialsGrid = document.querySelector(".testimonials-grid");
+        if (testimonialsGrid) {
+          const tCards = testimonialsGrid.querySelectorAll(".testimonial-card");
+          if (tCards.length) {
+            gsap.from(tCards, {
+              opacity: 0,
+              y: 40,
+              filter: "blur(5px)",
+              stagger: 0.2,
+              duration: 0.9,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: testimonialsGrid,
+                start: "top 80%",
+                toggleActions: "play none none none"
+              }
+            });
+          }
+        }
+
+        if (window.matchMedia("(pointer: fine)").matches) {
+          document.querySelectorAll(".product-card").forEach(card => {
+            card.addEventListener("mousemove", e => {
+              const rect = card.getBoundingClientRect();
+              const cx = rect.left + rect.width / 2;
+              const cy = rect.top + rect.height / 2;
+              const rotateY = Math.max(-6, Math.min(6, ((e.clientX - cx) / (rect.width / 2)) * 6));
+              const rotateX = Math.max(-6, Math.min(6, ((e.clientY - cy) / (rect.height / 2)) * -6));
+              gsap.to(card, {
+                rotateX,
+                rotateY,
+                transformPerspective: 800,
+                duration: 0.3,
+                ease: "power2.out"
+              });
+            });
+            card.addEventListener("mouseleave", () => {
+              gsap.to(card, {
+                rotateX: 0,
+                rotateY: 0,
+                duration: 0.6,
+                ease: "power2.out"
+              });
+            });
+          });
+        }
+      })();
 
       /* ---- F) Nav Link Bracket Hover Animation (exact SideStage pattern) ---- */
       if (window.matchMedia("(min-width: 992px)").matches) {

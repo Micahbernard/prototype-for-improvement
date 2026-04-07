@@ -581,12 +581,25 @@ import Layout from '../layouts/Layout.astro';
             gsap.from('.page-hero .hero-title', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.7 });
             gsap.from('.page-hero .hero-subtitle', { opacity: 0, y: 15, duration: 0.8, ease: 'power3.out', delay: 0.9 });
 
-            document.querySelectorAll('.class-card').forEach((card, i) => {
-                gsap.from(card, {
-                    scrollTrigger: { trigger: card, start: 'top 85%' },
-                    opacity: 0, y: 30, duration: 0.7, ease: 'power3.out', delay: i * 0.08
+            (function initClassesGridReveal() {
+                if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+                document.querySelectorAll('.classes-grid').forEach(grid => {
+                    const cards = grid.querySelectorAll('.class-card');
+                    if (!cards.length) return;
+                    gsap.from(cards, {
+                        y: 50,
+                        opacity: 0,
+                        duration: 0.9,
+                        stagger: 0.12,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: grid,
+                            start: "top 78%",
+                            toggleActions: "play none none none"
+                        }
+                    });
                 });
-            });
+            })();
 
             document.querySelectorAll('.format-item').forEach((item, i) => {
                 gsap.from(item, {
