@@ -3623,22 +3623,22 @@ body.pg-terms .es-lg-crumb ol {
   }
 }
 
-/* ===== INNER PAGES (tarot + classes) ===== */
-body:is(.pg-tarot, .pg-classes) .section {
+/* ===== INNER PAGES (tarot + classes + free resources) ===== */
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .section {
   padding: 6rem 2rem;
   max-width: 1100px;
   margin: 0 auto;
 }
 
-body:is(.pg-tarot, .pg-classes) .section-divider {
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .section-divider {
   margin: 0 auto 2rem;
 }
 
-body:is(.pg-tarot, .pg-classes) .section-label {
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .section-label {
   letter-spacing: 0.25em;
 }
 
-body:is(.pg-tarot, .pg-classes) .section-description {
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .section-description {
   font-family: var(--es-font-serif);
   font-size: 1.15rem;
   font-weight: 300;
@@ -3650,12 +3650,12 @@ body:is(.pg-tarot, .pg-classes) .section-description {
   margin: 0 auto 3rem;
 }
 
-body:is(.pg-tarot, .pg-classes) .quote-section {
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .quote-section {
   text-align: center;
   padding: 5rem 2rem;
 }
 
-body:is(.pg-tarot, .pg-classes) .quote-mark {
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .quote-mark {
   font-family: var(--es-font-display);
   font-size: 5rem;
   line-height: 1;
@@ -3663,7 +3663,7 @@ body:is(.pg-tarot, .pg-classes) .quote-mark {
   margin-bottom: 0;
 }
 
-body:is(.pg-tarot, .pg-classes) .quote-text {
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .quote-text {
   font-family: var(--es-font-serif);
   font-size: clamp(1.2rem, 2.5vw, 1.6rem);
   font-weight: 300;
@@ -3674,7 +3674,7 @@ body:is(.pg-tarot, .pg-classes) .quote-text {
   margin: 0 auto 1rem;
 }
 
-body:is(.pg-tarot, .pg-classes) .quote-author {
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .quote-author {
   font-family: var(--es-font-body);
   font-size: 0.7rem;
   font-weight: 400;
@@ -4204,7 +4204,7 @@ body.pg-tarot .orb {
 }
 
 @media (max-width: 768px) {
-  body:is(.pg-tarot, .pg-classes) .nav {
+  body:is(.pg-tarot, .pg-classes, .pg-free-resources) .nav {
     padding: 1rem 1.5rem;
   }
 

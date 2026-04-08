@@ -1,0 +1,86 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Free Resources — Esoterica"
+  description="Guides, spreads, and curated tools — coming soon from Esoterica."
+  bodyClass="pg-free-resources"
+>
+  <section class="es-ct-hero">
+    <div class="es-ct-ripple" aria-hidden="true">
+      <div class="es-ct-ripple__ring"></div>
+      <div class="es-ct-ripple__ring"></div>
+      <div class="es-ct-ripple__ring"></div>
+      <div class="es-ct-ripple__point"></div>
+    </div>
+    <div class="es-ct-hero__inner">
+      <nav class="es-ct-hero-crumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><span aria-current="page">Free Resources</span></li>
+        </ol>
+      </nav>
+      <div class="es-ct-hero-rule" aria-hidden="true"></div>
+      <h1 class="es-ct-hero-title">What Is Freely Given Returns Tenfold</h1>
+      <p class="es-ct-hero-lede">
+        A growing library of guides, spreads, and tools for your practice — curated with the same care as everything we
+        share.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="free-resources">
+    <div class="section-divider"></div>
+    <p class="section-label">Coming Soon</p>
+    <h2 class="section-heading">The Shelf Is Being Prepared</h2>
+    <p class="section-description">
+      We are assembling printable spreads, reference sheets, and short teachings you can return to again and again.
+      Check back — or reach out if there is something you would especially like to see here.
+    </p>
+
+    <div class="quote-section">
+      <div class="quote-mark" aria-hidden="true">"</div>
+      <p class="quote-text">
+        This space will hold offerings meant to travel with you — no gate, only gratitude.
+      </p>
+      <p class="quote-author">Placeholder · Esoterica</p>
+    </div>
+  </section>
+
+  <script is:inline slot="scripts">
+    (function () {
+      if (typeof gsap === 'undefined') return;
+      gsap.registerPlugin(ScrollTrigger);
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        gsap.from('.es-ct-ripple__point', {
+          opacity: 0,
+          scale: 0,
+          transformOrigin: '50% 50%',
+          duration: 0.8,
+          ease: 'back.out(2)',
+          delay: 0.2,
+        });
+        gsap.from('.es-ct-ripple__ring', {
+          opacity: 0,
+          duration: 1.0,
+          ease: 'power2.out',
+          delay: 0.5,
+          stagger: 0.15,
+        });
+        gsap.from('.es-ct-hero-crumb', { opacity: 0, y: 10, duration: 0.7, ease: 'power3.out', delay: 0.8 });
+        gsap.from('.es-ct-hero-rule', {
+          opacity: 0,
+          scaleX: 0,
+          transformOrigin: 'center center',
+          duration: 0.6,
+          ease: 'power2.out',
+          delay: 0.9,
+        });
+        gsap.from('.es-ct-hero-title', { opacity: 0, y: 20, duration: 1.0, ease: 'power3.out', delay: 1.0 });
+        gsap.from('.es-ct-hero-lede', { opacity: 0, y: 15, duration: 0.8, ease: 'power3.out', delay: 1.15 });
+      }
+      gsap.from('.section', { opacity: 0, y: 28, duration: 0.9, ease: 'power3.out', delay: 0.2 });
+    })();
+  </script>
+</Layout>
