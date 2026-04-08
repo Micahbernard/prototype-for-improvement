@@ -7,19 +7,6 @@ import Layout from '../layouts/Layout.astro';
   description="Intuitive tarot readings channeled through the mystic arts. Discover clarity, guidance, and cosmic insight."
   bodyClass="pg-tarot"
 >
-  <div slot="chrome">
-  <div class="cursor-rune" aria-hidden="true">
-    <div class="cursor-rune-ripple"></div>
-    <div class="cursor-rune-ring">
-      <div class="cursor-rune-h"></div>
-      <div class="cursor-rune-v"></div>
-      <div class="cursor-rune-center"></div>
-    </div>
-  </div>
-  <canvas id="starfield"></canvas>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  </div>
 
 <!-- ===== HERO ===== -->
         <section class="es-th-hero">
@@ -254,70 +241,6 @@ import Layout from '../layouts/Layout.astro';
             </div>
         </section>
   <script is:inline slot="scripts">
-/* ================================================================
-           STARFIELD — Same as main site
-        ================================================================ */
-        (function () {
-            const canvas = document.getElementById('starfield');
-            const ctx = canvas.getContext('2d');
-            let stars = [];
-            const STAR_COUNT = 180;
-
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            function createStars() {
-                stars = [];
-                for (let i = 0; i < STAR_COUNT; i++) {
-                    stars.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        r: Math.random() * 1.5 + 0.3,
-                        alpha: Math.random(),
-                        speed: Math.random() * 0.005 + 0.001,
-                        phase: Math.random() * Math.PI * 2
-                    });
-                }
-            }
-            createStars();
-
-            function drawStars(time) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                const grd = ctx.createRadialGradient(
-                    canvas.width * 0.3, canvas.height * 0.4, 0,
-                    canvas.width * 0.3, canvas.height * 0.4, canvas.width * 0.5
-                );
-                grd.addColorStop(0, 'rgba(60, 20, 100, 0.03)');
-                grd.addColorStop(1, 'transparent');
-                ctx.fillStyle = grd;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                for (const star of stars) {
-                    const twinkle = Math.sin(time * star.speed + star.phase) * 0.5 + 0.5;
-                    const alpha = star.alpha * twinkle * 0.8 + 0.1;
-
-                    ctx.beginPath();
-                    ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(232, 224, 212, ${alpha})`;
-                    ctx.fill();
-
-                    if (star.r > 1.2) {
-                        ctx.beginPath();
-                        ctx.arc(star.x, star.y, star.r * 3, 0, Math.PI * 2);
-                        ctx.fillStyle = `rgba(160, 130, 200, ${alpha * 0.08})`;
-                        ctx.fill();
-                    }
-                }
-                requestAnimationFrame(drawStars);
-            }
-            requestAnimationFrame(drawStars);
-        })();
-
         /* ================================================================
            GSAP SCROLL ANIMATIONS
         ================================================================ */
@@ -434,26 +357,6 @@ import Layout from '../layouts/Layout.astro';
                     gsap.to(textDup, { y: '120%', duration: 0.35, ease: 'power2.inOut' });
                 });
             });
-
-            /* ---- Crosshair rune cursor (desktop only) ---- */
-            if (window.matchMedia("(pointer: fine)").matches) {
-                const dot = document.querySelector(".cursor-rune");
-                if (!dot) return;
-
-                window.addEventListener("mousemove", (e) => {
-                    dot.style.left = e.clientX + "px";
-                    dot.style.top = e.clientY + "px";
-                });
-
-                const interactables = "a, button, .reading-card, .reading-cta, .nav-logo, .nav-link-block";
-                document.querySelectorAll(interactables).forEach(el => {
-                    el.addEventListener("mouseenter", () => dot.classList.add("is-hover"));
-                    el.addEventListener("mouseleave", () => dot.classList.remove("is-hover"));
-                });
-
-                window.addEventListener("mousedown", () => dot.classList.add("is-click"));
-                window.addEventListener("mouseup", () => dot.classList.remove("is-click"));
-            }
 
             // Timeline scroll activation
             const steps = document.querySelectorAll('.how-step');

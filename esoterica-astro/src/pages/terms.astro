@@ -25,19 +25,6 @@ const sections = [
   description="Terms of Use for Esoterica, Chiclayo, Perú — crystals, tarot, readings, and classes. Consumer rights under Ley N° 29571 and Peruvian law."
   bodyClass="pg-terms"
 >
-  <div slot="chrome">
-    <div class="cursor-rune" aria-hidden="true">
-      <div class="cursor-rune-ripple"></div>
-      <div class="cursor-rune-ring">
-        <div class="cursor-rune-h"></div>
-        <div class="cursor-rune-v"></div>
-        <div class="cursor-rune-center"></div>
-      </div>
-    </div>
-    <canvas id="starfield"></canvas>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-  </div>
 
   <section class="es-lg-hero" aria-labelledby="terms-title">
     <div class="es-lg-hero__inner">
@@ -199,98 +186,6 @@ const sections = [
   </article>
 
   <script is:inline slot="scripts">
-    // #region agent log
-    (function () {
-      var rune = document.querySelector('.cursor-rune');
-      var page = document.querySelector('.page');
-      var chrome = document.querySelector('.es-site-chrome');
-      var cs = rune ? getComputedStyle(rune) : null;
-      fetch('http://127.0.0.1:7828/ingest/464475d3-947a-4a6f-98ec-2a8da4f1d35e', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '85d028' },
-        body: JSON.stringify({
-          sessionId: '85d028',
-          runId: 'verify-stack',
-          hypothesisId: 'H1-H5',
-          location: 'terms.astro:cursor-diag',
-          message: 'terms cursor visibility diagnostics',
-          data: {
-            runeCount: document.querySelectorAll('.cursor-rune').length,
-            mqMobileHide: window.matchMedia('(max-width: 768px), (pointer: coarse)').matches,
-            pointerFine: window.matchMedia('(pointer: fine)').matches,
-            reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-            pageZ: page ? getComputedStyle(page).zIndex : null,
-            chromeZ: chrome ? getComputedStyle(chrome).zIndex : null,
-            runeDisplay: cs ? cs.display : null,
-            runeOpacity: cs ? cs.opacity : null,
-            runeVisibility: cs ? cs.visibility : null,
-            runeZ: cs ? cs.zIndex : null,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(function () {});
-    })();
-    // #endregion
-
-    /* ===== STARFIELD ===== */
-    (function () {
-      const canvas = document.getElementById('starfield');
-      if (!canvas || !canvas.getContext) return;
-      const ctx = canvas.getContext('2d');
-      let stars = [];
-      const STAR_COUNT = 120;
-
-      function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-
-      function init() {
-        stars = Array.from({ length: STAR_COUNT }, () => ({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: Math.random() * 1.2 + 0.3,
-          alpha: Math.random() * 0.6 + 0.1,
-          speed: Math.random() * 0.008 + 0.004,
-          phase: Math.random() * Math.PI * 2,
-        }));
-      }
-
-      function draw(t) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        stars.forEach(s => {
-          const a = s.alpha * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
-          ctx.beginPath();
-          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(232,224,212,${a})`;
-          ctx.fill();
-        });
-        requestAnimationFrame(draw);
-      }
-
-      resize();
-      init();
-      window.addEventListener('resize', () => { resize(); init(); });
-      requestAnimationFrame(draw);
-    })();
-
-    /* ===== CUSTOM CURSOR ===== */
-    (function () {
-      const dot = document.querySelector('.cursor-rune');
-      if (!dot) return;
-      document.addEventListener('mousemove', e => {
-        dot.style.left = e.clientX + 'px';
-        dot.style.top = e.clientY + 'px';
-      });
-      const interactables = 'a, button, .nav-link-block, .es-lg-contact__link';
-      document.querySelectorAll(interactables).forEach(el => {
-        el.addEventListener('mouseenter', () => dot.classList.add('is-hover'));
-        el.addEventListener('mouseleave', () => dot.classList.remove('is-hover'));
-      });
-      window.addEventListener('mousedown', () => dot.classList.add('is-click'));
-      window.addEventListener('mouseup', () => dot.classList.remove('is-click'));
-    })();
-
     (function () {
       if (typeof gsap === 'undefined') return;
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;

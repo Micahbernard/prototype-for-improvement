@@ -6,9 +6,19 @@ interface Props {
   title?: string;
   description?: string;
   bodyClass?: string;
+  hasExtraOrb?: boolean;
+  hasTransition?: boolean;
+  skipTarget?: string;
 }
 
-const { title = 'Esoterica', description, bodyClass } = Astro.props;
+const {
+  title = 'Esoterica',
+  description,
+  bodyClass,
+  hasExtraOrb = false,
+  hasTransition = false,
+  skipTarget = '#main',
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -62,13 +72,200 @@ const { title = 'Esoterica', description, bodyClass } = Astro.props;
   </head>
   <body class={`esoterica ${bodyClass ?? ''}`.trim()}>
     <div class="es-site-chrome">
+      <!-- ===== SITE CHROME (hoisted — every page gets this) ===== -->
+      <a href={skipTarget} class="skip-to-content">Skip to content</a>
+
+      {
+        hasTransition && (
+          <div class="transition">
+            <div class="loader-ring"></div>
+            <div class="loader-ray"></div>
+            <div class="loader-core"></div>
+          </div>
+        )
+      }
+
+      <div class="cursor-rune" aria-hidden="true">
+        <div class="cursor-rune-ripple"></div>
+        <div class="cursor-rune-ring">
+          <div class="cursor-rune-h"></div>
+          <div class="cursor-rune-v"></div>
+          <div class="cursor-rune-center"></div>
+        </div>
+      </div>
+
+      <canvas id="starfield"></canvas>
+
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      {hasExtraOrb && <div class="orb orb-3"></div>}
+
       <slot name="chrome" />
     </div>
+
     <div class="page">
       <Nav />
-      <slot />
+      <main id="main">
+        <slot />
+      </main>
       <Footer />
     </div>
+
     <slot name="scripts" />
+
+    <!-- ===== SITE CHROME JS (hoisted master rAF + starfield + cursor) ===== -->
+    <script is:inline>
+      (function () {
+        if (window.__ESOTERICA_CHROME_INIT__) return;
+        window.__ESOTERICA_CHROME_INIT__ = true;
+
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        window.__ESOTERICA_RAF__ = window.__ESOTERICA_RAF__ || {};
+
+        /* STARFIELD — offscreen nebula + frame-skipped twinkle (canonical homepage version) */
+        if (!reduce) {
+          const canvas = document.getElementById('starfield');
+          if (canvas) {
+            const ctx = canvas.getContext('2d');
+            const STAR_COUNT = 120;
+            let stars = [];
+            let frameSkip = 0;
+            let nebulaCanvas = null;
+            let nebulaCtx = null;
+
+            function drawNebula() {
+              nebulaCanvas = document.createElement('canvas');
+              nebulaCanvas.width = canvas.width;
+              nebulaCanvas.height = canvas.height;
+              nebulaCtx = nebulaCanvas.getContext('2d');
+
+              const grd = nebulaCtx.createRadialGradient(
+                canvas.width * 0.3, canvas.height * 0.4, 0,
+                canvas.width * 0.3, canvas.height * 0.4, canvas.width * 0.5
+              );
+              grd.addColorStop(0, 'rgba(60, 20, 100, 0.03)');
+              grd.addColorStop(1, 'transparent');
+              nebulaCtx.fillStyle = grd;
+              nebulaCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+              const grd2 = nebulaCtx.createRadialGradient(
+                canvas.width * 0.7, canvas.height * 0.6, 0,
+                canvas.width * 0.7, canvas.height * 0.6, canvas.width * 0.4
+              );
+              grd2.addColorStop(0, 'rgba(120, 80, 30, 0.02)');
+              grd2.addColorStop(1, 'transparent');
+              nebulaCtx.fillStyle = grd2;
+              nebulaCtx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            function createStars() {
+              stars = [];
+              for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                  x: Math.random() * canvas.width,
+                  y: Math.random() * canvas.height,
+                  r: Math.random() * 1.5 + 0.3,
+                  alpha: Math.random(),
+                  speed: Math.random() * 0.005 + 0.001,
+                  phase: Math.random() * Math.PI * 2
+                });
+              }
+            }
+
+            function resize() {
+              canvas.width = window.innerWidth;
+              canvas.height = window.innerHeight;
+              drawNebula();
+              createStars();
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+
+            ctx.fillStyle = 'rgb(232, 224, 212)';
+
+            window.__ESOTERICA_RAF__.tickStarfield = function tickStarfield(time) {
+              frameSkip = (frameSkip + 1) % 3;
+              if (frameSkip !== 0) return;
+
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              if (nebulaCanvas) ctx.drawImage(nebulaCanvas, 0, 0);
+
+              for (const star of stars) {
+                const twinkle = Math.sin(time * star.speed + star.phase) * 0.5 + 0.5;
+                const alpha = star.alpha * twinkle * 0.8 + 0.1;
+                ctx.globalAlpha = alpha;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+                ctx.fill();
+              }
+              ctx.globalAlpha = 1;
+            };
+          }
+        }
+
+        let tickCursor = null;
+        if (window.matchMedia('(pointer: fine)').matches) {
+          const dot = document.querySelector('.cursor-rune');
+          if (dot) {
+            let mx = 0, my = 0;
+            window.addEventListener('mousemove', function (e) {
+              mx = e.clientX;
+              my = e.clientY;
+            }, { passive: true });
+
+            tickCursor = function () {
+              dot.style.left = mx + 'px';
+              dot.style.top = my + 'px';
+            };
+
+            const INTERACTABLES = [
+              'a', 'button', '[data-scroll]',
+              '.nav-logo', '.nav-link-block',
+              '.product-card',
+              '.reading-card', '.reading-cta',
+              '.class-card', '.class-cta',
+              '.es-ct-wa-btn', '.es-ct-wa-number', '.es-ct-channel',
+              '.es-lg-contact__link',
+              '.es-ft-row', '.es-ft-direct-link'
+            ].join(', ');
+
+            document.querySelectorAll(INTERACTABLES).forEach(function (el) {
+              el.addEventListener('mouseenter', function () { dot.classList.add('is-hover'); });
+              el.addEventListener('mouseleave', function () { dot.classList.remove('is-hover'); });
+            });
+
+            window.addEventListener('mousedown', function () { dot.classList.add('is-click'); });
+            window.addEventListener('mouseup', function () { dot.classList.remove('is-click'); });
+          }
+        }
+
+        const tickStarfield = window.__ESOTERICA_RAF__.tickStarfield;
+
+        function esotericaMasterRaf(time) {
+          if (typeof tickStarfield === 'function') tickStarfield(time);
+
+          if (window.lenisInstance) {
+            window.lenisInstance.raf(time);
+            if (window.ScrollTrigger && typeof window.ScrollTrigger.update === 'function') {
+              window.ScrollTrigger.update();
+            }
+          }
+
+          if (typeof tickCursor === 'function') tickCursor();
+
+          requestAnimationFrame(esotericaMasterRaf);
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function () {
+            requestAnimationFrame(esotericaMasterRaf);
+          });
+        } else {
+          requestAnimationFrame(esotericaMasterRaf);
+        }
+      })();
+    </script>
   </body>
 </html>
