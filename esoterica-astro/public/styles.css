@@ -51,7 +51,8 @@ body.esoterica
     .how-title,
     .product-card-title,
     .reading-name,
-    .section-heading
+    .section-heading,
+    .nav-wordmark
   ) {
   display: inline-block;
   background-image: linear-gradient(
@@ -95,8 +96,13 @@ body.esoterica
     .how-title,
     .product-card-title,
     .reading-name,
-    .section-heading
+    .section-heading,
+    .nav-wordmark
   ):hover {
+  background-position: 0% 50%;
+}
+
+body.esoterica .nav-logo:hover .nav-wordmark {
   background-position: 0% 50%;
 }
 
@@ -290,6 +296,7 @@ body.esoterica > .es-site-chrome {
       .product-card-title,
       .reading-name,
       .section-heading,
+      .nav-wordmark,
       .section-label,
       .footer-logo-text
     ) {
@@ -310,9 +317,14 @@ body.esoterica > .es-site-chrome {
       .product-card-title,
       .reading-name,
       .section-heading,
+      .nav-wordmark,
       .section-label,
       .footer-logo-text
     ):hover {
+    background-position: 100% 50%;
+  }
+
+  body.esoterica .nav-logo:hover .nav-wordmark {
     background-position: 100% 50%;
   }
 }
@@ -773,6 +785,17 @@ button.nav-link-block {
   object-fit: cover;
   object-position: center 58%;
   border-radius: 50%;
+}
+
+.nav-wordmark {
+  font-family: var(--es-font-display);
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+body.esoterica .nav-logo .nav-wordmark {
+  cursor: inherit;
 }
 
 .nav-links-wrap {
