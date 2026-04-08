@@ -60,7 +60,9 @@ const { title = 'Esoterica', description, bodyClass } = Astro.props;
     <script is:inline src="https://unpkg.com/splitting/dist/splitting.js"></script>
   </head>
   <body class={`esoterica ${bodyClass ?? ''}`.trim()}>
-    <slot name="chrome" />
+    <div class="es-site-chrome">
+      <slot name="chrome" />
+    </div>
     <div class="page">
       <Nav />
       <slot />

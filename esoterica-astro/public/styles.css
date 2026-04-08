@@ -173,6 +173,12 @@ body.esoterica .page {
   z-index: 2;
 }
 
+/* Cursor, starfield, orbs, loader: one layer above .page so fixed UI is never buried */
+body.esoterica > .es-site-chrome {
+  position: relative;
+  z-index: 3;
+}
+
 /* Inner-page hero card (Option A — CSS-only, matches homepage mood) */
 .page-hero {
   padding: 6rem 1.25rem 3rem;
