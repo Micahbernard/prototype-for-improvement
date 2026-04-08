@@ -3,113 +3,6 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <style is:global>
-/* ===== HERO (inner .sub-hero-cosmos in styles.css) ===== */
-        /* inner-page override */
-        .page-hero {
-            padding: 5.5rem 1.25rem 2.5rem;
-            position: relative;
-        }
-
-        /* inner-page override */
-        .hero-sigil {
-            margin-bottom: 1.5rem;
-        }
-
-        /* inner-page override */
-        .hero-sigil img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            object-position: center 58%;
-            border-radius: 50%;
-            filter: drop-shadow(0 0 16px rgba(212, 168, 83, 0.3)) drop-shadow(0 0 40px rgba(90, 50, 140, 0.15));
-        }
-
-        /* inner-page override */
-        .hero-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 500;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-            max-width: 700px;
-        }
-
-        /* inner-page override */
-        .hero-subtitle {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.05rem, 1.8vw, 1.3rem);
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.7;
-            color: var(--es-text-muted);
-            max-width: var(--es-max-prose);
-            margin: 0 auto;
-        }
-
-        body.pg-tarot .sub-hero-cosmos {
-            min-height: min(68vh, 580px);
-            align-items: flex-start;
-            padding: 4rem 5rem;
-        }
-        body.pg-tarot .sub-hero-cosmos-inner {
-            text-align: left;
-            align-items: flex-start;
-            max-width: 640px;
-        }
-        body.pg-tarot .hero-breadcrumb {
-            display: flex;
-            justify-content: flex-start;
-        }
-        body.pg-tarot .hero-title {
-            text-align: left;
-            font-size: clamp(2.5rem, 5.5vw, 4rem);
-        }
-        body.pg-tarot .hero-subtitle {
-            text-align: left;
-            margin: 0;
-        }
-        body.pg-tarot .sub-hero-cosmos::before {
-            background:
-                radial-gradient(ellipse 50% 60% at 18% 80%, rgba(100, 60, 180, 0.28) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 35% at 80% 20%, rgba(140, 100, 200, 0.08) 0%, transparent 55%);
-        }
-        body.pg-tarot .sub-hero-cosmos::after {
-            background: none;
-        }
-        /* Decorative eye mark — top right corner */
-        body.pg-tarot .sub-hero-cosmos-inner::before {
-            content: '';
-            position: absolute;
-            top: 2rem;
-            right: 3rem;
-            width: 120px;
-            height: 60px;
-            border-radius: 50%;
-            border: 1px solid rgba(var(--es-gold-rgb), 0.15);
-            pointer-events: none;
-        }
-        body.pg-tarot .sub-hero-cosmos-inner::after {
-            content: '';
-            position: absolute;
-            top: calc(2rem + 24px);
-            right: calc(3rem + 48px);
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(var(--es-gold-rgb), 0.2);
-            box-shadow: 0 0 12px rgba(var(--es-gold-rgb), 0.15);
-            pointer-events: none;
-        }
-        @media (max-width: 768px) {
-            body.pg-tarot .sub-hero-cosmos { padding: 3rem 1.5rem; align-items: center; }
-            body.pg-tarot .sub-hero-cosmos-inner { text-align: center; align-items: center; }
-            body.pg-tarot .hero-title { text-align: center; }
-            body.pg-tarot .hero-subtitle { text-align: center; }
-            body.pg-tarot .sub-hero-cosmos-inner::before,
-            body.pg-tarot .sub-hero-cosmos-inner::after { display: none; }
-        }
-
         /* ===== SECTION SHARED ===== */
         /* inner-page override */
         .section {
@@ -521,20 +414,47 @@ import Layout from '../layouts/Layout.astro';
   </div>
 
 <!-- ===== HERO ===== -->
-        <section class="page-hero">
-            <div class="sub-hero-cosmos">
-                <div class="sub-hero-cosmos-inner">
-                    <div class="hero-sigil">
-                        <img src="/logo.png" alt="Esoterica" width="100" height="100" />
-                    </div>
-                    <div class="hero-breadcrumb">
-                        <a href="/">Home</a> &nbsp;/&nbsp; Tarot Readings
-                    </div>
-                    <h1 class="hero-title">The Cards Remember What You've Forgotten</h1>
-                    <p class="hero-subtitle">
-                        Each reading is a mirror held to the soul — revealing patterns, illuminating crossroads, and whispering
-                        truths your conscious mind may overlook.
+        <section class="es-th-hero">
+            <div class="es-th-hero__inner">
+                <div class="es-th-copy">
+                    <nav class="es-th-crumb" aria-label="Breadcrumb">
+                        <ol>
+                            <li><a href="/">Home</a></li>
+                            <li><span aria-current="page">Tarot Readings</span></li>
+                        </ol>
+                    </nav>
+                    <div class="es-th-rule" aria-hidden="true"></div>
+                    <h1 class="es-th-title">The Cards Remember What You've Forgotten</h1>
+                    <p class="es-th-lede">
+                        Each reading is a mirror held to the soul — revealing patterns, illuminating crossroads, and whispering truths your conscious mind may overlook.
                     </p>
+                </div>
+                <div class="es-th-spread" aria-hidden="true">
+                    <div class="es-th-card es-th-card--left">
+                        <div class="es-th-card__sigil">
+                            <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.2">
+                                <circle cx="20" cy="20" r="10"></circle>
+                                <path d="M20 5 L20 12 M20 28 L20 35 M5 20 L12 20 M28 20 L35 20"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="es-th-card es-th-card--center">
+                        <div class="es-th-card__sigil">
+                            <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.3">
+                                <ellipse cx="30" cy="30" rx="24" ry="12"></ellipse>
+                                <circle cx="30" cy="30" r="6" fill="currentColor" fill-opacity="0.35"></circle>
+                                <circle cx="30" cy="30" r="2.5" fill="currentColor"></circle>
+                                <path d="M30 6 L30 12 M30 48 L30 54 M6 30 L12 30 M48 30 L54 30" opacity="0.6"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="es-th-card es-th-card--right">
+                        <div class="es-th-card__sigil">
+                            <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.2">
+                                <path d="M20 6 L23.5 16.5 L34 16.5 L25.5 23 L29 33.5 L20 27 L11 33.5 L14.5 23 L6 16.5 L16.5 16.5 Z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -796,7 +716,37 @@ import Layout from '../layouts/Layout.astro';
         document.addEventListener("DOMContentLoaded", function () {
             gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-            // Native smooth scroll — no Lenis needed on this page
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                gsap.set('.es-th-card--left', { x: 0, y: 0, rotation: 0, opacity: 0 });
+                gsap.set('.es-th-card--right', { x: 0, y: 0, rotation: 0, opacity: 0 });
+                gsap.set('.es-th-card--center', { y: 0, opacity: 0 });
+
+                const tlHero = gsap.timeline({
+                    delay: 0.15,
+                    onComplete: () => {
+                        gsap.set('.es-th-card--center', { clearProps: 'transform' });
+                    },
+                });
+                tlHero
+                    .to('.es-th-card--center', { opacity: 1, y: -24, duration: 0.9, ease: 'power3.out' })
+                    .to('.es-th-card--left', { opacity: 1, x: -70, y: 20, rotation: -8, duration: 0.9, ease: 'power3.out' }, '-=0.55')
+                    .to('.es-th-card--right', { opacity: 1, x: 70, y: 20, rotation: 8, duration: 0.9, ease: 'power3.out' }, '-=0.9')
+                    .from('.es-th-crumb', { opacity: 0, x: -12, duration: 0.6, ease: 'power2.out' }, '-=0.5')
+                    .from('.es-th-rule', { opacity: 0, scaleX: 0, transformOrigin: 'left center', duration: 0.5, ease: 'power2.out' }, '-=0.4')
+                    .from('.es-th-title', { opacity: 0, y: 20, duration: 0.9, ease: 'power3.out' }, '-=0.3')
+                    .from('.es-th-lede', { opacity: 0, y: 15, duration: 0.7, ease: 'power3.out' }, '-=0.55');
+
+                gsap.to('.es-th-spread', {
+                    y: 40,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: '.es-th-hero',
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: 1,
+                    },
+                });
+            }
 
             // Fade-up all sections
             document.querySelectorAll('.section, .quote-section').forEach(section => {
@@ -848,61 +798,6 @@ import Layout from '../layouts/Layout.astro';
                     if (cta) gsap.to(cta, { letterSpacing: '0.15em', duration: 0.3, ease: 'power2.out' });
                 });
             });
-
-            // Hero fade in
-            gsap.from('.page-hero .hero-sigil', { y: 30, opacity: 0, duration: 1, delay: 0.3, ease: 'power3.out' });
-            gsap.from('.page-hero .hero-breadcrumb', { y: 30, opacity: 0, duration: 1, delay: 0.5, ease: 'power3.out' });
-            gsap.from('.page-hero .hero-title', { y: 40, opacity: 0, duration: 1.2, delay: 0.6, ease: 'power3.out' });
-            gsap.from('.page-hero .hero-subtitle', { y: 40, opacity: 0, duration: 1.2, delay: 0.8, ease: 'power3.out' });
-
-            // Sub-hero parallax depth
-            if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                const subHero = document.querySelector(".sub-hero-cosmos");
-                const subHeroInner = document.querySelector(".sub-hero-cosmos-inner");
-                const subHeroSigil = document.querySelector(".hero-sigil");
-                const subHeroBefore = document.querySelector(".sub-hero-cosmos");
-
-                if (subHero && subHeroInner) {
-                    // Layer 1 — background glow (slowest, 15% scroll rate)
-                    gsap.to(subHero, {
-                        backgroundPositionY: "30%",
-                        ease: "none",
-                        scrollTrigger: {
-                            trigger: subHero,
-                            start: "top top",
-                            end: "bottom top",
-                            scrub: true
-                        }
-                    });
-
-                    // Layer 2 — sigil logo (medium, 25% scroll rate)
-                    if (subHeroSigil) {
-                        gsap.to(subHeroSigil, {
-                            y: -40,
-                            ease: "none",
-                            scrollTrigger: {
-                                trigger: subHero,
-                                start: "top top",
-                                end: "bottom top",
-                                scrub: true
-                            }
-                        });
-                    }
-
-                    // Layer 3 — text content (fastest, 45% scroll rate)
-                    gsap.to(subHeroInner, {
-                        y: -70,
-                        opacity: 0,
-                        ease: "none",
-                        scrollTrigger: {
-                            trigger: subHero,
-                            start: "top top",
-                            end: "60% top",
-                            scrub: true
-                        }
-                    });
-                }
-            }
 
             // Bracket hover animations
             document.querySelectorAll('.nav-link-block').forEach(link => {

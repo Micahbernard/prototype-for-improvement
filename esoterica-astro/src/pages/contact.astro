@@ -2,70 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<style is:global>
-/* ===== HERO (outer shell; inner .sub-hero-cosmos in styles.css) ===== */
-        /* inner-page override */
-        .page-hero {
-            padding: 5.5rem 1.25rem 2.5rem;
-            position: relative;
-        }
-
-        /* inner-page override */
-        .hero-sigil {
-            margin-bottom: 1.5rem;
-        }
-
-        /* inner-page override */
-        .hero-sigil img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            object-position: center 58%;
-            border-radius: 50%;
-            filter: drop-shadow(0 0 16px rgba(212, 168, 83, 0.3)) drop-shadow(0 0 40px rgba(90, 50, 140, 0.15));
-        }
-
-        /* inner-page override */
-        .hero-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 500;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-            max-width: 700px;
-        }
-
-        /* inner-page override */
-        .hero-subtitle {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.05rem, 1.8vw, 1.3rem);
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.7;
-            color: var(--es-text-muted);
-            max-width: var(--es-max-prose);
-            margin: 0 auto;
-        }
-
-        body.pg-contact .sub-hero-cosmos {
-            min-height: min(55vh, 480px);
-            border-color: rgba(37, 211, 102, 0.12);
-            box-shadow: inset 0 0 80px rgba(37, 211, 102, 0.04);
-        }
-        body.pg-contact .sub-hero-cosmos::before {
-            background:
-                radial-gradient(ellipse 40% 35% at 68% 68%, rgba(37, 211, 102, 0.09) 0%, transparent 60%),
-                radial-gradient(ellipse 70% 55% at 50% 55%, rgba(20, 100, 50, 0.05) 0%, transparent 72%);
-        }
-        body.pg-contact .hero-sigil {
-            display: none;
-        }
-        body.pg-contact .hero-title {
-            font-size: clamp(2.8rem, 6vw, 4.5rem);
-            margin-bottom: 1.5rem;
-        }
-</style>
-
 <Layout title="Contact — Esoterica" description="Reach Esoterica directly — WhatsApp, email, and social." bodyClass="pg-contact">
   <div slot="chrome">
   <div class="cursor-rune" aria-hidden="true">
@@ -81,18 +17,25 @@ import Layout from '../layouts/Layout.astro';
   <div class="orb orb-2"></div>
   </div>
 
-<section class="page-hero">
-  <div class="sub-hero-cosmos">
-    <div class="sub-hero-cosmos-inner">
-      <div class="hero-breadcrumb">
-        <a href="/">Home</a> &nbsp;/&nbsp; Contact
-      </div>
-      <h1 class="hero-title">Speak Into the Veil</h1>
-      <p class="hero-subtitle">
-        We read every message. Reach us directly — no forms, no waiting rooms.<br/>
-        Just a conversation, held with intention.
-      </p>
-    </div>
+<section class="es-ct-hero">
+  <div class="es-ct-ripple" aria-hidden="true">
+    <div class="es-ct-ripple__ring"></div>
+    <div class="es-ct-ripple__ring"></div>
+    <div class="es-ct-ripple__ring"></div>
+    <div class="es-ct-ripple__point"></div>
+  </div>
+  <div class="es-ct-hero__inner">
+    <nav class="es-ct-hero-crumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><span aria-current="page">Contact</span></li>
+      </ol>
+    </nav>
+    <div class="es-ct-hero-rule" aria-hidden="true"></div>
+    <h1 class="es-ct-hero-title">Speak Into the Veil</h1>
+    <p class="es-ct-hero-lede">
+      We read every message. Reach us directly — no forms, no waiting rooms. Just a conversation, held with intention.
+    </p>
   </div>
 </section>
 
@@ -221,60 +164,37 @@ import Layout from '../layouts/Layout.astro';
 
             gsap.registerPlugin(ScrollTrigger);
 
-            gsap.from('.page-hero .hero-breadcrumb', { opacity: 0, y: 10, duration: 0.8, ease: 'power3.out', delay: 0.3 });
-            gsap.from('.page-hero .hero-title', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.5 });
-            gsap.from('.page-hero .hero-subtitle', { opacity: 0, y: 15, duration: 0.8, ease: 'power3.out', delay: 0.7 });
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                gsap.from('.es-ct-ripple__point', {
+                    opacity: 0,
+                    scale: 0,
+                    transformOrigin: '50% 50%',
+                    duration: 0.8,
+                    ease: 'back.out(2)',
+                    delay: 0.2,
+                });
+                gsap.from('.es-ct-ripple__ring', {
+                    opacity: 0,
+                    duration: 1.0,
+                    ease: 'power2.out',
+                    delay: 0.5,
+                    stagger: 0.15,
+                });
+                gsap.from('.es-ct-hero-crumb', { opacity: 0, y: 10, duration: 0.7, ease: 'power3.out', delay: 0.8 });
+                gsap.from('.es-ct-hero-rule', {
+                    opacity: 0,
+                    scaleX: 0,
+                    transformOrigin: 'center center',
+                    duration: 0.6,
+                    ease: 'power2.out',
+                    delay: 0.9,
+                });
+                gsap.from('.es-ct-hero-title', { opacity: 0, y: 20, duration: 1.0, ease: 'power3.out', delay: 1.0 });
+                gsap.from('.es-ct-hero-lede', { opacity: 0, y: 15, duration: 0.8, ease: 'power3.out', delay: 1.15 });
+            }
 
             gsap.from('.es-ct-primary', { opacity: 0, y: 40, duration: 1, ease: 'power3.out', delay: 0.3 });
             gsap.from('.es-ct-secondary', { opacity: 0, x: 30, duration: 1, ease: 'power3.out', delay: 0.5 });
-
-            // Sub-hero parallax depth
-            if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                const subHero = document.querySelector(".sub-hero-cosmos");
-                const subHeroInner = document.querySelector(".sub-hero-cosmos-inner");
-                const subHeroSigil = document.querySelector(".hero-sigil");
-
-                if (subHero && subHeroInner) {
-                    // Layer 1 — background glow (slowest, 15% scroll rate)
-                    gsap.to(subHero, {
-                        backgroundPositionY: "30%",
-                        ease: "none",
-                        scrollTrigger: {
-                            trigger: subHero,
-                            start: "top top",
-                            end: "bottom top",
-                            scrub: true
-                        }
-                    });
-
-                    // Layer 2 — sigil logo (medium, 25% scroll rate)
-                    if (subHeroSigil) {
-                        gsap.to(subHeroSigil, {
-                            y: -40,
-                            ease: "none",
-                            scrollTrigger: {
-                                trigger: subHero,
-                                start: "top top",
-                                end: "bottom top",
-                                scrub: true
-                            }
-                        });
-                    }
-
-                    // Layer 3 — text content (fastest, 45% scroll rate)
-                    gsap.to(subHeroInner, {
-                        y: -70,
-                        opacity: 0,
-                        ease: "none",
-                        scrollTrigger: {
-                            trigger: subHero,
-                            start: "top top",
-                            end: "60% top",
-                            scrub: true
-                        }
-                    });
-                }
-            }
         })();
   </script>
 </Layout>
