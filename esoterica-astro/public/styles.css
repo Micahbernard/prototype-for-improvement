@@ -4003,59 +4003,168 @@ body.pg-tarot .orb {
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding-left: 1rem;
+  padding-left: 0.5rem;
 }
 
+/* The vertical rail — 2px wide, restrained gold. Sits at the centerline
+   of the number column (grid col 1 is 5rem wide → center is 2.5rem from the
+   grid edge; add the 0.5rem padding-left offset and we land at 3rem from
+   .how-timeline's left). */
 .how-timeline-line {
   position: absolute;
-  left: 0.35rem;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: color-mix(in srgb, var(--es-gold) 12%, transparent);
+  left: 3rem;
+  top: 2rem;
+  bottom: 2rem;
+  width: 2px;
+  background: color-mix(in srgb, var(--es-gold) 18%, transparent);
+  transform: translateX(-50%);
+  border-radius: 2px;
+  overflow: visible;
 }
 
+/* The filled progress — single gold, with soft glow that follows the fill */
 .how-timeline-progress {
+  position: relative;
   width: 100%;
   height: 0%;
-  background: linear-gradient(180deg, var(--es-gold), var(--es-violet));
+  background: linear-gradient(
+    180deg,
+    var(--es-gold) 0%,
+    color-mix(in srgb, var(--es-gold) 85%, var(--es-gold-light)) 100%
+  );
+  border-radius: 2px;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--es-gold) 40%, transparent);
   transition: height 0.1s linear;
 }
 
+/* The playhead — a circle that rides the bottom edge of the filled portion,
+   like a scrub indicator. Lives as a ::after on the progress element so it
+   sits at the progress's current bottom edge automatically. */
+.how-timeline-progress::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--es-gold-light);
+  transform: translateX(-50%);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--es-gold) 25%, transparent),
+    0 0 16px color-mix(in srgb, var(--es-gold) 70%, transparent),
+    0 0 32px color-mix(in srgb, var(--es-gold) 35%, transparent);
+  animation: es-how-playhead-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes es-how-playhead-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--es-gold) 25%, transparent),
+      0 0 16px color-mix(in srgb, var(--es-gold) 70%, transparent),
+      0 0 32px color-mix(in srgb, var(--es-gold) 35%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--es-gold) 35%, transparent),
+      0 0 22px color-mix(in srgb, var(--es-gold) 90%, transparent),
+      0 0 44px color-mix(in srgb, var(--es-gold) 50%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .how-timeline-progress::after {
+    animation: none;
+  }
+}
+
+/* Each step in the timeline */
 .how-step {
+  position: relative;
   display: grid;
   grid-template-columns: 5rem 1fr;
   gap: 2rem;
   padding: 3rem 0;
   border-bottom: 1px solid color-mix(in srgb, var(--es-gold) 8%, transparent);
-  opacity: 0.35;
+  opacity: 0.55;
   transition: opacity 0.5s ease;
-}
-
-.how-step.is-active {
-  opacity: 1;
 }
 
 .how-step:last-child {
   border-bottom: none;
 }
 
+.how-step.is-active {
+  opacity: 1;
+}
+
+/* A node marker on the rail at each step's vertical center.
+   Uses a ::before on .how-step that's absolutely positioned on the rail. */
+.how-step::before {
+  content: '';
+  position: absolute;
+  left: 3.5rem;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--es-bg-deep);
+  border: 1.5px solid color-mix(in srgb, var(--es-gold) 45%, transparent);
+  transform: translate(-50%, -50%);
+  transition: background 0.45s ease, border-color 0.45s ease, box-shadow 0.45s ease, transform 0.45s ease;
+  z-index: 2;
+}
+
+.how-step.is-active::before {
+  background: var(--es-gold);
+  border-color: var(--es-gold-light);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--es-gold) 18%, transparent),
+    0 0 14px color-mix(in srgb, var(--es-gold) 55%, transparent);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* The Roman numeral */
 .how-step-number {
   font-family: var(--es-font-display);
   font-size: 3.5rem;
   font-weight: 400;
   color: var(--es-gold);
-  opacity: 0.25;
+  opacity: 0.4;
   line-height: 1;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  transform: translateY(4px);
   padding-top: 0.25rem;
+  padding-left: 1rem;
+  transform: translateY(4px);
+  transition: opacity 0.45s ease, transform 0.45s ease, text-shadow 0.45s ease;
+  cursor: default;
 }
 
+/* Hover: brighten the numeral (independent of scroll-active state).
+   The hover target is the parent .how-step because the number itself
+   is small and users expect hover on the row to work. */
+.how-step:hover .how-step-number {
+  opacity: 0.85;
+  transform: translateY(0);
+  text-shadow:
+    0 0 18px color-mix(in srgb, var(--es-gold) 35%, transparent),
+    0 0 40px color-mix(in srgb, var(--es-gold) 18%, transparent);
+}
+
+/* Active (scrolled into view): full brightness + stronger glow.
+   Active overrides hover, so we put it after the hover rule. */
 .how-step.is-active .how-step-number {
   opacity: 1;
   transform: translateY(0);
+  text-shadow:
+    0 0 22px color-mix(in srgb, var(--es-gold) 50%, transparent),
+    0 0 48px color-mix(in srgb, var(--es-gold) 25%, transparent);
 }
+
+/* When a step is hovered while also active, keep the active state
+   (no regression). Browsers resolve this by specificity already since
+   .how-step.is-active .how-step-number has equal specificity to
+   .how-step:hover .how-step-number, but :is-active comes later in source
+   order so it wins. Leave as-is. */
 
 .how-step-content {
   padding-top: 0.5rem;
@@ -4129,7 +4238,15 @@ body.pg-tarot .orb {
     grid-template-columns: 1fr 1fr;
   }
 
+  .how-timeline {
+    padding-left: 0;
+  }
+
   .how-timeline-line {
+    display: none;
+  }
+
+  .how-step::before {
     display: none;
   }
 
@@ -4141,6 +4258,15 @@ body.pg-tarot .orb {
 
   .how-step-number {
     font-size: 2rem;
-    opacity: 0.5;
+    opacity: 0.7;
+    padding-left: 0;
+  }
+
+  .how-step:hover .how-step-number {
+    opacity: 0.85;
+  }
+
+  .how-step.is-active .how-step-number {
+    opacity: 1;
   }
 }
