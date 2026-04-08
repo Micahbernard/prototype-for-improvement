@@ -1972,6 +1972,7 @@ footer a:hover {
 }
 
 .es-ft-body {
+  position: relative;
   max-width: 1100px;
   margin: 0 auto;
   padding: 4rem 3rem 1.5rem;
@@ -1979,6 +1980,25 @@ footer a:hover {
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
   align-items: start;
+}
+
+.es-ft-body::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 2.5rem;
+  bottom: 1rem;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(var(--es-gold-rgb), 0.1) 18%,
+    rgba(var(--es-gold-rgb), 0.18) 50%,
+    rgba(var(--es-gold-rgb), 0.1) 82%,
+    transparent
+  );
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .es-ft-logo {
@@ -2014,30 +2034,12 @@ footer a:hover {
   max-width: 260px;
 }
 
-.es-ft-legal {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-}
-
-.es-ft-legal-link {
-  font-size: 0.7rem;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--es-text-faint);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.es-ft-legal-link:hover {
-  color: var(--es-gold);
-}
-
-.es-ft-legal-sep {
-  color: rgba(var(--es-gold-rgb), 0.2);
-  font-size: 0.65rem;
+.es-ft-rule {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--es-gold), transparent);
+  margin: 0.25rem 0 1.5rem;
+  transform-origin: left center;
 }
 
 .es-ft-copy {
@@ -2135,19 +2137,43 @@ footer a:hover {
   transform: translate(3px, -3px);
 }
 
+.es-ft-row--legal {
+  padding: 0.7rem 0;
+}
+
+.es-ft-row--legal:first-of-type {
+  border-top: none;
+}
+
+.es-ft-row--legal .es-ft-row-num {
+  font-size: 0.58rem;
+  min-width: 2.2rem;
+}
+
+.es-ft-row--legal .es-ft-row-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.es-ft-row--legal .es-ft-row-arrow {
+  font-size: 0.75rem;
+}
+
 /* Wordmark */
 .es-ft-wordmark-wrap {
   border-top: 1px solid rgba(var(--es-gold-rgb), 0.06);
-  padding: 2rem 3rem 2.5rem;
-  padding-right: 3rem;
+  padding: 2.5rem 2rem 3rem;
+  text-align: center;
   overflow: hidden;
 }
 
 .es-ft-wordmark {
+  display: inline-block;
   font-family: var(--es-font-display);
-  font-size: clamp(2.5rem, 9vw, 8rem);
+  font-size: clamp(2.5rem, 13vw, 11rem);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.02em;
   line-height: 0.9;
   color: transparent;
   -webkit-text-stroke: 1px rgba(var(--es-gold-rgb), 0.12);
@@ -2170,6 +2196,15 @@ footer a:hover {
     grid-template-columns: 1fr;
     gap: 2.5rem;
     padding: 3rem 1.5rem 2rem;
+  }
+  .es-ft-body::before {
+    display: none;
+  }
+  .es-ft-rule {
+    margin: 0.25rem 0 1.25rem;
+  }
+  .es-ft-row--legal {
+    padding: 0.6rem 0;
   }
   .es-ft-wordmark-wrap { padding: 1.5rem 1.5rem 2rem; }
   .es-ft-desc { max-width: 100%; }
