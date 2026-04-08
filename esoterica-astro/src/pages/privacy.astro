@@ -1,393 +1,233 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const lastUpdated = 'April 2026';
+
+const sections = [
+  { id: 'who-we-are', label: 'Who we are' },
+  { id: 'what-we-collect', label: 'What we collect' },
+  { id: 'how-we-use', label: 'How we use information' },
+  { id: 'cookies', label: 'Cookies & similar tech' },
+  { id: 'third-parties', label: 'Third parties' },
+  { id: 'your-rights', label: 'Your rights (ARCO+)' },
+  { id: 'retention', label: 'How long we keep data' },
+  { id: 'security', label: 'Security' },
+  { id: 'minors', label: 'Minors' },
+  { id: 'changes', label: 'Changes to this policy' },
+] as const;
 ---
 
-<style is:global>
-/* ===== BARE HERO (privacy) ===== */
-        .pg-bare-hero {
-            padding: 8rem 3rem 4rem;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .pg-bare-hero-inner {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1.25rem;
-        }
-        .pg-bare-rule {
-            width: 60px;
-            height: 1px;
-            background: linear-gradient(90deg, var(--es-gold), transparent);
-            margin: 0.5rem 0;
-        }
-        .pg-bare-title {
-            font-size: clamp(3rem, 7vw, 5.5rem) !important;
-            font-weight: 400 !important;
-            letter-spacing: 0.02em;
-            line-height: 1 !important;
-            text-align: left !important;
-            margin: 0 !important;
-            max-width: none !important;
-        }
-        body.pg-privacy .hero-subtitle {
-            font-family: var(--es-font-serif);
-            font-size: 1rem;
-            font-style: italic;
-            color: var(--es-text-faint);
-            margin: 0;
-        }
-        body.pg-privacy .hero-breadcrumb {
-            font-size: 0.65rem;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: var(--es-text-dim);
-        }
-        body.pg-privacy .hero-breadcrumb a {
-            color: var(--es-text-faint);
-            text-decoration: none;
-        }
-
-        /* ===== SECTION SHARED ===== */
-        /* inner-page override */
-        .section {
-            padding: 6rem 2rem;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        /* inner-page override */
-        .section-divider {
-            width: 60px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--es-gold), transparent);
-            margin: 0 auto 2rem;
-        }
-
-        /* inner-page override */
-        .section-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        /* inner-page override */
-        .section-description {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.15rem;
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.7;
-            color: var(--es-text-muted);
-            text-align: center;
-            max-width: var(--es-max-prose);
-            margin: 0 auto 3rem;
-        }
-
-        /* ===== CLASS CARDS GRID ===== */
-        .classes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .class-card {
-            background: var(--es-bg-card-soft);
-            border: 1px solid var(--es-border-card);
-            border-radius: var(--es-radius-card-sm);
-            padding: 2.5rem 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-            cursor: pointer;
-        }
-
-        .class-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--es-border-card-hover);
-            box-shadow: var(--es-shadow-card-hover);
-        }
-
-        .class-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 50% 20%, rgba(100, 60, 180, 0.08) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .class-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1.2rem;
-            display: block;
-            color: var(--es-gold);
-        }
-
-        .class-icon svg {
-            display: block;
-            margin: 0 auto;
-        }
-
-        .class-badge {
-            display: inline-block;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--es-bg-deep);
-            background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            margin-bottom: 1rem;
-        }
-
-        .class-name {
-            font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .class-type {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 500;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--es-gold);
-            margin-bottom: 1rem;
-        }
-
-        .class-desc {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.6;
-            color: rgba(var(--es-text-rgb), 0.68);
-            margin-bottom: 1.5rem;
-        }
-
-        .class-details {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            color: var(--es-text-faint);
-            margin-bottom: 1.5rem;
-            line-height: 1.8;
-        }
-
-        .class-price {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            color: var(--es-gold);
-            margin-bottom: 1.5rem;
-        }
-
-        .class-cta {
-            display: inline-block;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--es-bg-deep);
-            background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
-
-        .class-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(212, 168, 83, 0.25);
-        }
-
-        /* ===== FORMAT SECTION ===== */
-        .format-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2.5rem;
-            text-align: center;
-        }
-
-        .format-item {
-            position: relative;
-        }
-
-        .format-icon {
-            font-size: 2rem;
-            color: rgba(var(--es-gold-rgb), 0.6);
-            margin-bottom: 1rem;
-        }
-
-        .format-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 0.6rem;
-        }
-
-        .format-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.95rem;
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.6;
-            color: var(--es-text-faint);
-        }
-
-        /* ===== QUOTE ===== */
-        /* inner-page override */
-        .quote-section {
-            text-align: center;
-            padding: 5rem 2rem;
-        }
-
-        /* inner-page override */
-        .quote-mark {
-            font-family: 'Cinzel', serif;
-            font-size: 5rem;
-            line-height: 1;
-            color: rgba(var(--es-gold-rgb), 0.15);
-        }
-
-        /* inner-page override */
-        .quote-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.7;
-            color: var(--es-text-subtle);
-            max-width: 600px;
-            margin: 0 auto 1rem;
-        }
-
-        /* inner-page override */
-        .quote-author {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--es-text-dim);
-        }
-</style>
-
-<Layout title="Privacy Policy — Esoterica" description="Privacy Policy — Esoterica." bodyClass="pg-privacy">
-  <div slot="chrome">
-  <div class="cursor-rune" aria-hidden="true">
-    <div class="cursor-rune-ripple"></div>
-    <div class="cursor-rune-ring">
-      <div class="cursor-rune-h"></div>
-      <div class="cursor-rune-v"></div>
-      <div class="cursor-rune-center"></div>
+<Layout
+  title="Privacy Policy — Esoterica"
+  description="Privacy Policy for Esoterica, Chiclayo, Perú — how we process personal data under Ley N° 29733 (Ley de Protección de Datos Personales) and your ARCO rights."
+  bodyClass="pg-privacy"
+>
+  <section class="es-lg-hero" aria-labelledby="privacy-title">
+    <div class="es-lg-hero__inner">
+      <nav class="es-lg-crumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li aria-current="page">Privacy Policy</li>
+        </ol>
+      </nav>
+      <div class="es-lg-rule" aria-hidden="true"></div>
+      <h1 id="privacy-title" class="es-lg-title">Privacy Policy</h1>
+      <p class="es-lg-lede">
+        How Esoterica collects, uses, and protects personal information when you visit our site, message us, book a reading, or shop with us — in line with Peruvian law.
+      </p>
+      <p class="es-lg-meta">Last updated · {lastUpdated}</p>
     </div>
-  </div>
-  <canvas id="starfield"></canvas>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  </div>
+  </section>
 
-<section class="pg-bare-hero">
-  <div class="pg-bare-hero-inner">
-    <div class="hero-breadcrumb">
-      <a href="/">Home</a> &nbsp;/&nbsp; Privacy Policy
-    </div>
-    <div class="pg-bare-rule"></div>
-    <h1 class="hero-title pg-bare-title">Privacy Policy</h1>
-    <p class="hero-subtitle">Our commitment to your trust and your data.</p>
-  </div>
-</section>
+  <article class="es-lg-body">
+    <nav class="es-lg-toc" aria-labelledby="toc-heading">
+      <h2 id="toc-heading" class="es-lg-toc__label">On this page</h2>
+      <ol>
+        {sections.map((s) => (
+          <li>
+            <a href={`#${s.id}`}>{s.label}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <section class="es-lg-section" id="who-we-are" aria-labelledby="h-who">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-who" class="es-lg-h2">Who we are</h2>
+      <p class="es-lg-p">
+        <strong>Esoterica</strong> is a small esoteric shop based in <em>Chiclayo, Lambayeque, Perú</em>. We sell crystals, tarot decks, ritual goods, and related services including readings and workshops. When this policy says “we,” “us,” or “our,” it refers to Esoterica as the data controller for the processing described here.
+      </p>
+      <p class="es-lg-p">
+        We process personal data in accordance with <strong>Ley N° 29733</strong>, Ley de Protección de Datos Personales, its regulations, and other applicable Peruvian norms. This policy explains what we collect, why we use it, who we share it with, how long we keep it, and the rights you have — including <em>acceso, rectificación, cancelación, oposición</em> and related protections.
+      </p>
+      <p class="es-lg-note">
+        This policy is provided in good faith for transparency. It is not legal advice. We recommend that a qualified attorney in Perú review it before you rely on it for compliance or publication.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="what-we-collect" aria-labelledby="h-collect">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-collect" class="es-lg-h2">What we collect</h2>
+      <p class="es-lg-p">
+        <strong>Information you give us.</strong> When you contact us (for example via WhatsApp or email), place an order, book a reading or class, or sign up for updates, you may provide your name, phone number, email address, delivery address, payment references (for bank transfer, Yape, Plin, or similar), and the content of your messages. If you attend a reading, you might share personal topics voluntarily; we treat that information with care and do not use it for unrelated marketing.
+      </p>
+      <p class="es-lg-p">
+        <strong>Information collected automatically.</strong> Like most sites, our hosting and infrastructure may process technical data such as browser type, device type, approximate region (from IP at aggregate level), and pages visited. We use this to keep the site secure, fix errors, and understand traffic in aggregate — not to build invasive profiles.
+      </p>
+      <p class="es-lg-p">
+        We do not ask for special categories of sensitive data (such as health data) as a condition of using the shop. If you voluntarily share sensitive information during a spiritual consultation, we only use it to provide that service unless you consent otherwise or the law requires otherwise.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="how-we-use" aria-labelledby="h-use">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-use" class="es-lg-h2">How we use information</h2>
+      <p class="es-lg-p">We use personal data to:</p>
+      <ul class="es-lg-list">
+        <li>Respond to inquiries and provide customer support</li>
+        <li>Process and deliver orders, and coordinate shipping within Perú (and internationally only when agreed)</li>
+        <li>Schedule and deliver readings, classes, and events you book</li>
+        <li>Meet accounting, tax, and legal obligations under Peruvian law</li>
+        <li>Improve our website and services in a privacy-respecting way</li>
+        <li>Protect against fraud, abuse, or security incidents</li>
+      </ul>
+      <p class="es-lg-p">
+        We do <strong>not</strong> sell your personal data. We do not use it for automated decision-making that affects your legal rights. We do not build cross-site tracking profiles for advertising brokers.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="cookies" aria-labelledby="h-cookies">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-cookies" class="es-lg-h2">Cookies &amp; similar technologies</h2>
+      <p class="es-lg-p">
+        We may use strictly necessary cookies or local storage required for the site to function (for example session stability or security). If we use privacy-respecting analytics, it will be configured to minimize identification and retention. You can block cookies in your browser; some features may not work perfectly if you do.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="third-parties" aria-labelledby="h-third">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-third" class="es-lg-h2">Third-party services</h2>
+      <p class="es-lg-p">
+        Depending on how you interact with us, data may be processed by providers such as: <strong>Meta</strong> (WhatsApp and Instagram), <strong>TikTok</strong>, shipping couriers operating in Perú, payment rails you choose (Yape, Plin, bank transfer), our email provider, and static hosting or DNS services. Each has its own privacy policy; we choose providers that align with our needs and, where possible, data processing terms appropriate for a small business in Perú.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="your-rights" aria-labelledby="h-rights">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-rights" class="es-lg-h2">Your rights (ARCO and related)</h2>
+      <p class="es-lg-p">
+        Under Ley N° 29733, you generally have rights including <strong>access</strong> (know what we hold), <strong>rectification</strong> (correct inaccurate data), <strong>cancellation</strong> (delete when applicable), <strong>opposition</strong> (object to certain processing), <strong>information</strong> about use, and the ability to <strong>revoke consent</strong> where processing is consent-based — subject to legal exceptions (for example, data we must retain for tax or contractual reasons).
+      </p>
+      <p class="es-lg-p">
+        To exercise these rights, contact us using the channel at the end of this page. You may also file a complaint with the <strong>Autoridad Nacional de Protección de Datos Personales</strong> if you believe your rights have been infringed, in accordance with current Peruvian procedures.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="retention" aria-labelledby="h-retention">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-retention" class="es-lg-h2">Retention</h2>
+      <p class="es-lg-p">
+        We keep information only as long as needed for the purposes above. Order and invoicing records may be retained for periods required by <em>normativa tributaria y contable</em> in Perú. Booking and consultation records are typically kept for a limited period (for example, around twelve months after your last relevant contact) unless a longer period is justified for disputes or legal compliance. WhatsApp and messaging history depends on your and the platform’s settings; we do not promise indefinite storage of chats.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="security" aria-labelledby="h-security">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-security" class="es-lg-h2">Security</h2>
+      <p class="es-lg-p">
+        We implement reasonable technical and organizational measures appropriate to the size of our operation — including access control, careful handling of messages, and secure connections where offered by our providers. No method of transmission over the internet is completely secure; we will notify you of a personal data breach when required by applicable law.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="minors" aria-labelledby="h-minors">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-minors" class="es-lg-h2">Minors</h2>
+      <p class="es-lg-p">
+        Our services are intended for adults <strong>18 years or older</strong>. We do not knowingly collect personal data from minors. If you believe a minor has provided us data, contact us and we will take steps to delete it where appropriate.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="changes" aria-labelledby="h-changes">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-changes" class="es-lg-h2">Changes to this policy</h2>
+      <p class="es-lg-p">
+        We may update this policy to reflect changes in our practices or the law. The “Last updated” date at the top shows the current version. Material changes will be posted on this page; continued use of the site after updates constitutes your acknowledgment of the revised policy where permitted by law.
+      </p>
+    </section>
+
+    <aside class="es-lg-contact" aria-labelledby="contact-privacy-heading">
+      <p class="es-lg-contact__label" id="contact-privacy-heading">Questions</p>
+      <h2 class="es-lg-contact__title">Privacy &amp; data requests</h2>
+      <p class="es-lg-contact__text">
+        Message us on WhatsApp for ARCO requests or general privacy questions. We respond as promptly as our small team allows.
+      </p>
+      <a
+        class="es-lg-contact__link"
+        href="https://wa.me/51919623179?text=Hola%20Esoterica%20%E2%80%94%20tengo%20una%20pregunta%20sobre%20privacidad."
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Open WhatsApp
+      </a>
+    </aside>
+  </article>
+
   <script is:inline slot="scripts">
-/* ===== STARFIELD ===== */
-        (function () {
-            const canvas = document.getElementById('starfield');
-            const ctx = canvas.getContext('2d');
-            let stars = [];
-            const STAR_COUNT = 120;
+    (function () {
+      if (typeof gsap === 'undefined') return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      gsap.registerPlugin(ScrollTrigger);
 
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
+      const ease = 'power3.out';
+      const ruleOrigin = document.body.classList.contains('pg-terms') ? 'right center' : 'left center';
 
-            function init() {
-                stars = Array.from({ length: STAR_COUNT }, () => ({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    r: Math.random() * 1.2 + 0.3,
-                    alpha: Math.random() * 0.6 + 0.1,
-                    speed: Math.random() * 0.008 + 0.004,
-                    phase: Math.random() * Math.PI * 2,
-                }));
-            }
+      gsap.timeline({ defaults: { ease } })
+        .from('.es-lg-crumb li', { opacity: 0, y: 10, duration: 0.45, stagger: 0.07 }, 0.2)
+        .from('.es-lg-rule', { scaleX: 0, duration: 0.5, transformOrigin: ruleOrigin }, 0.35)
+        .from('.es-lg-title', { opacity: 0, y: 22, duration: 0.65 }, 0.45)
+        .from('.es-lg-lede', { opacity: 0, y: 16, duration: 0.55 }, 0.65)
+        .from('.es-lg-meta', { opacity: 0, y: 10, duration: 0.45 }, 0.8);
 
-            function draw(t) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                stars.forEach(s => {
-                    const a = s.alpha * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
-                    ctx.beginPath();
-                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(232,224,212,${a})`;
-                    ctx.fill();
-                });
-                requestAnimationFrame(draw);
-            }
+      gsap.from('.es-lg-toc', {
+        opacity: 0,
+        y: 20,
+        duration: 0.65,
+        ease,
+        scrollTrigger: {
+          trigger: '.es-lg-toc',
+          start: 'top 88%',
+          toggleActions: 'play none none none',
+        },
+      });
 
-            resize();
-            init();
-            window.addEventListener('resize', () => { resize(); init(); });
-            requestAnimationFrame(draw);
-        })();
+      document.querySelectorAll('.es-lg-section').forEach(function (section) {
+        const num = section.querySelector('.es-lg-section__num');
+        const h2 = section.querySelector('.es-lg-h2');
+        const bodyEls = section.querySelectorAll('.es-lg-p, .es-lg-list, .es-lg-h3, .es-lg-note');
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 82%',
+            toggleActions: 'play none none none',
+          },
+        });
+        if (num) tl.from(num, { x: -12, opacity: 0, duration: 0.45, ease });
+        if (h2) tl.from(h2, { y: 18, opacity: 0, duration: 0.55, ease }, num ? '-=0.2' : 0);
+        if (bodyEls.length)
+          tl.from(bodyEls, { y: 14, opacity: 0, duration: 0.5, stagger: 0.08, ease }, '-=0.15');
+      });
 
-        /* ===== CUSTOM CURSOR ===== */
-        (function () {
-            const dot = document.querySelector('.cursor-rune');
-            if (!dot) return;
-            document.addEventListener('mousemove', e => {
-                dot.style.left = e.clientX + 'px';
-                dot.style.top = e.clientY + 'px';
-            });
-            const interactables = 'a, button, .class-card, .class-cta, .nav-link-block';
-            document.querySelectorAll(interactables).forEach(el => {
-                el.addEventListener('mouseenter', () => dot.classList.add('is-hover'));
-                el.addEventListener('mouseleave', () => dot.classList.remove('is-hover'));
-            });
-            window.addEventListener('mousedown', () => dot.classList.add('is-click'));
-            window.addEventListener('mouseup', () => dot.classList.remove('is-click'));
-        })();
-
-        /* ===== GSAP ANIMATIONS ===== */
-        (function () {
-            if (typeof gsap === 'undefined') return;
-
-            gsap.registerPlugin(ScrollTrigger);
-
-            gsap.from('.pg-bare-hero .hero-breadcrumb', { opacity: 0, y: 10, duration: 0.8, ease: 'power3.out', delay: 0.3 });
-            gsap.from('.pg-bare-hero .pg-bare-rule', { opacity: 0, scaleX: 0, transformOrigin: 'left center', duration: 0.6, ease: 'power2.out', delay: 0.45 });
-            gsap.from('.pg-bare-hero .hero-title', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.55 });
-            gsap.from('.pg-bare-hero .hero-subtitle', { opacity: 0, y: 15, duration: 0.8, ease: 'power3.out', delay: 0.75 });
-
-            document.querySelectorAll('.class-card').forEach((card, i) => {
-                gsap.from(card, {
-                    scrollTrigger: { trigger: card, start: 'top 85%' },
-                    opacity: 0, y: 30, duration: 0.7, ease: 'power3.out', delay: i * 0.08
-                });
-            });
-
-            document.querySelectorAll('.format-item').forEach((item, i) => {
-                gsap.from(item, {
-                    scrollTrigger: { trigger: item, start: 'top 88%' },
-                    opacity: 0, y: 20, duration: 0.6, ease: 'power2.out', delay: i * 0.1
-                });
-            });
-        })();
+      gsap.from('.es-lg-contact', {
+        opacity: 0,
+        y: 24,
+        duration: 0.8,
+        ease,
+        scrollTrigger: {
+          trigger: '.es-lg-contact',
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      });
+    })();
   </script>
 </Layout>

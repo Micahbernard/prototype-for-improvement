@@ -1,408 +1,245 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const lastUpdated = 'April 2026';
+
+const sections = [
+  { id: 'agreement', label: 'Agreement' },
+  { id: 'about', label: 'About Esoterica' },
+  { id: 'goods', label: 'Goods & descriptions' },
+  { id: 'services', label: 'Readings & classes' },
+  { id: 'disclaimer', label: 'Spiritual disclaimer' },
+  { id: 'pricing', label: 'Pricing & payment' },
+  { id: 'shipping', label: 'Shipping' },
+  { id: 'returns', label: 'Returns & refunds' },
+  { id: 'ip', label: 'Intellectual property' },
+  { id: 'conduct', label: 'Conduct' },
+  { id: 'liability', label: 'Limitation of liability' },
+  { id: 'law', label: 'Governing law' },
+  { id: 'changes', label: 'Changes to these terms' },
+] as const;
 ---
 
-<style is:global>
-/* ===== BARE HERO (terms) ===== */
-        .pg-bare-hero {
-            padding: 8rem 3rem 4rem;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .pg-bare-hero-inner {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1.25rem;
-        }
-        .pg-bare-rule {
-            width: 60px;
-            height: 1px;
-            background: linear-gradient(90deg, var(--es-gold), transparent);
-            margin: 0.5rem 0;
-        }
-        .pg-bare-title {
-            font-size: clamp(3rem, 7vw, 5.5rem) !important;
-            font-weight: 400 !important;
-            letter-spacing: 0.02em;
-            line-height: 1 !important;
-            text-align: left !important;
-            margin: 0 !important;
-            max-width: none !important;
-        }
-        body.pg-terms .hero-subtitle {
-            font-family: var(--es-font-serif);
-            font-size: 1rem;
-            font-style: italic;
-            color: var(--es-text-faint);
-            margin: 0;
-        }
-        body.pg-terms .hero-breadcrumb {
-            font-size: 0.65rem;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: var(--es-text-dim);
-        }
-        body.pg-terms .hero-breadcrumb a {
-            color: var(--es-text-faint);
-            text-decoration: none;
-        }
-        body.pg-terms .pg-bare-hero {
-            display: flex;
-            justify-content: flex-end;
-        }
-        body.pg-terms .pg-bare-hero-inner {
-            align-items: flex-end;
-            text-align: right;
-        }
-        body.pg-terms .pg-bare-rule {
-            background: linear-gradient(270deg, var(--es-gold), transparent);
-            align-self: flex-end;
-        }
-        body.pg-terms .pg-bare-title {
-            text-align: right !important;
-        }
-
-        /* ===== SECTION SHARED ===== */
-        /* inner-page override */
-        .section {
-            padding: 6rem 2rem;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        /* inner-page override */
-        .section-divider {
-            width: 60px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--es-gold), transparent);
-            margin: 0 auto 2rem;
-        }
-
-        /* inner-page override */
-        .section-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        /* inner-page override */
-        .section-description {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.15rem;
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.7;
-            color: var(--es-text-muted);
-            text-align: center;
-            max-width: var(--es-max-prose);
-            margin: 0 auto 3rem;
-        }
-
-        /* ===== CLASS CARDS GRID ===== */
-        .classes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .class-card {
-            background: var(--es-bg-card-soft);
-            border: 1px solid var(--es-border-card);
-            border-radius: var(--es-radius-card-sm);
-            padding: 2.5rem 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-            cursor: pointer;
-        }
-
-        .class-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--es-border-card-hover);
-            box-shadow: var(--es-shadow-card-hover);
-        }
-
-        .class-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 50% 20%, rgba(100, 60, 180, 0.08) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .class-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1.2rem;
-            display: block;
-            color: var(--es-gold);
-        }
-
-        .class-icon svg {
-            display: block;
-            margin: 0 auto;
-        }
-
-        .class-badge {
-            display: inline-block;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--es-bg-deep);
-            background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            margin-bottom: 1rem;
-        }
-
-        .class-name {
-            font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .class-type {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 500;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--es-gold);
-            margin-bottom: 1rem;
-        }
-
-        .class-desc {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.6;
-            color: rgba(var(--es-text-rgb), 0.68);
-            margin-bottom: 1.5rem;
-        }
-
-        .class-details {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            color: var(--es-text-faint);
-            margin-bottom: 1.5rem;
-            line-height: 1.8;
-        }
-
-        .class-price {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            color: var(--es-gold);
-            margin-bottom: 1.5rem;
-        }
-
-        .class-cta {
-            display: inline-block;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--es-bg-deep);
-            background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
-
-        .class-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(212, 168, 83, 0.25);
-        }
-
-        /* ===== FORMAT SECTION ===== */
-        .format-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2.5rem;
-            text-align: center;
-        }
-
-        .format-item {
-            position: relative;
-        }
-
-        .format-icon {
-            font-size: 2rem;
-            color: rgba(var(--es-gold-rgb), 0.6);
-            margin-bottom: 1rem;
-        }
-
-        .format-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 0.6rem;
-        }
-
-        .format-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 0.95rem;
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.6;
-            color: var(--es-text-faint);
-        }
-
-        /* ===== QUOTE ===== */
-        /* inner-page override */
-        .quote-section {
-            text-align: center;
-            padding: 5rem 2rem;
-        }
-
-        /* inner-page override */
-        .quote-mark {
-            font-family: 'Cinzel', serif;
-            font-size: 5rem;
-            line-height: 1;
-            color: rgba(var(--es-gold-rgb), 0.15);
-        }
-
-        /* inner-page override */
-        .quote-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-            font-weight: 300;
-            font-style: italic;
-            line-height: 1.7;
-            color: var(--es-text-subtle);
-            max-width: 600px;
-            margin: 0 auto 1rem;
-        }
-
-        /* inner-page override */
-        .quote-author {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--es-text-dim);
-        }
-</style>
-
-<Layout title="Terms of Use — Esoterica" description="Terms of Use — Esoterica." bodyClass="pg-terms">
-  <div slot="chrome">
-  <div class="cursor-rune" aria-hidden="true">
-    <div class="cursor-rune-ripple"></div>
-    <div class="cursor-rune-ring">
-      <div class="cursor-rune-h"></div>
-      <div class="cursor-rune-v"></div>
-      <div class="cursor-rune-center"></div>
+<Layout
+  title="Terms of Use — Esoterica"
+  description="Terms of Use for Esoterica, Chiclayo, Perú — crystals, tarot, readings, and classes. Consumer rights under Ley N° 29571 and Peruvian law."
+  bodyClass="pg-terms"
+>
+  <section class="es-lg-hero" aria-labelledby="terms-title">
+    <div class="es-lg-hero__inner">
+      <nav class="es-lg-crumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li aria-current="page">Terms of Use</li>
+        </ol>
+      </nav>
+      <div class="es-lg-rule" aria-hidden="true"></div>
+      <h1 id="terms-title" class="es-lg-title">Terms of Use</h1>
+      <p class="es-lg-lede">
+        The rules that govern your visit to our website, your purchases, and your bookings for readings and workshops at Esoterica in Chiclayo, Perú.
+      </p>
+      <p class="es-lg-meta">Last updated · {lastUpdated}</p>
     </div>
-  </div>
-  <canvas id="starfield"></canvas>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  </div>
+  </section>
 
-<section class="pg-bare-hero">
-  <div class="pg-bare-hero-inner">
-    <div class="hero-breadcrumb">
-      <a href="/">Home</a> &nbsp;/&nbsp; Terms of Use
-    </div>
-    <div class="pg-bare-rule"></div>
-    <h1 class="hero-title pg-bare-title">Terms of Use</h1>
-    <p class="hero-subtitle">The rules of this threshold.</p>
-  </div>
-</section>
+  <article class="es-lg-body">
+    <nav class="es-lg-toc" aria-labelledby="toc-heading-terms">
+      <h2 id="toc-heading-terms" class="es-lg-toc__label">On this page</h2>
+      <ol>
+        {sections.map((s) => (
+          <li>
+            <a href={`#${s.id}`}>{s.label}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+
+    <section class="es-lg-section" id="agreement" aria-labelledby="h-agreement">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-agreement" class="es-lg-h2">Agreement</h2>
+      <p class="es-lg-p">
+        By accessing this website, creating an order, or booking a service with Esoterica, you agree to these Terms of Use and our Privacy Policy. If you do not agree, please do not use the site or our services. We may update these terms; the date at the top reflects the version in effect.
+      </p>
+      <p class="es-lg-note">
+        These terms are drafted in good faith for a small business in Perú. They are not a substitute for legal advice — please have a qualified local attorney review them before publication or reliance.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="about" aria-labelledby="h-about">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-about" class="es-lg-h2">About Esoterica</h2>
+      <p class="es-lg-p">
+        Esoterica operates from <strong>Chiclayo, Lambayeque, Perú</strong>. We offer crystals, tarot decks, ritual tools, alchemical and botanical blends intended for spiritual use, in-person and remote tarot readings, and occasional classes or workshops. We are a small team; response times follow business hours and capacity.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="goods" aria-labelledby="h-goods">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-goods" class="es-lg-h2">Goods &amp; descriptions</h2>
+      <p class="es-lg-p">
+        Natural stones, herbs, and handmade items vary in color, pattern, and weight. Photographs are a fair representation but not a guarantee of exact appearance. Small imperfections in carvings, wraps, or packaging can be part of the character of the piece rather than a defect, unless they materially affect safe use as described at the time of sale.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="services" aria-labelledby="h-services">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-services" class="es-lg-h2">Readings &amp; classes</h2>
+      <p class="es-lg-p">
+        Bookings are typically arranged via <strong>WhatsApp</strong> or another channel we confirm. If you need to reschedule, tell us <strong>at least 24 hours</strong> before the agreed time when possible. Late cancellations or repeated no-shows may result in a request for a deposit for future bookings, at our discretion.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="disclaimer" aria-labelledby="h-disclaimer">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-disclaimer" class="es-lg-h2">Spiritual disclaimer</h2>
+      <p class="es-lg-p">
+        <strong>Readings, classes, and products sold by Esoterica are offered for spiritual reflection, ritual, self-understanding, and personal growth.</strong> They are <em>not</em> medical, legal, psychological, or financial advice. We do not diagnose conditions or promise specific outcomes. A tarot reading may illuminate possible paths; choosing how to walk them remains your responsibility.
+      </p>
+      <p class="es-lg-p">
+        Crystals, herbs, incense, and blends are sold as <strong>spiritual or symbolic tools</strong>, not as medicine. Do not ingest products unless a label explicitly states they are food-grade and you choose to consume them; many items are <strong>not intended for ingestion</strong>. They are not a replacement for professional health care, medication, or emergency services. If you are in crisis, contact qualified professionals or emergency services in Perú.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="pricing" aria-labelledby="h-pricing">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-pricing" class="es-lg-h2">Pricing &amp; payment</h2>
+      <p class="es-lg-p">
+        Prices are listed in <strong>soles peruanos (PEN)</strong> unless stated otherwise and may change as we update the site. Once we confirm your order at a given price, we honor that price for that transaction. Payment may be accepted via <strong>Yape, Plin, bank transfer, or cash on collection</strong> when available. Esoterica does not store full card numbers on its own servers; any card processing would run through a third-party gateway under their terms.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="shipping" aria-labelledby="h-shipping">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-shipping" class="es-lg-h2">Shipping</h2>
+      <p class="es-lg-p">
+        By default we ship within <strong>Perú</strong> using couriers we select. International shipping may be arranged case by case; duties, taxes, and delays outside our control are your responsibility unless we agree otherwise in writing. Risk of loss passes according to the courier’s terms once the parcel leaves our hands. Please report loss or damage within <strong>seven (7) calendar days</strong> of delivery so we can open a claim where applicable.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="returns" aria-labelledby="h-returns">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-returns" class="es-lg-h2">Returns &amp; refunds</h2>
+      <p class="es-lg-p">
+        Unused, unopened items in resalable condition may be eligible for <strong>exchange or refund within seven (7) days</strong> of delivery, subject to inspection and our confirmation. Items that have been <em>used, charged, blessed, opened</em>, or personalized — including many crystals, herbs, candles, and altar tools — are generally <strong>non-returnable</strong> for spiritual and hygiene reasons. Services already delivered (readings, classes) are <strong>non-refundable</strong> except where mandatory consumer law requires otherwise.
+      </p>
+      <p class="es-lg-p">
+        If we shipped the wrong item or it arrived materially damaged, contact us within <strong>seven (7) days</strong> with photos; we will replace or refund as appropriate. Nothing in these terms limits non-waivable rights under <strong>Ley N° 29571</strong> (Código de Protección y Defensa del Consumidor) and other applicable Peruvian consumer protection rules.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="ip" aria-labelledby="h-ip">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-ip" class="es-lg-h2">Intellectual property</h2>
+      <p class="es-lg-p">
+        The name <strong>Esoterica</strong>, our logo, original illustrations, photography, product descriptions, and site design are our intellectual property or used under license. You may share images or text with credit for personal, non-commercial purposes; <strong>commercial reuse</strong> requires our written permission.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="conduct" aria-labelledby="h-conduct">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-conduct" class="es-lg-h2">Conduct</h2>
+      <p class="es-lg-p">
+        You agree not to misuse the site: no scraping that harms performance, no impersonation of Esoterica or our staff, no harassment of our team or other clients, and no attempt to break security or upload malware. We may refuse service or end a session if behavior is unsafe or abusive.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="liability" aria-labelledby="h-liability">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-liability" class="es-lg-h2">Limitation of liability</h2>
+      <p class="es-lg-p">
+        We take reasonable care in curating products and delivering services, but we are not liable for <strong>indirect, incidental, special, or consequential</strong> losses (including lost profits or data) to the fullest extent permitted by <strong>Peruvian law</strong>. Nothing here excludes or limits liability that cannot legally be waived, including certain statutory consumer rights.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="law" aria-labelledby="h-law">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-law" class="es-lg-h2">Governing law &amp; disputes</h2>
+      <p class="es-lg-p">
+        These terms are governed by the laws of the <strong>República del Perú</strong>. For disputes, you agree to the jurisdiction of the competent courts of <strong>Chiclayo, Lambayeque</strong>, without prejudice to mandatory consumer venues. For consumer protection matters, <strong>INDECOPI</strong> (Instituto Nacional de Defensa de la Competencia y de la Protección de la Propiedad Intelectual) is the national authority consumers may approach under applicable rules.
+      </p>
+    </section>
+
+    <section class="es-lg-section" id="changes" aria-labelledby="h-changes-terms">
+      <span class="es-lg-section__num" aria-hidden="true"></span>
+      <h2 id="h-changes-terms" class="es-lg-h2">Changes to these terms</h2>
+      <p class="es-lg-p">
+        We may revise these Terms of Use to reflect new services, legal requirements, or clarity improvements. The “Last updated” date shows the current version. Material changes will be posted on this page; continued use of the site or services after the effective date may constitute acceptance where permitted by law.
+      </p>
+    </section>
+
+    <aside class="es-lg-contact" aria-labelledby="contact-terms-heading">
+      <p class="es-lg-contact__label" id="contact-terms-heading">Questions</p>
+      <h2 class="es-lg-contact__title">Terms &amp; bookings</h2>
+      <p class="es-lg-contact__text">
+        WhatsApp is the fastest way to ask about these terms, shipping, or rescheduling.
+      </p>
+      <a
+        class="es-lg-contact__link"
+        href="https://wa.me/51919623179?text=Hola%20Esoterica%20%E2%80%94%20tengo%20una%20pregunta%20sobre%20los%20t%C3%A9rminos."
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Open WhatsApp
+      </a>
+    </aside>
+  </article>
+
   <script is:inline slot="scripts">
-/* ===== STARFIELD ===== */
-        (function () {
-            const canvas = document.getElementById('starfield');
-            const ctx = canvas.getContext('2d');
-            let stars = [];
-            const STAR_COUNT = 120;
+    (function () {
+      if (typeof gsap === 'undefined') return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      gsap.registerPlugin(ScrollTrigger);
 
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
+      const ease = 'power3.out';
+      const ruleOrigin = document.body.classList.contains('pg-terms') ? 'right center' : 'left center';
 
-            function init() {
-                stars = Array.from({ length: STAR_COUNT }, () => ({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    r: Math.random() * 1.2 + 0.3,
-                    alpha: Math.random() * 0.6 + 0.1,
-                    speed: Math.random() * 0.008 + 0.004,
-                    phase: Math.random() * Math.PI * 2,
-                }));
-            }
+      gsap.timeline({ defaults: { ease } })
+        .from('.es-lg-crumb li', { opacity: 0, y: 10, duration: 0.45, stagger: 0.07 }, 0.2)
+        .from('.es-lg-rule', { scaleX: 0, duration: 0.5, transformOrigin: ruleOrigin }, 0.35)
+        .from('.es-lg-title', { opacity: 0, y: 22, duration: 0.65 }, 0.45)
+        .from('.es-lg-lede', { opacity: 0, y: 16, duration: 0.55 }, 0.65)
+        .from('.es-lg-meta', { opacity: 0, y: 10, duration: 0.45 }, 0.8);
 
-            function draw(t) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                stars.forEach(s => {
-                    const a = s.alpha * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
-                    ctx.beginPath();
-                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(232,224,212,${a})`;
-                    ctx.fill();
-                });
-                requestAnimationFrame(draw);
-            }
+      gsap.from('.es-lg-toc', {
+        opacity: 0,
+        y: 20,
+        duration: 0.65,
+        ease,
+        scrollTrigger: {
+          trigger: '.es-lg-toc',
+          start: 'top 88%',
+          toggleActions: 'play none none none',
+        },
+      });
 
-            resize();
-            init();
-            window.addEventListener('resize', () => { resize(); init(); });
-            requestAnimationFrame(draw);
-        })();
+      document.querySelectorAll('.es-lg-section').forEach(function (section) {
+        const num = section.querySelector('.es-lg-section__num');
+        const h2 = section.querySelector('.es-lg-h2');
+        const bodyEls = section.querySelectorAll('.es-lg-p, .es-lg-list, .es-lg-h3, .es-lg-note');
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 82%',
+            toggleActions: 'play none none none',
+          },
+        });
+        if (num) tl.from(num, { x: -12, opacity: 0, duration: 0.45, ease });
+        if (h2) tl.from(h2, { y: 18, opacity: 0, duration: 0.55, ease }, num ? '-=0.2' : 0);
+        if (bodyEls.length)
+          tl.from(bodyEls, { y: 14, opacity: 0, duration: 0.5, stagger: 0.08, ease }, '-=0.15');
+      });
 
-        /* ===== CUSTOM CURSOR ===== */
-        (function () {
-            const dot = document.querySelector('.cursor-rune');
-            if (!dot) return;
-            document.addEventListener('mousemove', e => {
-                dot.style.left = e.clientX + 'px';
-                dot.style.top = e.clientY + 'px';
-            });
-            const interactables = 'a, button, .class-card, .class-cta, .nav-link-block';
-            document.querySelectorAll(interactables).forEach(el => {
-                el.addEventListener('mouseenter', () => dot.classList.add('is-hover'));
-                el.addEventListener('mouseleave', () => dot.classList.remove('is-hover'));
-            });
-            window.addEventListener('mousedown', () => dot.classList.add('is-click'));
-            window.addEventListener('mouseup', () => dot.classList.remove('is-click'));
-        })();
-
-        /* ===== GSAP ANIMATIONS ===== */
-        (function () {
-            if (typeof gsap === 'undefined') return;
-
-            gsap.registerPlugin(ScrollTrigger);
-
-            gsap.from('.pg-bare-hero .hero-breadcrumb', { opacity: 0, y: 10, duration: 0.8, ease: 'power3.out', delay: 0.3 });
-            gsap.from('.pg-bare-hero .pg-bare-rule', { opacity: 0, scaleX: 0, transformOrigin: 'right center', duration: 0.6, ease: 'power2.out', delay: 0.45 });
-            gsap.from('.pg-bare-hero .hero-title', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.55 });
-            gsap.from('.pg-bare-hero .hero-subtitle', { opacity: 0, y: 15, duration: 0.8, ease: 'power3.out', delay: 0.75 });
-
-            document.querySelectorAll('.class-card').forEach((card, i) => {
-                gsap.from(card, {
-                    scrollTrigger: { trigger: card, start: 'top 85%' },
-                    opacity: 0, y: 30, duration: 0.7, ease: 'power3.out', delay: i * 0.08
-                });
-            });
-
-            document.querySelectorAll('.format-item').forEach((item, i) => {
-                gsap.from(item, {
-                    scrollTrigger: { trigger: item, start: 'top 88%' },
-                    opacity: 0, y: 20, duration: 0.6, ease: 'power2.out', delay: i * 0.1
-                });
-            });
-        })();
+      gsap.from('.es-lg-contact', {
+        opacity: 0,
+        y: 24,
+        duration: 0.8,
+        ease,
+        scrollTrigger: {
+          trigger: '.es-lg-contact',
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      });
+    })();
   </script>
 </Layout>
