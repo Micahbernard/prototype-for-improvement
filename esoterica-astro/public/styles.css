@@ -384,6 +384,21 @@ html.lenis {
   box-sizing: border-box;
 }
 
+/* Hide scrollbar (keep scrolling); use html for viewport, .container for scrollable regions */
+html,
+.container {
+  /* IE and Edge */
+  -ms-overflow-style: none;
+  /* Firefox */
+  scrollbar-width: none;
+}
+
+/* Chrome, Safari, and Opera */
+html::-webkit-scrollbar,
+.container::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   background: var(--es-bg-deep);
   color: var(--es-text);
@@ -3605,5 +3620,526 @@ body.pg-terms .es-lg-crumb ol {
   .es-ct-ripple {
     width: 360px;
     height: 360px;
+  }
+}
+
+/* ===== INNER PAGES (tarot + classes) ===== */
+body:is(.pg-tarot, .pg-classes) .section {
+  padding: 6rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+body:is(.pg-tarot, .pg-classes) .section-divider {
+  margin: 0 auto 2rem;
+}
+
+body:is(.pg-tarot, .pg-classes) .section-label {
+  letter-spacing: 0.25em;
+}
+
+body:is(.pg-tarot, .pg-classes) .section-description {
+  font-family: var(--es-font-serif);
+  font-size: 1.15rem;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--es-text-muted);
+  text-align: center;
+  max-width: var(--es-max-prose);
+  margin: 0 auto 3rem;
+}
+
+body:is(.pg-tarot, .pg-classes) .quote-section {
+  text-align: center;
+  padding: 5rem 2rem;
+}
+
+body:is(.pg-tarot, .pg-classes) .quote-mark {
+  font-family: var(--es-font-display);
+  font-size: 5rem;
+  line-height: 1;
+  color: rgba(var(--es-gold-rgb), 0.15);
+  margin-bottom: 0;
+}
+
+body:is(.pg-tarot, .pg-classes) .quote-text {
+  font-family: var(--es-font-serif);
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--es-text-subtle);
+  max-width: 600px;
+  margin: 0 auto 1rem;
+}
+
+body:is(.pg-tarot, .pg-classes) .quote-author {
+  font-family: var(--es-font-body);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--es-text-dim);
+}
+
+/* Tarot — testimonials (homepage uses different .testimonial-* styles) */
+body.pg-tarot .testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+body.pg-tarot .testimonial-card {
+  background: rgba(15, 11, 36, 0.5);
+  border: 1px solid rgba(120, 80, 180, 0.08);
+  border-radius: 12px;
+  padding: 2rem;
+  backdrop-filter: none;
+}
+
+body.pg-tarot .testimonial-quote {
+  font-family: var(--es-font-serif);
+  font-size: 1.05rem;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--es-text-subtle);
+  margin-bottom: 1.2rem;
+}
+
+body.pg-tarot .testimonial-author {
+  font-family: var(--es-font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--es-text-dim);
+}
+
+body.pg-tarot .orb {
+  will-change: transform;
+}
+
+/* Tarot — readings grid & cards */
+.readings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+}
+
+.reading-card {
+  background: var(--es-bg-card-soft);
+  border: 1px solid var(--es-border-card);
+  border-radius: var(--es-radius-card-sm);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.reading-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--es-border-card-hover);
+  box-shadow: var(--es-shadow-card-hover);
+}
+
+.reading-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 20%, rgba(100, 60, 180, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.reading-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1.2rem;
+  display: block;
+  color: var(--es-gold);
+}
+
+.reading-icon svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.reading-name {
+  font-family: var(--es-font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.reading-type {
+  font-family: var(--es-font-body);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--es-gold);
+  margin-bottom: 1rem;
+}
+
+.reading-desc {
+  font-family: var(--es-font-serif);
+  font-size: 1rem;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--es-text-subtle);
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.reading-details {
+  font-family: var(--es-font-body);
+  font-size: 0.75rem;
+  color: var(--es-text-faint);
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+.reading-price {
+  font-family: var(--es-font-display);
+  font-size: 1.5rem;
+  color: var(--es-gold);
+  margin-bottom: 1.5rem;
+}
+
+.reading-cta {
+  display: inline-block;
+  font-family: var(--es-font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--es-bg-deep);
+  background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.reading-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(212, 168, 83, 0.2);
+}
+
+/* Classes — grid & cards */
+.classes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.class-card {
+  background: var(--es-bg-card-soft);
+  border: 1px solid var(--es-border-card);
+  border-radius: var(--es-radius-card-sm);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  cursor: pointer;
+}
+
+.class-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--es-border-card-hover);
+  box-shadow: var(--es-shadow-card-hover);
+}
+
+.class-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 20%, rgba(100, 60, 180, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.class-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1.2rem;
+  display: block;
+  color: var(--es-gold);
+}
+
+.class-icon svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.class-badge {
+  display: inline-block;
+  font-family: var(--es-font-body);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--es-bg-deep);
+  background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  margin-bottom: 1rem;
+}
+
+.class-name {
+  font-family: var(--es-font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.class-type {
+  font-family: var(--es-font-body);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--es-gold);
+  margin-bottom: 1rem;
+}
+
+.class-desc {
+  font-family: var(--es-font-serif);
+  font-size: 1rem;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--es-text-subtle);
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.class-details {
+  font-family: var(--es-font-body);
+  font-size: 0.75rem;
+  color: var(--es-text-faint);
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+.class-price {
+  font-family: var(--es-font-display);
+  font-size: 1.5rem;
+  color: var(--es-gold);
+  margin-bottom: 1.5rem;
+}
+
+.class-cta {
+  display: inline-block;
+  font-family: var(--es-font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--es-bg-deep);
+  background: linear-gradient(135deg, var(--es-gold), var(--es-gold-light));
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.class-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(212, 168, 83, 0.25);
+}
+
+/* Shared 420px card + reveal */
+.reading-card,
+.class-card {
+  position: relative;
+  overflow: hidden;
+  height: 420px;
+  z-index: 0;
+}
+
+.reading-card-reveal,
+.class-card-reveal {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem 1.75rem 1.75rem;
+  background: linear-gradient(
+    to top,
+    var(--es-bg-card) 0%,
+    var(--es-bg-card) 75%,
+    transparent 100%
+  );
+  transform: translateY(100%);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--es-gold) 18%, transparent);
+  backdrop-filter: blur(0px);
+}
+
+.reading-card:hover .reading-card-reveal,
+.class-card:hover .class-card-reveal {
+  transform: translateY(0);
+}
+
+.reading-card-body,
+.class-card-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tarot — how it works (scroll timeline) */
+.how-timeline {
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.how-timeline-line {
+  position: absolute;
+  left: 2.5rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: color-mix(in srgb, var(--es-gold) 12%, transparent);
+}
+
+.how-timeline-progress {
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(180deg, var(--es-gold), var(--es-violet));
+  transition: height 0.1s linear;
+}
+
+.how-step {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: 2rem;
+  padding: 3rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--es-gold) 8%, transparent);
+  opacity: 0.35;
+  transition: opacity 0.5s ease;
+}
+
+.how-step.is-active {
+  opacity: 1;
+}
+
+.how-step:last-child {
+  border-bottom: none;
+}
+
+.how-step-number {
+  font-family: var(--es-font-display);
+  font-size: 3.5rem;
+  font-weight: 400;
+  color: var(--es-gold);
+  opacity: 0.25;
+  line-height: 1;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(4px);
+  padding-top: 0.25rem;
+}
+
+.how-step.is-active .how-step-number {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.how-step-content {
+  padding-top: 0.5rem;
+}
+
+.how-title {
+  font-family: var(--es-font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--es-white);
+  margin-bottom: 0.75rem;
+}
+
+.how-text {
+  font-family: var(--es-font-serif);
+  font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--es-text-muted);
+}
+
+/* Classes — format */
+.format-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2.5rem;
+  text-align: center;
+}
+
+.format-item {
+  position: relative;
+}
+
+.format-icon {
+  font-size: 2rem;
+  color: rgba(var(--es-gold-rgb), 0.6);
+  margin-bottom: 1rem;
+}
+
+.format-title {
+  font-family: var(--es-font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.6rem;
+}
+
+.format-text {
+  font-family: var(--es-font-serif);
+  font-size: 0.95rem;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--es-text-faint);
+}
+
+@media (max-width: 768px) {
+  body:is(.pg-tarot, .pg-classes) .nav {
+    padding: 1rem 1.5rem;
+  }
+
+  .readings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .classes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .format-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .how-timeline-line {
+    display: none;
+  }
+
+  .how-step {
+    grid-template-columns: 3rem 1fr;
+    gap: 1rem;
+    opacity: 1;
+  }
+
+  .how-step-number {
+    font-size: 2rem;
+    opacity: 0.5;
   }
 }
