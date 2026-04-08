@@ -9,10 +9,14 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "optimize:logo": "node scripts/optimize-logo.mjs"
   },
   "dependencies": {
     "astro": "^6.1.4",
     "splitting": "^1.1.0"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }

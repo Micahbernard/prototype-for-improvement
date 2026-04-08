@@ -49,8 +49,19 @@ import Layout from '../layouts/Layout.astro';
             <div class="hero-stars" aria-hidden="true"></div>
             <div class="hero-content">
               <div class="hero-sigil">
-                <img src="/logo.png" alt="Esoterica Eye Crystal Ball Logo" width="140" height="140" loading="eager"
-                  fetchpriority="high" />
+                <picture>
+                  <source
+                    type="image/webp"
+                    srcset="/logo/logo-160.webp 1x, /logo/logo-320.webp 2x" />
+                  <img
+                    src="/logo/logo-160.png"
+                    srcset="/logo/logo-160.png 1x, /logo/logo-320.png 2x"
+                    alt="Esoterica — eye and crystal ball emblem"
+                    width="140"
+                    height="140"
+                    loading="eager"
+                    fetchpriority="high" />
+                </picture>
               </div>
               <h1 class="hero-title">
                 Where the Veil Between Worlds Grows Thin
@@ -59,7 +70,7 @@ import Layout from '../layouts/Layout.astro';
                 Curated crystals, hand-illustrated tarot, and alchemical blends — each artifact chosen to awaken what
                 already stirs within you.
               </p>
-              <a href="#" data-scroll="shop" class="hero-cta">Enter the Shop</a>
+              <a href="#shop" data-scroll="shop" class="hero-cta">Enter the Shop</a>
             </div>
             <div class="hero-lower">
               <div class="hero-links-wrap">

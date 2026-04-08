@@ -16,6 +16,7 @@ const { title = 'Esoterica', description, bodyClass } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#070714" />
     <title>{title}</title>
     {description ? <meta name="description" content={description} /> : null}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,7 +27,7 @@ const { title = 'Esoterica', description, bodyClass } = Astro.props;
     />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="https://unpkg.com/splitting/dist/splitting.css" />
-    <link rel="preload" as="image" href="/logo.png" />
+    <link rel="preload" as="image" href="/logo/logo-160.webp" type="image/webp" />
     <meta name="generator" content={Astro.generator} />
 
     <!-- GSAP + ScrollTrigger + ScrollToPlugin (same versions as SideStage); SRI sha384 from CDN bytes -->
