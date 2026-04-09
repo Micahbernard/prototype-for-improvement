@@ -1128,12 +1128,13 @@ body.esoterica .nav-logo .nav-wordmark {
 
 /* ===== SECTION ORNAMENT — center sigil + flanking hairlines (single continuous line) ===== */
 .es-ornament {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
   margin: 0 auto 3rem;
   width: fit-content;
+  max-width: 100%;
   flex-shrink: 0;
   /* Diamond sigil in the flex gap (two half-gradients = diamond silhouette) */
   background-image:
