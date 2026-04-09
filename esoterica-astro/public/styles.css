@@ -180,6 +180,114 @@ body.esoterica::before {
   mix-blend-mode: overlay;
 }
 
+/* Slow-drifting violet vignette — composes above grain, below .page (z-index 1) */
+body.esoterica::after {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 60% 45% at 50% 40%,
+    rgba(140, 100, 200, 0.06) 0%,
+    rgba(90, 50, 140, 0.03) 40%,
+    transparent 75%
+  );
+  will-change: transform;
+  animation: esAtmosphereDrift 80s ease-in-out infinite alternate;
+}
+
+@keyframes esAtmosphereDrift {
+  0% {
+    transform: translate(-2%, -1%);
+  }
+  50% {
+    transform: translate(2%, 1.5%);
+  }
+  100% {
+    transform: translate(-1.5%, 2%);
+  }
+}
+
+/* Gold dust specks — same atmosphere band as grain (fixed z-index 1, below .page) */
+.es-dust {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.es-dust span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  background: rgba(var(--es-gold-rgb), 0.4);
+  border-radius: 50%;
+  box-shadow: 0 0 2px rgba(var(--es-gold-rgb), 0.3);
+  will-change: transform, opacity;
+  animation-name: esDustDrift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.es-dust span:nth-child(1) {
+  top: 15%;
+  left: 12%;
+  animation-duration: 42s;
+  animation-delay: 0s;
+}
+
+.es-dust span:nth-child(2) {
+  top: 38%;
+  left: 78%;
+  animation-duration: 67s;
+  animation-delay: -12s;
+}
+
+.es-dust span:nth-child(3) {
+  top: 62%;
+  left: 28%;
+  animation-duration: 53s;
+  animation-delay: -28s;
+}
+
+.es-dust span:nth-child(4) {
+  top: 22%;
+  left: 58%;
+  animation-duration: 78s;
+  animation-delay: -45s;
+}
+
+.es-dust span:nth-child(5) {
+  top: 81%;
+  left: 88%;
+  animation-duration: 38s;
+  animation-delay: -8s;
+}
+
+@keyframes esDustDrift {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0.2;
+  }
+  25% {
+    transform: translate(-8px, -20px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(4px, -45px);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translate(-6px, -70px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(0, -90px);
+    opacity: 0.2;
+  }
+}
+
 body.esoterica .page {
   position: relative;
   z-index: 2;
@@ -326,6 +434,16 @@ body.esoterica > .es-site-chrome {
 
   body.esoterica .nav-logo:hover .nav-wordmark {
     background-position: 100% 50%;
+  }
+
+  body.esoterica::after,
+  .es-atmosphere-drift,
+  .es-dust span {
+    animation: none !important;
+  }
+
+  .es-dust span {
+    opacity: 0.4;
   }
 }
 
@@ -1882,6 +2000,11 @@ footer a:hover {
 
   .products-grid {
     grid-template-columns: 1fr;
+  }
+
+  .es-dust span:nth-child(4),
+  .es-dust span:nth-child(5) {
+    display: none;
   }
 
   /* Product cards: full-width top hairline on touch (hover unreliable) */
