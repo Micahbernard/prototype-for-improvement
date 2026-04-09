@@ -920,7 +920,7 @@ body.esoterica .nav-logo .nav-wordmark {
 }
 
 
-/* Brilliant galaxy nucleus — white-lavender core with golden halo */
+/* Brilliant galaxy nucleus — warm core, gold-dominant mid-light, violet in the outer atmosphere */
 .hero-sun {
   position: absolute;
   top: 50%;
@@ -932,14 +932,14 @@ body.esoterica .nav-logo .nav-wordmark {
   pointer-events: none;
   border-radius: inherit;
   background:
-    /* Blazing white core */
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.70) 0%, rgba(240, 230, 255, 0.40) 3%, transparent 10%),
-    /* Warm golden inner halo */
-    radial-gradient(ellipse 35% 20% at 50% 50%, rgba(255, 220, 150, 0.25) 0%, rgba(212, 168, 83, 0.10) 40%, transparent 70%),
-    /* Purple-lavender mid glow */
-    radial-gradient(ellipse 50% 25% at 50% 50%, rgba(160, 120, 220, 0.15) 0%, rgba(120, 80, 180, 0.06) 50%, transparent 80%),
+    /* Blazing highlight — warm cream aligned with gold undertone */
+    radial-gradient(circle at 50% 50%, rgba(255, 248, 230, 0.72) 0%, rgba(255, 236, 200, 0.42) 3%, transparent 10%),
+    /* Warm golden inner halo (dominant mid-light) */
+    radial-gradient(ellipse 35% 20% at 50% 50%, rgba(255, 220, 150, 0.40) 0%, rgba(var(--es-gold-rgb), 0.18) 40%, transparent 70%),
+    /* Purple-lavender mid glow — atmosphere, not competing with the core */
+    radial-gradient(ellipse 50% 25% at 50% 50%, rgba(160, 120, 220, 0.10) 0%, rgba(120, 80, 180, 0.04) 50%, transparent 80%),
     /* Horizontal light rays across the disk */
-    radial-gradient(ellipse 100% 3% at 50% 50%, rgba(200, 180, 240, 0.10) 0%, transparent 80%),
+    radial-gradient(ellipse 100% 3% at 50% 50%, rgba(240, 220, 180, 0.12) 0%, transparent 80%),
     /* Wide purple halo bloom */
     radial-gradient(ellipse 60% 40% at 50% 50%, rgba(140, 100, 200, 0.06) 0%, transparent 60%);
   opacity: 0.92;
