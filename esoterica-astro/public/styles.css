@@ -1167,6 +1167,7 @@ body.esoterica .nav-logo .nav-wordmark {
   border-radius: var(--es-radius-card);
   overflow: hidden;
   background: var(--es-bg-card-soft);
+  box-shadow: inset 0 1px 0 rgba(var(--es-gold-rgb), 0.15);
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.5s ease;
@@ -1174,9 +1175,38 @@ body.esoterica .nav-logo .nav-wordmark {
   will-change: transform;
 }
 
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 1px;
+  width: 0;
+  background: linear-gradient(90deg, transparent, var(--es-gold) 50%, transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .product-card::before {
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card::before {
+    transition: none;
+  }
+}
+
+.product-card:hover::before {
+  width: 100%;
+}
+
 .product-card:hover {
   transform: translateY(-8px);
-  box-shadow: var(--es-shadow-card-hover);
+  box-shadow: var(--es-shadow-card-hover), inset 0 1px 0 rgba(var(--es-gold-rgb), 0.35);
   border-color: var(--es-border-card-hover);
 }
 
@@ -1735,6 +1765,12 @@ footer a:hover {
 
   .products-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* Product cards: full-width top hairline on touch (hover unreliable) */
+  .product-card::before {
+    width: 100%;
+    transition: none;
   }
 
   .testimonials-grid {
