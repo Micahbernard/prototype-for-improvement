@@ -56,7 +56,7 @@ import Layout from '../layouts/Layout.astro';
 
         <!-- ===== READINGS GRID ===== -->
         <section class="section" id="readings">
-            <div class="section-divider"></div>
+            <div class="es-ornament" aria-hidden="true"></div>
             <p class="section-label">Choose Your Path</p>
             <h2 class="section-heading">Sacred Readings</h2>
             <p class="section-description">
@@ -173,7 +173,7 @@ import Layout from '../layouts/Layout.astro';
 
         <!-- ===== HOW IT WORKS ===== -->
         <section class="section" id="how">
-            <div class="section-divider"></div>
+            <div class="es-ornament" aria-hidden="true"></div>
             <p class="section-label">The Sacred Process</p>
             <h2 class="section-heading">How It Works</h2>
             <p class="section-description">
@@ -215,7 +215,7 @@ import Layout from '../layouts/Layout.astro';
 
         <!-- ===== TESTIMONIALS ===== -->
         <section class="section" id="testimonials">
-            <div class="section-divider"></div>
+            <div class="es-ornament" aria-hidden="true"></div>
             <p class="section-label">Voices from the Veil</p>
             <h2 class="section-heading">What Seekers Say</h2>
             <p class="section-description">
@@ -281,7 +281,7 @@ import Layout from '../layouts/Layout.astro';
 
             // Fade-up all sections
             document.querySelectorAll('.section, .quote-section').forEach(section => {
-                const els = section.querySelectorAll('.section-divider, .section-label, .section-heading, .section-description, .how-step, .testimonial-card, .quote-mark, .quote-text, .quote-author');
+                const els = section.querySelectorAll('.es-ornament, .section-label, .section-heading, .section-description, .how-step, .testimonial-card, .quote-mark, .quote-text, .quote-author');
                 els.forEach((el, i) => {
                     gsap.from(el, {
                         y: 50,

@@ -1118,11 +1118,127 @@ body.esoterica .nav-logo .nav-wordmark {
   margin: 0 auto;
 }
 
+/* Deprecated: prefer .es-ornament for section separators (sigil + hairlines). Kept for any legacy markup. */
 .section-divider {
   width: 60px;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--es-gold), transparent);
   margin: 0 auto 3rem;
+}
+
+/* ===== SECTION ORNAMENT — center sigil + flanking hairlines (single continuous line) ===== */
+.es-ornament {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0 auto 3rem;
+  width: fit-content;
+  flex-shrink: 0;
+  /* Diamond sigil in the flex gap (two half-gradients = diamond silhouette) */
+  background-image:
+    linear-gradient(135deg, rgba(var(--es-gold-rgb), 0.55) 50%, transparent 50%),
+    linear-gradient(225deg, rgba(var(--es-gold-rgb), 0.55) 50%, transparent 50%);
+  background-size: 6px 6px;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 8px rgba(var(--es-gold-rgb), 0.25);
+}
+
+.es-ornament::before,
+.es-ornament::after {
+  content: '';
+  width: 80px;
+  height: 1px;
+  flex-shrink: 0;
+}
+
+.es-ornament::before {
+  background: linear-gradient(90deg, transparent, rgba(var(--es-gold-rgb), 0.45));
+}
+
+.es-ornament::after {
+  background: linear-gradient(90deg, rgba(var(--es-gold-rgb), 0.45), transparent);
+}
+
+@media (max-width: 768px) {
+  .es-ornament {
+    gap: 0.75rem;
+  }
+
+  .es-ornament::before,
+  .es-ornament::after {
+    width: 56px;
+  }
+}
+
+/* ===== PREMIUM CORNER BRACKETS (two corners; hover reveals on pointer fine) ===== */
+.es-corners {
+  position: relative;
+}
+
+.es-corners::before,
+.es-corners::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.es-corners::before {
+  top: 10px;
+  left: 10px;
+  border-top: 1px solid rgba(var(--es-gold-rgb), 0.45);
+  border-left: 1px solid rgba(var(--es-gold-rgb), 0.45);
+}
+
+.es-corners::after {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 1px solid rgba(var(--es-gold-rgb), 0.45);
+  border-right: 1px solid rgba(var(--es-gold-rgb), 0.45);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .es-corners::before,
+  .es-corners::after {
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .es-corners::before,
+  .es-corners::after {
+    transition: none;
+  }
+}
+
+.es-corners:hover::before,
+.es-corners:hover::after {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .es-corners::before,
+  .es-corners::after {
+    opacity: 0.6;
+  }
+
+  .es-corners:hover::before,
+  .es-corners:hover::after {
+    opacity: 0.6;
+  }
+}
+
+/* Hero: bracket overlay (hero-layout ::before is galaxy glow — wrapper only) */
+.hero-corners {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  border-radius: inherit;
 }
 
 .section-label {
@@ -3689,7 +3805,8 @@ body:is(.pg-tarot, .pg-classes, .pg-free-resources) .section {
   margin: 0 auto;
 }
 
-body:is(.pg-tarot, .pg-classes, .pg-free-resources) .section-divider {
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .section-divider,
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .es-ornament {
   margin: 0 auto 2rem;
 }
 

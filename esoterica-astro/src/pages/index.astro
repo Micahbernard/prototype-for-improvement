@@ -14,6 +14,7 @@ import Layout from '../layouts/Layout.astro';
       <div class="hero-scroll">
         <section class="hero-section">
           <div class="hero-layout">
+            <div class="hero-corners es-corners" aria-hidden="true"></div>
             <div class="hero-webgl-wrap">
               <canvas id="heroShaderCanvas"></canvas>
             </div>
@@ -98,7 +99,7 @@ import Layout from '../layouts/Layout.astro';
     <!-- ===== PRODUCTS SECTION ===== -->
     <section class="section es-hscroll-section" id="shop">
       <div class="section-inner">
-        <div class="section-divider"></div>
+        <div class="es-ornament" aria-hidden="true"></div>
         <p class="section-label">Curated Collection</p>
         <h2 class="section-heading">Sacred Instruments</h2>
         <p class="section-description">
@@ -161,7 +162,7 @@ import Layout from '../layouts/Layout.astro';
     <!-- ===== STORY ===== -->
     <section class="section story-section" id="story">
       <div class="section-inner">
-        <div class="section-divider"></div>
+        <div class="es-ornament" aria-hidden="true"></div>
         <p class="section-label">Our Origin</p>
         <h2 class="section-heading">Born from Moonlight</h2>
         <div class="story-content">
@@ -184,7 +185,7 @@ import Layout from '../layouts/Layout.astro';
     <!-- ===== OFFERINGS ===== -->
     <section class="section" id="offerings">
       <div class="section-inner">
-        <div class="section-divider"></div>
+        <div class="es-ornament" aria-hidden="true"></div>
         <p class="section-label">Beyond the Physical</p>
         <h2 class="section-heading">Ethereal Offerings</h2>
         <p class="section-description">
@@ -236,9 +237,9 @@ import Layout from '../layouts/Layout.astro';
     </section>
 
     <!-- ===== TESTIMONIALS (Social Proof) ===== -->
-    <section class="testimonials">
+    <section class="testimonials es-corners">
       <div class="section-inner" style="margin-bottom:3rem">
-        <div class="section-divider"></div>
+        <div class="es-ornament" aria-hidden="true"></div>
         <p class="section-label">Whispers of Praise</p>
         <h2 class="section-heading">Seekers Speak</h2>
       </div>
@@ -332,7 +333,7 @@ import Layout from '../layouts/Layout.astro';
 
     <!-- ===== NEWSLETTER ===== -->
     <section class="newsletter" id="commune">
-      <div class="section-divider"></div>
+      <div class="es-ornament" aria-hidden="true"></div>
       <p class="section-label">Join the Circle</p>
       <h2 class="section-heading">Whispers from the Other Side</h2>
       <p class="section-description">
@@ -769,7 +770,7 @@ void main(void) {
           });
         });
 
-        document.querySelectorAll(".section-divider").forEach(div => {
+        document.querySelectorAll(".es-ornament").forEach(div => {
           gsap.set(div, { scaleX: 0, transformOrigin: "center center" });
           gsap
             .timeline({
