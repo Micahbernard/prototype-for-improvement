@@ -100,10 +100,9 @@
 
   </div>
 
-  <!-- Full-width wordmark: starfall settles into outline text -->
+  <!-- Full-width wordmark: constellation canvas only -->
   <div class="es-ft-wordmark-wrap">
     <canvas class="es-ft-starfall" aria-hidden="true"></canvas>
-    <div class="es-ft-wordmark es-ft-wordmark--hidden" aria-hidden="true">ESOTERICA</div>
   </div>
 
 </footer>
@@ -134,7 +133,7 @@
   var goldR = 212, goldG = 168, goldB = 83;
   var textR = 232, textG = 224, textB = 212;
 
-  var canvas, ctx, wrap, wordmark;
+  var canvas, ctx, wrap;
   var W, H, dpr;
   var stars = [];
   var lines = [];
@@ -334,8 +333,7 @@
 
     canvas = document.querySelector('.es-ft-starfall');
     wrap = document.querySelector('.es-ft-wordmark-wrap');
-    wordmark = document.querySelector('.es-ft-wordmark');
-    if (!canvas || !wrap || !wordmark) return;
+    if (!canvas || !wrap) return;
 
     ctx = canvas.getContext('2d');
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -348,10 +346,6 @@
     canvas.height = H * dpr;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
-
-    // Reset wordmark to hidden state
-    wordmark.classList.add('es-ft-wordmark--hidden');
-    wordmark.classList.remove('es-ft-wordmark--revealed');
 
     var built = buildConstellation();
     var letterPoints = built.points;
@@ -381,8 +375,6 @@
       lineAlphaProxy.v = lineAlphaTarget;
       hasSettled = true;
       animationStarted = true;
-      wordmark.classList.remove('es-ft-wordmark--hidden');
-      wordmark.classList.add('es-ft-wordmark--revealed');
       drawFrame();
       return;
     }
@@ -414,8 +406,6 @@
       lineAlphaProxy.v = lineAlphaTarget;
       hasSettled = true;
       animationStarted = true;
-      wordmark.classList.remove('es-ft-wordmark--hidden');
-      wordmark.classList.add('es-ft-wordmark--revealed');
       startTwinkleLoop();
       return;
     }
@@ -454,8 +444,6 @@
 
     gsap.delayedCall(3.2, function() {
       hasSettled = true;
-      wordmark.classList.remove('es-ft-wordmark--hidden');
-      wordmark.classList.add('es-ft-wordmark--revealed');
     });
   }
 

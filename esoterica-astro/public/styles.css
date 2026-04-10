@@ -2633,7 +2633,7 @@ footer a:hover {
   font-size: 0.75rem;
 }
 
-/* Wordmark — starfall canvas + Cinzel outline reveal */
+/* Footer constellation — canvas only (no HTML text underlay) */
 .es-ft-wordmark-wrap {
   position: relative;
   border-top: 1px solid rgba(var(--es-gold-rgb), 0.06);
@@ -2653,40 +2653,7 @@ footer a:hover {
   height: 200px;
   display: block;
   pointer-events: none;
-  z-index: 2;
-}
-
-.es-ft-wordmark {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: inline-block;
-  font-family: var(--es-font-display);
-  font-size: clamp(2.5rem, 13vw, 11rem);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  line-height: 0.9;
-  color: transparent;
-  -webkit-text-stroke: 0px transparent;
-  user-select: none;
-  pointer-events: none;
-  white-space: nowrap;
   z-index: 1;
-}
-
-.es-ft-wordmark--hidden {
-  opacity: 0;
-  -webkit-text-stroke: 0px transparent;
-  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.es-ft-wordmark--revealed {
-  opacity: 1;
-  -webkit-text-stroke: 1px rgba(var(--es-gold-rgb), 0.18);
-  transition: -webkit-text-stroke-color 0.7s ease,
-    -webkit-text-stroke-width 0.9s ease,
-    opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Mobile */
