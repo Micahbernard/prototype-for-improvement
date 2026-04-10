@@ -155,6 +155,8 @@
   var wrap;
   var wrapClickHandler;
   var reduceClickHandler;
+  var textFillAlpha = 0;
+  var textFillTweenObj = { a: 0 };
 
   function cancelLoop() {
     if (rafId) {
@@ -165,10 +167,13 @@
 
   function teardown() {
     cancelLoop();
-    if (typeof gsap !== 'undefined' && stars && stars.length) {
-      stars.forEach(function(s) {
-        gsap.killTweensOf(s);
-      });
+    if (typeof gsap !== 'undefined') {
+      gsap.killTweensOf(textFillTweenObj);
+      if (stars && stars.length) {
+        stars.forEach(function(s) {
+          gsap.killTweensOf(s);
+        });
+      }
     }
     if (wrap && wrapClickHandler) {
       wrap.removeEventListener('click', wrapClickHandler);
@@ -198,6 +203,8 @@
     time = 0;
     lineAlpha = 0.08;
     starBaseAlpha = 0.55;
+    textFillAlpha = 0;
+    textFillTweenObj.a = 0;
 
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     var rect = canvas.getBoundingClientRect();
@@ -305,25 +312,48 @@
       time++;
       ctx.clearRect(0, 0, W, H);
 
-      /* Before click: faint lines (scattered mesh). During/after reveal: full — outlines letters */
-      var lineVis = lineAlpha * (revealed || animating ? 1 : 0.18);
-      var lineW = revealed || animating ? 0.65 : 0.45;
-      for (var li = 0; li < lines.length; li++) {
-        var a = stars[lines[li].a];
-        var b = stars[lines[li].b];
-        ctx.globalAlpha = lineVis;
-        ctx.strokeStyle = 'rgba(' + goldR + ',' + goldG + ',' + goldB + ', 1)';
-        ctx.lineWidth = lineW;
-        ctx.beginPath();
-        ctx.moveTo(a.currentX, a.currentY);
-        ctx.lineTo(b.currentX, b.currentY);
-        ctx.stroke();
+      /* Readable typography: filled + stroked ESOTERICA (same geometry as the star sample) */
+      if (textFillAlpha > 0.001) {
+        ctx.save();
+        ctx.globalAlpha = textFillAlpha;
+        ctx.font = '600 ' + fontSize + 'px Cinzel, serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'rgba(' + textR + ',' + textG + ',' + textB + ', 1)';
+        ctx.fillText('ESOTERICA', W / 2, H / 2);
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = 'rgba(' + goldR + ',' + goldG + ',' + goldB + ', 0.42)';
+        ctx.lineWidth = 1.35;
+        ctx.strokeText('ESOTERICA', W / 2, H / 2);
+        ctx.restore();
       }
+
+      /* Constellation lines only in idle state — hide during/after reveal so real text reads clearly */
+      var showLines = lines.length && !animating && !revealed;
+      if (showLines) {
+        var lineVis = lineAlpha * 0.18;
+        var lineW = 0.45;
+        for (var li = 0; li < lines.length; li++) {
+          var a = stars[lines[li].a];
+          var b = stars[lines[li].b];
+          ctx.globalAlpha = lineVis;
+          ctx.strokeStyle = 'rgba(' + goldR + ',' + goldG + ',' + goldB + ', 1)';
+          ctx.lineWidth = lineW;
+          ctx.beginPath();
+          ctx.moveTo(a.currentX, a.currentY);
+          ctx.lineTo(b.currentX, b.currentY);
+          ctx.stroke();
+        }
+      }
+
+      var starDim = 1 - textFillAlpha * 0.45;
+      if (starDim < 0.38) starDim = 0.38;
 
       for (var si = 0; si < stars.length; si++) {
         var s = stars[si];
         var twinkle = Math.sin(time * s.twinkleSpeed + s.twinklePhase) * 0.3 + 0.7;
-        var alpha = starBaseAlpha * s.brightness * twinkle;
+        var alpha = starBaseAlpha * s.brightness * twinkle * starDim;
 
         ctx.globalAlpha = alpha * 0.3;
         ctx.beginPath();
@@ -383,6 +413,8 @@
         }
         lineAlpha = 0.25;
         starBaseAlpha = 0.95;
+        textFillAlpha = 1;
+        textFillTweenObj.a = 1;
         draw();
         cancelLoop();
       };
@@ -422,6 +454,18 @@
         ease: 'power2.out',
         onUpdate: function() {
           starBaseAlpha = starTween.v;
+        }
+      });
+
+      textFillTweenObj.a = 0;
+      textFillAlpha = 0;
+      gsap.to(textFillTweenObj, {
+        a: 1,
+        duration: 1,
+        delay: 1.35,
+        ease: 'power2.out',
+        onUpdate: function() {
+          textFillAlpha = textFillTweenObj.a;
         }
       });
 
