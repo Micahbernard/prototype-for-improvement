@@ -245,15 +245,22 @@ import Layout from '../layouts/Layout.astro';
         <h2 class="section-heading">Voices From the Spread</h2>
       </div>
 
-      <div class="es-tt-spread">
+      <div class="es-tt-spread" id="esTtSpread" aria-live="polite">
 
-        <article class="es-tt-card es-tt-card--left">
+        <article class="es-tt-card es-tt-card--left" data-card-id="1">
           <div class="es-tt-frame" aria-hidden="true">
             <span class="es-tt-corner es-tt-corner--tl"></span>
             <span class="es-tt-corner es-tt-corner--tr"></span>
             <span class="es-tt-corner es-tt-corner--bl"></span>
             <span class="es-tt-corner es-tt-corner--br"></span>
           </div>
+          <button type="button" class="es-tt-close" aria-label="Return to spread">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1" />
+              <line x1="8" y1="8" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              <line x1="16" y1="8" x2="8" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
+          </button>
           <div class="es-tt-glyph" aria-hidden="true">
             <svg viewBox="0 0 40 40" width="32" height="32">
               <circle cx="20" cy="20" r="8" fill="none" stroke="currentColor" stroke-width="0.8"/>
@@ -267,6 +274,7 @@ import Layout from '../layouts/Layout.astro';
           <h3 class="es-tt-archetype">The Seeker</h3>
           <div class="es-tt-rule" aria-hidden="true"></div>
           <p class="es-tt-quote">The tarot and oracle decks here are unlike anything I have held before. Each card feels alive with intention. My readings have never been more vivid.</p>
+          <p class="es-tt-quote-full">The tarot and oracle decks here are unlike anything I have held before. Each card feels alive with intention, as if the artist poured a small ritual into every illustration. My readings have never been more vivid, more honest, or more immediate. I have done tarot for fifteen years and I did not know a deck could feel this attentive to the hand that draws it.</p>
           <div class="es-tt-rule" aria-hidden="true"></div>
           <div class="es-tt-attribution">
             <span class="es-tt-name">Selene M.</span>
@@ -275,13 +283,20 @@ import Layout from '../layouts/Layout.astro';
           <span class="es-tt-numeral" aria-hidden="true">I</span>
         </article>
 
-        <article class="es-tt-card es-tt-card--center">
+        <article class="es-tt-card es-tt-card--center" data-card-id="2">
           <div class="es-tt-frame" aria-hidden="true">
             <span class="es-tt-corner es-tt-corner--tl"></span>
             <span class="es-tt-corner es-tt-corner--tr"></span>
             <span class="es-tt-corner es-tt-corner--bl"></span>
             <span class="es-tt-corner es-tt-corner--br"></span>
           </div>
+          <button type="button" class="es-tt-close" aria-label="Return to spread">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1" />
+              <line x1="8" y1="8" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              <line x1="16" y1="8" x2="8" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
+          </button>
           <div class="es-tt-glyph" aria-hidden="true">
             <svg viewBox="0 0 40 40" width="32" height="32">
               <polygon points="20,4 24,16 36,16 26,24 30,36 20,28 10,36 14,24 4,16 16,16" fill="none" stroke="currentColor" stroke-width="0.8"/>
@@ -291,6 +306,7 @@ import Layout from '../layouts/Layout.astro';
           <h3 class="es-tt-archetype">The Healer</h3>
           <div class="es-tt-rule" aria-hidden="true"></div>
           <p class="es-tt-quote">These crystals radiate a calm I have never experienced. My meditation space was transformed the moment I placed them on my altar.</p>
+          <p class="es-tt-quote-full">These crystals radiate a calm I have never experienced. My meditation space was transformed the moment I placed them on my altar — my clients feel it the instant they walk in, before I have said a word. I have sourced stones from three continents and nothing compares to what arrives from Esoterica. They choose what they send with obvious care, and it shows.</p>
           <div class="es-tt-rule" aria-hidden="true"></div>
           <div class="es-tt-attribution">
             <span class="es-tt-name">Rowan A.</span>
@@ -299,13 +315,20 @@ import Layout from '../layouts/Layout.astro';
           <span class="es-tt-numeral" aria-hidden="true">II</span>
         </article>
 
-        <article class="es-tt-card es-tt-card--right">
+        <article class="es-tt-card es-tt-card--right" data-card-id="3">
           <div class="es-tt-frame" aria-hidden="true">
             <span class="es-tt-corner es-tt-corner--tl"></span>
             <span class="es-tt-corner es-tt-corner--tr"></span>
             <span class="es-tt-corner es-tt-corner--bl"></span>
             <span class="es-tt-corner es-tt-corner--br"></span>
           </div>
+          <button type="button" class="es-tt-close" aria-label="Return to spread">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1" />
+              <line x1="8" y1="8" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+              <line x1="16" y1="8" x2="8" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
+          </button>
           <div class="es-tt-glyph" aria-hidden="true">
             <svg viewBox="0 0 40 40" width="32" height="32">
               <path d="M 8 28 Q 8 12 20 8 Q 32 12 32 28" fill="none" stroke="currentColor" stroke-width="0.8"/>
@@ -317,6 +340,7 @@ import Layout from '../layouts/Layout.astro';
           <h3 class="es-tt-archetype">The Dreamer</h3>
           <div class="es-tt-rule" aria-hidden="true"></div>
           <p class="es-tt-quote">Dreamwalker Tea opened a door I did not know existed. I have been having the most vivid, prophetic dreams. Esoterica understands the unseen.</p>
+          <p class="es-tt-quote-full">Dreamwalker Tea opened a door I did not know existed. I have been having the most vivid, prophetic dreams of my life — dreams I remember in full detail when I wake, dreams that have shown me things I later confirmed. Esoterica understands the unseen in a way that feels inherited rather than learned. I am already on my third order, and I will be on a thousandth.</p>
           <div class="es-tt-rule" aria-hidden="true"></div>
           <div class="es-tt-attribution">
             <span class="es-tt-name">Luna V.</span>
@@ -1169,6 +1193,99 @@ void main(void) {
       })();
 
     });
+
+    /* ================================================================
+       TESTIMONIALS — Click to Expand / Focus Mode
+    ================================================================ */
+    (function () {
+      var spread = document.getElementById('esTtSpread');
+      if (!spread) return;
+
+      var cards = spread.querySelectorAll('.es-tt-card');
+      if (!cards.length) return;
+
+      var expandedCard = null;
+
+      function expand(card) {
+        if (expandedCard === card) return;
+
+        if (expandedCard) {
+          collapse(false);
+        }
+
+        expandedCard = card;
+        spread.classList.add('es-tt-spread--focused');
+        card.classList.add('es-tt-card--expanded');
+        card.setAttribute('aria-expanded', 'true');
+
+        cards.forEach(function (other) {
+          if (other !== card) {
+            other.classList.add('es-tt-card--dimmed');
+            other.setAttribute('aria-hidden', 'true');
+          }
+        });
+
+        var closeBtn = card.querySelector('.es-tt-close');
+        if (closeBtn) {
+          setTimeout(function () {
+            closeBtn.focus();
+          }, 350);
+        }
+      }
+
+      function collapse(restoreFocus) {
+        if (!expandedCard) return;
+        var prev = expandedCard;
+        prev.classList.remove('es-tt-card--expanded');
+        prev.removeAttribute('aria-expanded');
+        spread.classList.remove('es-tt-spread--focused');
+
+        cards.forEach(function (other) {
+          other.classList.remove('es-tt-card--dimmed');
+          other.removeAttribute('aria-hidden');
+        });
+
+        expandedCard = null;
+        if (restoreFocus !== false) {
+          prev.focus();
+        }
+      }
+
+      cards.forEach(function (card) {
+        if (!card.hasAttribute('tabindex')) {
+          card.setAttribute('tabindex', '0');
+        }
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-expanded', 'false');
+
+        card.addEventListener('click', function (e) {
+          if (e.target.closest('.es-tt-close')) return;
+          if (card.classList.contains('es-tt-card--expanded')) return;
+          expand(card);
+        });
+
+        card.addEventListener('keydown', function (e) {
+          if (card.classList.contains('es-tt-card--expanded')) return;
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            expand(card);
+          }
+        });
+      });
+
+      spread.addEventListener('click', function (e) {
+        var closeBtn = e.target.closest('.es-tt-close');
+        if (!closeBtn) return;
+        e.stopPropagation();
+        collapse(true);
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && expandedCard) {
+          collapse(true);
+        }
+      });
+    })();
 
 </script>
 

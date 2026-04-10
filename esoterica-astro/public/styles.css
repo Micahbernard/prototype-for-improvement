@@ -1720,6 +1720,7 @@ body.esoterica .nav-logo .nav-wordmark {
 }
 
 .es-tt-spread {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -1727,6 +1728,7 @@ body.esoterica .nav-logo .nav-wordmark {
   max-width: 1200px;
   margin: 0 auto;
   perspective: 1400px;
+  transition: min-height 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .es-tt-card {
@@ -1877,6 +1879,192 @@ body.esoterica .nav-logo .nav-wordmark {
   font-weight: 500;
   letter-spacing: 0.15em;
   color: rgba(var(--es-gold-rgb), 0.45);
+}
+
+/* ===== TESTIMONIALS — Focus Mode (click to expand) ===== */
+.es-tt-quote-full {
+  display: none;
+  font-family: var(--es-font-serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.75;
+  color: rgba(var(--es-text-rgb), 0.85);
+  margin: 1.8rem 0;
+  max-width: 34ch;
+  position: relative;
+  z-index: 1;
+}
+
+.es-tt-spread--focused {
+  min-height: 640px;
+}
+
+.es-tt-card--dimmed {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.85) translateY(20px);
+  filter: blur(6px);
+  transition: opacity 0.5s ease,
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.5s ease;
+}
+
+.es-tt-card--expanded {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  flex: 0 0 auto;
+  width: min(420px, 90vw);
+  aspect-ratio: 5 / 7.6;
+  padding: 4rem 2.5rem 4.5rem;
+  z-index: 10;
+  border-color: rgba(var(--es-gold-rgb), 0.42);
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.6),
+    0 0 80px rgba(var(--es-gold-rgb), 0.1),
+    inset 0 1px 0 rgba(var(--es-gold-rgb), 0.22);
+  cursor: default;
+}
+
+.es-tt-card--expanded.es-tt-card--left,
+.es-tt-card--expanded.es-tt-card--center,
+.es-tt-card--expanded.es-tt-card--right {
+  transform: translate(-50%, -50%) !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  .es-tt-card--expanded.es-tt-card--left:hover,
+  .es-tt-card--expanded.es-tt-card--center:hover,
+  .es-tt-card--expanded.es-tt-card--right:hover {
+    transform: translate(-50%, -50%) !important;
+  }
+}
+
+.es-tt-card--expanded::before {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  border-radius: 8px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(var(--es-gold-rgb), 0.08) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: -1;
+  animation: esTtAuraBreathe 4s ease-in-out infinite;
+}
+
+@keyframes esTtAuraBreathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.es-tt-card--expanded .es-tt-quote {
+  display: none;
+}
+.es-tt-card--expanded .es-tt-quote-full {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  animation: esTtQuoteIn 0.6s ease 0.25s both;
+}
+
+@keyframes esTtQuoteIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.es-tt-card--expanded .es-tt-glyph {
+  color: rgba(var(--es-gold-rgb), 1);
+  transform: scale(1.3);
+  margin-bottom: 1.75rem;
+}
+.es-tt-card--expanded .es-tt-archetype {
+  font-size: 1.15rem;
+  letter-spacing: 0.28em;
+  color: rgba(var(--es-gold-rgb), 1);
+}
+.es-tt-card--expanded .es-tt-corner {
+  opacity: 1;
+  width: 18px;
+  height: 18px;
+}
+.es-tt-card--expanded .es-tt-name {
+  font-size: 0.78rem;
+}
+.es-tt-card--expanded .es-tt-role {
+  font-size: 0.68rem;
+}
+
+.es-tt-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: rgba(var(--es-gold-rgb), 0.65);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8) rotate(-45deg);
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+  z-index: 11;
+}
+
+.es-tt-card--expanded .es-tt-close {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1) rotate(0deg);
+  transition-delay: 0.3s;
+}
+
+.es-tt-close:hover {
+  color: rgba(var(--es-gold-rgb), 1);
+}
+
+.es-tt-close:focus-visible {
+  outline: 2px solid rgba(var(--es-gold-rgb), 0.6);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+.es-tt-card:not(.es-tt-card--expanded) {
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .es-tt-spread--focused {
+    min-height: 560px;
+  }
+  .es-tt-card--expanded {
+    width: calc(100vw - 2rem);
+    max-width: 360px;
+    padding: 3rem 1.5rem 3.5rem;
+  }
+  .es-tt-card--expanded::before {
+    inset: -20px;
+  }
+  .es-tt-quote-full {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .es-tt-spread,
+  .es-tt-card--dimmed,
+  .es-tt-card--expanded,
+  .es-tt-close,
+  .es-tt-card--expanded::before,
+  .es-tt-card--expanded .es-tt-quote-full {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
