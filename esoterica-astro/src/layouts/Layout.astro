@@ -192,10 +192,9 @@ const {
                 startY = Math.random() * canvas.height * 0.5;
               }
 
-              var angle = Math.PI * 0.7 + (Math.random() - 0.5) * 0.4;
-              var speed = 8 + Math.random() * 5;
-
-              var trailMax = canvas.width < 768 ? 30 : 55;
+              var angle = Math.PI * 0.25 + (Math.random() - 0.5) * 0.4;
+              var speed = 7 + Math.random() * 4;
+              var trailMax = canvas.width < 768 ? 38 : 70;
 
               comets.push({
                 x: startX,
@@ -204,9 +203,10 @@ const {
                 vy: Math.sin(angle) * speed,
                 trail: [],
                 trailMax: trailMax,
-                sparkles: [],
-                life: 1.0,
-                age: 0
+                mist: [],
+                age: 0,
+                wobblePhase: Math.random() * Math.PI * 2,
+                wobbleSpeed: 0.06 + Math.random() * 0.04
               });
             }
 
@@ -215,7 +215,7 @@ const {
               cometCooldown--;
               if (cometCooldown <= 0 && comets.length < maxComets) {
                 spawnComet();
-                cometCooldown = 480 + Math.floor(Math.random() * 240);
+                cometCooldown = 160 + Math.floor(Math.random() * 80);
               }
 
               for (var i = comets.length - 1; i >= 0; i--) {
@@ -226,30 +226,42 @@ const {
 
                 c.trail.unshift({ x: c.x, y: c.y, alpha: 1.0 });
                 if (c.trail.length > c.trailMax) c.trail.pop();
-
                 for (var t = 0; t < c.trail.length; t++) {
                   c.trail[t].alpha = 1.0 - t / c.trailMax;
                 }
 
-                if (c.age % 3 === 0 && c.trail.length > 2) {
-                  var src = c.trail[2 + Math.floor(Math.random() * Math.min(6, c.trail.length - 2))];
+                if (c.age % 2 === 0 && c.trail.length > 4) {
+                  var srcIdx = 3 + Math.floor(Math.random() * Math.min(8, c.trail.length - 4));
+                  var src = c.trail[srcIdx];
                   if (src) {
-                    c.sparkles.push({
-                      x: src.x + (Math.random() - 0.5) * 8,
-                      y: src.y + (Math.random() - 0.5) * 8,
-                      alpha: 0.7 + Math.random() * 0.3,
-                      decay: 0.02 + Math.random() * 0.02,
-                      size: 0.5 + Math.random() * 1.0
+                    var vmag = Math.sqrt(c.vx * c.vx + c.vy * c.vy) || 1;
+                    var perpX = -c.vy / vmag;
+                    var perpY = c.vx / vmag;
+                    var side = Math.random() < 0.5 ? -1 : 1;
+                    var driftSpeed = 0.25 + Math.random() * 0.45;
+                    c.mist.push({
+                      x: src.x + perpX * side * 1.5,
+                      y: src.y + perpY * side * 1.5,
+                      vx: perpX * side * driftSpeed,
+                      vy: perpY * side * driftSpeed,
+                      alpha: 0.42 + Math.random() * 0.18,
+                      decay: 0.012 + Math.random() * 0.012,
+                      size: 0.6 + Math.random() * 0.9,
+                      grow: 0.06 + Math.random() * 0.05
                     });
                   }
                 }
 
-                for (var s = c.sparkles.length - 1; s >= 0; s--) {
-                  c.sparkles[s].alpha -= c.sparkles[s].decay;
-                  if (c.sparkles[s].alpha <= 0) c.sparkles.splice(s, 1);
+                for (var m = c.mist.length - 1; m >= 0; m--) {
+                  var mp = c.mist[m];
+                  mp.x += mp.vx;
+                  mp.y += mp.vy;
+                  mp.size += mp.grow;
+                  mp.alpha -= mp.decay;
+                  if (mp.alpha <= 0) c.mist.splice(m, 1);
                 }
 
-                if (c.x > canvas.width + 50 || c.y > canvas.height + 50 || c.x < -50 || c.y < -50) {
+                if (c.x > canvas.width + 80 || c.y > canvas.height + 80 || c.x < -80 || c.y < -80) {
                   comets.splice(i, 1);
                 }
               }
@@ -258,73 +270,88 @@ const {
             function drawComets() {
               for (var i = 0; i < comets.length; i++) {
                 var c = comets[i];
-                if (c.trail.length < 2) continue;
+                if (c.trail.length < 3) continue;
 
-                for (var t = 0; t < c.trail.length - 1; t++) {
+                var wobble = Math.sin(c.age * c.wobbleSpeed + c.wobblePhase) * 0.4;
+
+                var vmag = Math.sqrt(c.vx * c.vx + c.vy * c.vy) || 1;
+                var perpX = -c.vy / vmag;
+                var perpY = c.vx / vmag;
+
+                for (var t = 1; t < c.trail.length; t += 2) {
                   var p = c.trail[t];
-                  var alpha = p.alpha * 0.15;
-                  var radius = 6 * p.alpha;
+                  var taper = t / c.trail.length;
+                  var radius = 0.6 + taper * 5.5;
+                  var alpha = p.alpha * 0.07 * (1 - taper * 0.5);
                   ctx.globalAlpha = alpha;
                   ctx.beginPath();
                   ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
-                  ctx.fillStyle = 'rgba(160, 130, 220, 1)';
+                  ctx.fillStyle = 'rgba(120, 180, 240, 1)';
                   ctx.fill();
                 }
 
-                ctx.lineWidth = 2;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
+                ctx.lineWidth = 1.8;
                 for (var t2 = 0; t2 < c.trail.length - 1; t2++) {
                   var p1 = c.trail[t2];
                   var p2 = c.trail[t2 + 1];
-                  var a = p1.alpha * 0.7;
-                  ctx.globalAlpha = a;
-                  ctx.strokeStyle = 'rgba(232, 200, 120, 1)';
+                  var taper2 = t2 / c.trail.length;
+                  var lineAlpha = p1.alpha * 0.55 * (1 - taper2 * 0.7);
+                  var w1 = Math.sin(t2 * 0.3 + c.age * 0.08 + c.wobblePhase) * wobble * (taper2 * 1.5);
+                  var w2 = Math.sin((t2 + 1) * 0.3 + c.age * 0.08 + c.wobblePhase) * wobble * ((taper2 + 0.05) * 1.5);
+                  ctx.globalAlpha = lineAlpha;
+                  ctx.strokeStyle = 'rgba(170, 215, 255, 1)';
                   ctx.beginPath();
-                  ctx.moveTo(p1.x, p1.y);
-                  ctx.lineTo(p2.x, p2.y);
+                  ctx.moveTo(p1.x + perpX * w1, p1.y + perpY * w1);
+                  ctx.lineTo(p2.x + perpX * w2, p2.y + perpY * w2);
                   ctx.stroke();
                 }
 
-                ctx.lineWidth = 1;
-                var coreLen = Math.min(15, c.trail.length - 1);
+                ctx.lineWidth = 0.9;
+                var coreLen = Math.min(14, c.trail.length - 1);
                 for (var t3 = 0; t3 < coreLen; t3++) {
                   var c1 = c.trail[t3];
                   var c2 = c.trail[t3 + 1];
-                  var ca = (1.0 - t3 / coreLen) * 0.9;
-                  ctx.globalAlpha = ca;
-                  ctx.strokeStyle = 'rgba(255, 252, 240, 1)';
+                  var coreAlpha = (1.0 - t3 / coreLen) * 0.85;
+                  ctx.globalAlpha = coreAlpha;
+                  ctx.strokeStyle = 'rgba(230, 245, 255, 1)';
                   ctx.beginPath();
                   ctx.moveTo(c1.x, c1.y);
                   ctx.lineTo(c2.x, c2.y);
                   ctx.stroke();
                 }
 
+                for (var m = 0; m < c.mist.length; m++) {
+                  var mp = c.mist[m];
+                  ctx.globalAlpha = mp.alpha * 0.25;
+                  ctx.beginPath();
+                  ctx.arc(mp.x, mp.y, mp.size * 2.2, 0, Math.PI * 2);
+                  ctx.fillStyle = 'rgba(190, 220, 250, 1)';
+                  ctx.fill();
+                  ctx.globalAlpha = mp.alpha * 0.55;
+                  ctx.beginPath();
+                  ctx.arc(mp.x, mp.y, mp.size, 0, Math.PI * 2);
+                  ctx.fillStyle = 'rgba(220, 235, 255, 1)';
+                  ctx.fill();
+                }
+
                 var head = c.trail[0];
-                var headGlow = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 12);
-                headGlow.addColorStop(0, 'rgba(255, 248, 230, 0.9)');
-                headGlow.addColorStop(0.3, 'rgba(232, 200, 120, 0.4)');
-                headGlow.addColorStop(0.6, 'rgba(160, 130, 220, 0.12)');
-                headGlow.addColorStop(1, 'rgba(160, 130, 220, 0)');
+                var headGlow = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 14);
+                headGlow.addColorStop(0, 'rgba(240, 250, 255, 0.95)');
+                headGlow.addColorStop(0.25, 'rgba(200, 230, 255, 0.55)');
+                headGlow.addColorStop(0.55, 'rgba(140, 195, 245, 0.18)');
+                headGlow.addColorStop(1, 'rgba(120, 180, 240, 0)');
                 ctx.globalAlpha = 1;
                 ctx.beginPath();
-                ctx.arc(head.x, head.y, 12, 0, Math.PI * 2);
+                ctx.arc(head.x, head.y, 14, 0, Math.PI * 2);
                 ctx.fillStyle = headGlow;
                 ctx.fill();
 
                 ctx.beginPath();
-                ctx.arc(head.x, head.y, 2, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                ctx.arc(head.x, head.y, 1.6, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 1)';
                 ctx.fill();
-
-                for (var s = 0; s < c.sparkles.length; s++) {
-                  var sp = c.sparkles[s];
-                  ctx.globalAlpha = sp.alpha * 0.6;
-                  ctx.beginPath();
-                  ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
-                  ctx.fillStyle = 'rgba(232, 224, 212, 1)';
-                  ctx.fill();
-                }
               }
 
               ctx.globalAlpha = 1;
