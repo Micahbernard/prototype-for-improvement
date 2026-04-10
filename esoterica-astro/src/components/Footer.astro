@@ -274,23 +274,27 @@
       stars[i].currentY = stars[i].scatterY;
     }
 
+    /* Lines = letter outline only: connect stars whose TRUE positions are neighbors on the
+       text sample grid (not scatter distance — avoids dense web). Revealed state traces ESOTERICA. */
     lines = [];
-    var lineThreshold = fontSize * 0.8;
-    for (var i = 0; i < stars.length; i++) {
-      for (var j = i + 1; j < stars.length; j++) {
-        var dx = stars[i].scatterX - stars[j].scatterX;
-        var dy = stars[i].scatterY - stars[j].scatterY;
-        var d = Math.sqrt(dx * dx + dy * dy);
-        if (d < lineThreshold) {
-          lines.push({ a: i, b: j, dist: d });
+    var stepCss = stepPx / dpr;
+    var adjThreshold = stepCss * 1.9;
+    for (var li = 0; li < stars.length; li++) {
+      for (var lj = li + 1; lj < stars.length; lj++) {
+        var tdx = stars[li].trueX - stars[lj].trueX;
+        var tdy = stars[li].trueY - stars[lj].trueY;
+        var td = Math.sqrt(tdx * tdx + tdy * tdy);
+        if (td <= adjThreshold && td > 0.15) {
+          lines.push({ a: li, b: lj, dist: td });
         }
       }
     }
     lines.sort(function(a, b) {
       return a.dist - b.dist;
     });
-    if (lines.length > stars.length * 1.8) {
-      lines = lines.slice(0, Math.floor(stars.length * 1.8));
+    var maxOutlineEdges = Math.floor(stars.length * 2.2);
+    if (lines.length > maxOutlineEdges) {
+      lines = lines.slice(0, maxOutlineEdges);
     }
 
     function draw() {
@@ -301,12 +305,15 @@
       time++;
       ctx.clearRect(0, 0, W, H);
 
+      /* Before click: faint lines (scattered mesh). During/after reveal: full — outlines letters */
+      var lineVis = lineAlpha * (revealed || animating ? 1 : 0.18);
+      var lineW = revealed || animating ? 0.65 : 0.45;
       for (var li = 0; li < lines.length; li++) {
         var a = stars[lines[li].a];
         var b = stars[lines[li].b];
-        ctx.globalAlpha = lineAlpha;
+        ctx.globalAlpha = lineVis;
         ctx.strokeStyle = 'rgba(' + goldR + ',' + goldG + ',' + goldB + ', 1)';
-        ctx.lineWidth = 0.5;
+        ctx.lineWidth = lineW;
         ctx.beginPath();
         ctx.moveTo(a.currentX, a.currentY);
         ctx.lineTo(b.currentX, b.currentY);
