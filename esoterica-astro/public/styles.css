@@ -2663,25 +2663,30 @@ footer a:hover {
   letter-spacing: 0.02em;
   line-height: 0.9;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(var(--es-gold-rgb), 0.12);
+  -webkit-text-stroke: 0px transparent;
   user-select: none;
-  transition: -webkit-text-stroke-color 0.7s ease, opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
   pointer-events: none;
+  transition:
+    -webkit-text-stroke-color 0.8s ease,
+    -webkit-text-stroke-width 0.8s ease,
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .es-ft-wordmark--hidden {
   opacity: 0;
   transform: translate(-50%, calc(-50% + 8px));
+  -webkit-text-stroke: 0px transparent;
 }
 
 .es-ft-wordmark--revealed {
   opacity: 1;
   transform: translate(-50%, -50%);
+  -webkit-text-stroke: 1px rgba(var(--es-gold-rgb), 0.18);
 }
 
-.es-ft-wordmark:hover {
+.es-ft-wordmark--revealed:hover {
   -webkit-text-stroke-color: rgba(var(--es-gold-rgb), 0.4);
 }
 
