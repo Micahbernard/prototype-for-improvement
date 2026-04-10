@@ -82,10 +82,6 @@ const {
         <span></span><span></span><span></span><span></span><span></span>
       </div>
 
-      <div class="es-comets" aria-hidden="true">
-        <span></span><span></span><span></span>
-      </div>
-
       {
         hasTransition && (
           <div class="transition">
@@ -182,11 +178,165 @@ const {
               }
             }
 
+            var comets = [];
+            var cometCooldown = 60;
+
+            function spawnComet() {
+              var startX;
+              var startY;
+              if (Math.random() < 0.6) {
+                startX = Math.random() * canvas.width * 0.6;
+                startY = -10;
+              } else {
+                startX = -10;
+                startY = Math.random() * canvas.height * 0.5;
+              }
+
+              var angle = Math.PI * 0.7 + (Math.random() - 0.5) * 0.4;
+              var speed = 8 + Math.random() * 5;
+
+              var trailMax = canvas.width < 768 ? 30 : 55;
+
+              comets.push({
+                x: startX,
+                y: startY,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                trail: [],
+                trailMax: trailMax,
+                sparkles: [],
+                life: 1.0,
+                age: 0
+              });
+            }
+
+            function updateComets() {
+              var maxComets = canvas.width < 768 ? 1 : 2;
+              cometCooldown--;
+              if (cometCooldown <= 0 && comets.length < maxComets) {
+                spawnComet();
+                cometCooldown = 480 + Math.floor(Math.random() * 240);
+              }
+
+              for (var i = comets.length - 1; i >= 0; i--) {
+                var c = comets[i];
+                c.x += c.vx;
+                c.y += c.vy;
+                c.age++;
+
+                c.trail.unshift({ x: c.x, y: c.y, alpha: 1.0 });
+                if (c.trail.length > c.trailMax) c.trail.pop();
+
+                for (var t = 0; t < c.trail.length; t++) {
+                  c.trail[t].alpha = 1.0 - t / c.trailMax;
+                }
+
+                if (c.age % 3 === 0 && c.trail.length > 2) {
+                  var src = c.trail[2 + Math.floor(Math.random() * Math.min(6, c.trail.length - 2))];
+                  if (src) {
+                    c.sparkles.push({
+                      x: src.x + (Math.random() - 0.5) * 8,
+                      y: src.y + (Math.random() - 0.5) * 8,
+                      alpha: 0.7 + Math.random() * 0.3,
+                      decay: 0.02 + Math.random() * 0.02,
+                      size: 0.5 + Math.random() * 1.0
+                    });
+                  }
+                }
+
+                for (var s = c.sparkles.length - 1; s >= 0; s--) {
+                  c.sparkles[s].alpha -= c.sparkles[s].decay;
+                  if (c.sparkles[s].alpha <= 0) c.sparkles.splice(s, 1);
+                }
+
+                if (c.x > canvas.width + 50 || c.y > canvas.height + 50 || c.x < -50 || c.y < -50) {
+                  comets.splice(i, 1);
+                }
+              }
+            }
+
+            function drawComets() {
+              for (var i = 0; i < comets.length; i++) {
+                var c = comets[i];
+                if (c.trail.length < 2) continue;
+
+                for (var t = 0; t < c.trail.length - 1; t++) {
+                  var p = c.trail[t];
+                  var alpha = p.alpha * 0.15;
+                  var radius = 6 * p.alpha;
+                  ctx.globalAlpha = alpha;
+                  ctx.beginPath();
+                  ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+                  ctx.fillStyle = 'rgba(160, 130, 220, 1)';
+                  ctx.fill();
+                }
+
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                for (var t2 = 0; t2 < c.trail.length - 1; t2++) {
+                  var p1 = c.trail[t2];
+                  var p2 = c.trail[t2 + 1];
+                  var a = p1.alpha * 0.7;
+                  ctx.globalAlpha = a;
+                  ctx.strokeStyle = 'rgba(232, 200, 120, 1)';
+                  ctx.beginPath();
+                  ctx.moveTo(p1.x, p1.y);
+                  ctx.lineTo(p2.x, p2.y);
+                  ctx.stroke();
+                }
+
+                ctx.lineWidth = 1;
+                var coreLen = Math.min(15, c.trail.length - 1);
+                for (var t3 = 0; t3 < coreLen; t3++) {
+                  var c1 = c.trail[t3];
+                  var c2 = c.trail[t3 + 1];
+                  var ca = (1.0 - t3 / coreLen) * 0.9;
+                  ctx.globalAlpha = ca;
+                  ctx.strokeStyle = 'rgba(255, 252, 240, 1)';
+                  ctx.beginPath();
+                  ctx.moveTo(c1.x, c1.y);
+                  ctx.lineTo(c2.x, c2.y);
+                  ctx.stroke();
+                }
+
+                var head = c.trail[0];
+                var headGlow = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 12);
+                headGlow.addColorStop(0, 'rgba(255, 248, 230, 0.9)');
+                headGlow.addColorStop(0.3, 'rgba(232, 200, 120, 0.4)');
+                headGlow.addColorStop(0.6, 'rgba(160, 130, 220, 0.12)');
+                headGlow.addColorStop(1, 'rgba(160, 130, 220, 0)');
+                ctx.globalAlpha = 1;
+                ctx.beginPath();
+                ctx.arc(head.x, head.y, 12, 0, Math.PI * 2);
+                ctx.fillStyle = headGlow;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(head.x, head.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                ctx.fill();
+
+                for (var s = 0; s < c.sparkles.length; s++) {
+                  var sp = c.sparkles[s];
+                  ctx.globalAlpha = sp.alpha * 0.6;
+                  ctx.beginPath();
+                  ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
+                  ctx.fillStyle = 'rgba(232, 224, 212, 1)';
+                  ctx.fill();
+                }
+              }
+
+              ctx.globalAlpha = 1;
+            }
+
             function resize() {
               canvas.width = window.innerWidth;
               canvas.height = window.innerHeight;
               drawNebula();
               createStars();
+              comets = [];
+              cometCooldown = 60;
             }
 
             window.addEventListener('resize', resize);
@@ -209,6 +359,10 @@ const {
                 ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
                 ctx.fill();
               }
+
+              updateComets();
+              drawComets();
+
               ctx.globalAlpha = 1;
             };
           }
