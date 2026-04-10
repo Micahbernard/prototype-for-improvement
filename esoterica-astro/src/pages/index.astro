@@ -18,13 +18,10 @@ import Layout from '../layouts/Layout.astro';
             <div class="hero-webgl-wrap">
               <canvas id="heroShaderCanvas"></canvas>
             </div>
-            <div class="hero-sun" aria-hidden="true">
-              <div class="hero-sun-inner"></div>
-            </div>
+            <div class="hero-sun" aria-hidden="true"></div>
             <!-- Blinking stars between the spirals (filled by initHeroStars on DOMContentLoaded) -->
             <div class="hero-stars" aria-hidden="true"></div>
             <div class="hero-content">
-              <div class="hero-content-shift">
               <div class="hero-sigil">
                 <picture>
                   <source
@@ -48,7 +45,6 @@ import Layout from '../layouts/Layout.astro';
                 already stirs within you.
               </p>
               <a href="#shop" data-scroll="shop" class="hero-cta">Enter the Shop</a>
-              </div>
             </div>
             <div class="hero-lower">
               <div class="hero-links-wrap">
@@ -412,7 +408,6 @@ precision mediump float;
 
 uniform vec2 u_resolution;
 uniform float u_time;
-uniform vec2 u_mouse;
 
 float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -430,19 +425,11 @@ float noise(vec2 p) {
 }
 
 void main(void) {
-    vec2 mouse = u_mouse / u_resolution;
-    mouse = mouse * 2.0 - 1.0;
-    mouse.x *= u_resolution.x / u_resolution.y;
-    mouse.y *= 1.8;
-
     vec2 uv = gl_FragCoord.xy / u_resolution;
     uv = uv * 2.0 - 1.0;
     uv.x *= u_resolution.x / u_resolution.y;
     // Compress Y to create elliptical galaxy (replaces CSS rotateX tilt)
     uv.y *= 1.8;
-
-    float mouseInfluence = 0.06;
-    uv -= mouse * mouseInfluence;
 
     float r = length(uv);
     float angle = atan(uv.y, uv.x);
@@ -490,11 +477,6 @@ void main(void) {
         float d = length(frac);
         color += vec3(0.8, 0.7, 0.95) * exp(-d * 12.0) * 0.35;
     }
-
-    float mouseDist = length(uv - mouse);
-    float mouseGlow = exp(-mouseDist * 3.5) * 0.18;
-    vec3 glowColor = vec3(1.0, 0.88, 0.65);
-    color += glowColor * mouseGlow;
 
     gl_FragColor = vec4(color, 1.0);
 }`);
@@ -572,77 +554,6 @@ void main(void) {
               },
             });
         });
-      }
-
-      /* ---- Hero mouse parallax — multi-depth layers (pointer desktop only; inner nodes avoid fighting GSAP scroll) ---- */
-      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && !ScrollTrigger.isTouch) {
-        (function initHeroMouseParallax() {
-          const hero = document.querySelector(".hero-layout");
-          if (!hero) return;
-
-          const layers = [
-            { el: hero.querySelector(".hero-sun-inner"), depth: 0.025 },
-            { el: hero.querySelector(".hero-stars"), depth: 0.015 },
-            { el: hero.querySelector(".hero-content-shift"), depth: 0.008 },
-          ];
-
-          const activeLayers = layers.filter(function (l) {
-            return l.el;
-          });
-          if (!activeLayers.length) return;
-
-          let targetX = 0;
-          let targetY = 0;
-          let currentX = 0;
-          let currentY = 0;
-          let rafId = null;
-          let running = true;
-
-          hero.addEventListener("mousemove", function (e) {
-            const rect = hero.getBoundingClientRect();
-            targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-            targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-          });
-
-          hero.addEventListener("mouseleave", function () {
-            targetX = 0;
-            targetY = 0;
-          });
-
-          function tick() {
-            if (!running) return;
-            currentX += (targetX - currentX) * 0.06;
-            currentY += (targetY - currentY) * 0.06;
-
-            for (let i = 0; i < activeLayers.length; i++) {
-              const layer = activeLayers[i];
-              const x = currentX * layer.depth * 100;
-              const y = currentY * layer.depth * 100;
-              layer.el.style.transform = "translate(" + x + "px, " + y + "px)";
-            }
-
-            rafId = requestAnimationFrame(tick);
-          }
-
-          rafId = requestAnimationFrame(tick);
-
-          ScrollTrigger.create({
-            trigger: ".hero-section",
-            start: "top bottom",
-            end: "bottom top",
-            onLeave: function () {
-              running = false;
-              if (rafId) {
-                cancelAnimationFrame(rafId);
-                rafId = null;
-              }
-            },
-            onEnterBack: function () {
-              running = true;
-              if (!rafId) rafId = requestAnimationFrame(tick);
-            },
-          });
-        })();
       }
 
       /* ---- B) Lenis on desktop only (SideStage pattern) ---- */
