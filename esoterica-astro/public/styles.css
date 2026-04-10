@@ -452,33 +452,6 @@ body.esoterica > .es-site-chrome {
   max-width: var(--es-max-prose);
 }
 
-/* Testimonial avatar initials (replaces inline styles) */
-.testimonial-avatar-initial {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--es-font-display);
-  font-size: 1rem;
-  color: var(--es-white);
-  border: 2px solid color-mix(in srgb, var(--es-gold) 22%, transparent);
-}
-
-.testimonial-avatar-initial--warm {
-  background: linear-gradient(135deg, var(--es-gold), #6a4c93);
-}
-
-.testimonial-avatar-initial--cool {
-  background: linear-gradient(135deg, #6a4c93, #2d1b4e);
-}
-
-.testimonial-avatar-initial--twilight {
-  background: linear-gradient(135deg, #1a1a3e, var(--es-gold));
-}
-
 /* Product / content image treatment */
 .es-media-cover {
   width: 100%;
@@ -1739,88 +1712,233 @@ body.esoterica .nav-logo .nav-wordmark {
   color: var(--es-text-muted);
 }
 
-/* ===== TESTIMONIALS ===== */
-.testimonials {
+/* ===== TESTIMONIALS — Tarot Card Spread (homepage) ===== */
+.es-tt-section {
   padding: 8rem 2rem;
   background: radial-gradient(ellipse at 50% 50%, rgba(90, 50, 140, 0.04) 0%, transparent 60%);
+  position: relative;
 }
 
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1100px;
+.es-tt-spread {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2.5rem;
+  max-width: 1200px;
   margin: 0 auto;
+  perspective: 1400px;
 }
 
-.testimonial-card {
-  background: var(--es-bg-card-soft);
-  border: 1px solid var(--es-border-card);
-  border-radius: var(--es-radius-card);
-  padding: 2.5rem 2rem 2rem;
-  backdrop-filter: blur(12px);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+.es-tt-card {
+  position: relative;
+  flex: 0 0 280px;
+  aspect-ratio: 5 / 8;
+  padding: 3.25rem 1.75rem 3.5rem;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(var(--es-gold-rgb), 0.05) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(15, 12, 35, 0.92) 0%, rgba(7, 7, 20, 0.96) 100%);
+  border: 1px solid rgba(var(--es-gold-rgb), 0.18);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transform-origin: center bottom;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.5s ease,
+    box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(var(--es-gold-rgb), 0.08);
 }
 
-.testimonial-card:hover {
-  border-color: var(--es-border-card-hover);
-  box-shadow: var(--es-shadow-card-hover);
+.es-tt-card--center {
+  transform: translateY(-18px);
 }
 
-.es-star-icon {
+.es-tt-frame {
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(var(--es-gold-rgb), 0.1);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.es-tt-corner {
+  position: absolute;
   width: 14px;
   height: 14px;
-  fill: currentColor;
-  flex-shrink: 0;
+  opacity: 0.45;
+  transition: opacity 0.5s ease;
+}
+.es-tt-corner--tl {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid rgba(var(--es-gold-rgb), 0.7);
+  border-left: 1px solid rgba(var(--es-gold-rgb), 0.7);
+}
+.es-tt-corner--tr {
+  top: -1px;
+  right: -1px;
+  border-top: 1px solid rgba(var(--es-gold-rgb), 0.7);
+  border-right: 1px solid rgba(var(--es-gold-rgb), 0.7);
+}
+.es-tt-corner--bl {
+  bottom: -1px;
+  left: -1px;
+  border-bottom: 1px solid rgba(var(--es-gold-rgb), 0.7);
+  border-left: 1px solid rgba(var(--es-gold-rgb), 0.7);
+}
+.es-tt-corner--br {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid rgba(var(--es-gold-rgb), 0.7);
+  border-right: 1px solid rgba(var(--es-gold-rgb), 0.7);
 }
 
-.testimonial-stars {
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-  color: var(--es-gold);
-  margin-bottom: 1.2rem;
+.es-tt-glyph {
+  color: rgba(var(--es-gold-rgb), 0.7);
+  margin-bottom: 1.25rem;
+  position: relative;
+  z-index: 1;
+  transition: color 0.5s ease, transform 0.6s ease;
 }
 
-.testimonial-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.1rem;
-  font-weight: 400;
-  font-style: italic;
-  line-height: 1.7;
-  color: var(--es-text-muted);
-  margin-bottom: 1.5rem;
-}
-
-.testimonial-author {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.testimonial-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(212, 168, 83, 0.2);
-}
-
-.testimonial-name {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.8rem;
+.es-tt-archetype {
+  font-family: var(--es-font-display);
+  font-size: 0.95rem;
   font-weight: 500;
-  color: var(--es-text-secondary);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(var(--es-gold-rgb), 0.92);
+  margin: 0 0 1.1rem;
+  position: relative;
+  z-index: 1;
 }
 
-.testimonial-role {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.7rem;
+.es-tt-rule {
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--es-gold-rgb), 0.3), transparent);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.es-tt-quote {
+  font-family: var(--es-font-serif);
+  font-size: 1.05rem;
+  font-style: italic;
   font-weight: 400;
+  line-height: 1.65;
+  color: rgba(var(--es-text-rgb), 0.78);
+  margin: 1.5rem 0;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.es-tt-attribution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 1.4rem;
+  position: relative;
+  z-index: 1;
+}
+.es-tt-name {
+  font-family: var(--es-font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(var(--es-text-rgb), 0.72);
+}
+.es-tt-role {
+  font-family: var(--es-font-body);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
   color: rgba(var(--es-gold-rgb), 0.5);
-  letter-spacing: 0.08em;
-  margin-top: 0.2rem;
+}
+
+.es-tt-numeral {
+  position: absolute;
+  bottom: 1.1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--es-font-display);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: rgba(var(--es-gold-rgb), 0.45);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .es-tt-card:hover {
+    border-color: rgba(var(--es-gold-rgb), 0.42);
+    box-shadow:
+      0 30px 60px rgba(0, 0, 0, 0.55),
+      0 0 40px rgba(var(--es-gold-rgb), 0.08),
+      inset 0 1px 0 rgba(var(--es-gold-rgb), 0.18);
+  }
+  .es-tt-card:hover .es-tt-corner {
+    opacity: 1;
+  }
+  .es-tt-card:hover .es-tt-glyph {
+    color: rgba(var(--es-gold-rgb), 1);
+  }
+
+  .es-tt-card--left:hover {
+    transform: translateY(-10px) rotateZ(-2.5deg);
+  }
+  .es-tt-card--center:hover {
+    transform: translateY(-28px) rotateZ(0deg) scale(1.02);
+  }
+  .es-tt-card--right:hover {
+    transform: translateY(-10px) rotateZ(2.5deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .es-tt-section {
+    padding: 5rem 1.5rem;
+  }
+  .es-tt-spread {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .es-tt-card {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 320px;
+  }
+  .es-tt-card--center {
+    transform: none;
+  }
+  .es-tt-card--left:hover,
+  .es-tt-card--center:hover,
+  .es-tt-card--right:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .es-tt-card,
+  .es-tt-glyph {
+    transition: none;
+  }
+  .es-tt-card--left:hover,
+  .es-tt-card--center:hover,
+  .es-tt-card--right:hover {
+    transform: none;
+  }
 }
 
 /* ===== FOOTER ===== */
@@ -2075,7 +2193,7 @@ footer a:hover {
     transition: none;
   }
 
-  .testimonials-grid {
+  body.pg-tarot .testimonials-grid {
     grid-template-columns: 1fr;
   }
 
@@ -4054,11 +4172,13 @@ body:is(.pg-tarot, .pg-classes, .pg-free-resources) .quote-author {
   color: var(--es-text-dim);
 }
 
-/* Tarot — testimonials (homepage uses different .testimonial-* styles) */
+/* Tarot — testimonials grid (inner page; homepage uses .es-tt-*) */
 body.pg-tarot .testimonials-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 body.pg-tarot .testimonial-card {
