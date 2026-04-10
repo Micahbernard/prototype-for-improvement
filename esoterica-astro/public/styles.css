@@ -2644,7 +2644,7 @@ footer a:hover {
 .es-ft-wordmark {
   display: inline-block;
   font-family: var(--es-font-display);
-  font-size: clamp(2.5rem, 13vw, 11rem);
+  font-size: clamp(2.35rem, 12vw, 10rem);
   font-weight: 600;
   letter-spacing: 0.02em;
   line-height: 0.9;
