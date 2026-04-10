@@ -100,9 +100,10 @@
 
   </div>
 
-  <!-- Full-width wordmark -->
+  <!-- Full-width wordmark: starfall settles into outline text -->
   <div class="es-ft-wordmark-wrap">
-    <div class="es-ft-wordmark" aria-hidden="true">Esoterica</div>
+    <canvas class="es-ft-starfall" aria-hidden="true"></canvas>
+    <div class="es-ft-wordmark es-ft-wordmark--hidden" aria-hidden="true">ESOTERICA</div>
   </div>
 
 </footer>
@@ -121,6 +122,267 @@
     row.addEventListener('mouseleave', function() {
       gsap.to(label, { x: 0, duration: 0.5, ease: 'power2.out' });
     });
+  });
+})();
+</script>
+
+<script is:inline>
+(function() {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Color tokens (matches --es-gold-rgb and --es-text-rgb)
+  var goldR = 212, goldG = 168, goldB = 83;
+  var textR = 232, textG = 224, textB = 212;
+
+  var canvas, ctx, wrap, wordmark;
+  var W, H, dpr;
+  var stars = [];
+  var rafId = null;
+  var animationStarted = false;
+  var hasSettled = false;
+  var observer = null;
+  var resizeTimer = null;
+  var time = 0;
+
+  function cancelLoop() {
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
+  function teardown() {
+    cancelLoop();
+    if (typeof gsap !== 'undefined' && stars.length) {
+      stars.forEach(function(s) { gsap.killTweensOf(s); });
+    }
+    if (observer) {
+      observer.disconnect();
+      observer = null;
+    }
+    stars = [];
+    animationStarted = false;
+    hasSettled = false;
+  }
+
+  function sampleLetterPoints() {
+    // Offscreen canvas: stroke "ESOTERICA" and read pixels along the outline
+    var off = document.createElement('canvas');
+    off.width = W * dpr;
+    off.height = H * dpr;
+    var offCtx = off.getContext('2d');
+    offCtx.setTransform(1, 0, 0, 1, 0, 0);
+    offCtx.scale(dpr, dpr);
+
+    var fontSize = Math.min(W * 0.13, H * 0.78);
+    offCtx.font = '600 ' + fontSize + 'px Cinzel, serif';
+    offCtx.textAlign = 'center';
+    offCtx.textBaseline = 'middle';
+    offCtx.lineWidth = Math.max(2, fontSize * 0.045);
+    offCtx.strokeStyle = '#fff';
+    offCtx.strokeText('ESOTERICA', W / 2, H / 2);
+
+    var imageData = offCtx.getImageData(0, 0, off.width, off.height);
+    var pixels = imageData.data;
+    var candidates = [];
+    var sampleStep = Math.max(3, Math.floor(fontSize / 14));
+    var stepPx = Math.max(1, Math.floor(sampleStep * dpr));
+
+    for (var py = 0; py < off.height; py += stepPx) {
+      for (var px = 0; px < off.width; px += stepPx) {
+        var idx = (py * off.width + px) * 4;
+        if (pixels[idx + 3] > 100) {
+          candidates.push({ x: px / dpr, y: py / dpr });
+        }
+      }
+    }
+
+    // Poisson-like minimum distance filter — even spacing along the outline
+    var minDist = fontSize * 0.07;
+    var minDistSq = minDist * minDist;
+    var filtered = [];
+    for (var i = 0; i < candidates.length; i++) {
+      var ok = true;
+      for (var j = 0; j < filtered.length; j++) {
+        var fdx = candidates[i].x - filtered[j].x;
+        var fdy = candidates[i].y - filtered[j].y;
+        if (fdx * fdx + fdy * fdy < minDistSq) { ok = false; break; }
+      }
+      if (ok) filtered.push(candidates[i]);
+    }
+
+    var targetCount = W < 768
+      ? Math.min(Math.max(80, Math.floor(W / 6)), 130)
+      : Math.min(Math.max(140, Math.floor(W / 5)), 220);
+
+    while (filtered.length > targetCount) {
+      filtered.splice(Math.floor(Math.random() * filtered.length), 1);
+    }
+    return filtered;
+  }
+
+  function init() {
+    teardown();
+
+    canvas = document.querySelector('.es-ft-starfall');
+    wrap = document.querySelector('.es-ft-wordmark-wrap');
+    wordmark = document.querySelector('.es-ft-wordmark');
+    if (!canvas || !wrap || !wordmark) return;
+
+    ctx = canvas.getContext('2d');
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var rect = canvas.getBoundingClientRect();
+    W = rect.width;
+    H = rect.height;
+    if (W < 8 || H < 8) return;
+
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+
+    // Reset wordmark to hidden state
+    wordmark.classList.add('es-ft-wordmark--hidden');
+    wordmark.classList.remove('es-ft-wordmark--revealed');
+
+    var letterPoints = sampleLetterPoints();
+    if (!letterPoints.length) return;
+
+    // Build star data: each one starts above the canvas with a random X
+    stars = letterPoints.map(function(p) {
+      return {
+        trueX: p.x,
+        trueY: p.y,
+        currentX: Math.random() * W,
+        currentY: -20 - Math.random() * H * 0.8,
+        size: 0.9 + Math.random() * 1.4,
+        twinkleSpeed: 0.008 + Math.random() * 0.018,
+        twinklePhase: Math.random() * Math.PI * 2,
+        brightness: 0.65 + Math.random() * 0.35
+      };
+    });
+
+    if (reduce) {
+      // Reduced motion: snap stars to position immediately, reveal text instantly
+      stars.forEach(function(s) {
+        s.currentX = s.trueX;
+        s.currentY = s.trueY;
+      });
+      hasSettled = true;
+      animationStarted = true;
+      wordmark.classList.remove('es-ft-wordmark--hidden');
+      wordmark.classList.add('es-ft-wordmark--revealed');
+      drawFrame();
+      return;
+    }
+
+    // IntersectionObserver: animate once when footer enters view
+    observer = new IntersectionObserver(function(entries) {
+      if (entries[0] && entries[0].isIntersecting) {
+        startAnimation();
+      } else if (hasSettled) {
+        // Pause twinkle when offscreen to save CPU
+        cancelLoop();
+      } else {
+        cancelLoop();
+      }
+    }, { rootMargin: '50px' });
+    observer.observe(canvas);
+
+    // Pre-paint frame 1 so canvas isn't blank before observer fires
+    drawFrame();
+  }
+
+  function startAnimation() {
+    if (typeof gsap === 'undefined') {
+      // No GSAP — snap and reveal as fallback
+      stars.forEach(function(s) {
+        s.currentX = s.trueX;
+        s.currentY = s.trueY;
+      });
+      hasSettled = true;
+      animationStarted = true;
+      wordmark.classList.remove('es-ft-wordmark--hidden');
+      wordmark.classList.add('es-ft-wordmark--revealed');
+      startTwinkleLoop();
+      return;
+    }
+
+    if (animationStarted) {
+      // Already animated once — just resume the twinkle loop
+      startTwinkleLoop();
+      return;
+    }
+    animationStarted = true;
+
+    // Start the draw loop immediately so we see falling stars
+    startTwinkleLoop();
+
+    // Tween each star to its true letter position
+    stars.forEach(function(s, idx) {
+      gsap.to(s, {
+        currentX: s.trueX,
+        currentY: s.trueY,
+        duration: 1.6 + Math.random() * 0.9,
+        ease: 'power2.out',
+        delay: 0.005 * idx + Math.random() * 0.4
+      });
+    });
+
+    // After all stars have settled, reveal the text underneath
+    gsap.delayedCall(2.6, function() {
+      hasSettled = true;
+      wordmark.classList.remove('es-ft-wordmark--hidden');
+      wordmark.classList.add('es-ft-wordmark--revealed');
+    });
+  }
+
+  function startTwinkleLoop() {
+    if (rafId) return;
+    function tick() {
+      time++;
+      drawFrame();
+      rafId = requestAnimationFrame(tick);
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function drawFrame() {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, W, H);
+
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var twinkle = Math.sin(time * s.twinkleSpeed + s.twinklePhase) * 0.3 + 0.7;
+      var alpha = s.brightness * twinkle;
+
+      // Outer warm glow
+      ctx.globalAlpha = alpha * 0.32;
+      ctx.beginPath();
+      ctx.arc(s.currentX, s.currentY, s.size * 3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + goldR + ',' + goldG + ',' + goldB + ',1)';
+      ctx.fill();
+
+      // Bright cream core
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.arc(s.currentX, s.currentY, s.size, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + textR + ',' + textG + ',' + textB + ',1)';
+      ctx.fill();
+    }
+
+    ctx.globalAlpha = 1;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(init, 300);
   });
 })();
 </script>
