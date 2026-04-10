@@ -137,6 +137,10 @@
   var canvas, ctx, wrap, wordmark;
   var W, H, dpr;
   var stars = [];
+  var lines = [];
+  var lineAlpha = 0;
+  var lineAlphaTarget = 0.32;
+  var lineAlphaProxy = { v: 0 };
   var rafId = null;
   var animationStarted = false;
   var hasSettled = false;
@@ -153,72 +157,176 @@
 
   function teardown() {
     cancelLoop();
-    if (typeof gsap !== 'undefined' && stars.length) {
-      stars.forEach(function(s) { gsap.killTweensOf(s); });
+    if (typeof gsap !== 'undefined') {
+      if (stars.length) stars.forEach(function(s) { gsap.killTweensOf(s); });
+      gsap.killTweensOf(lineAlphaProxy);
     }
     if (observer) {
       observer.disconnect();
       observer = null;
     }
     stars = [];
+    lines = [];
+    lineAlpha = 0;
+    lineAlphaProxy.v = 0;
     animationStarted = false;
     hasSettled = false;
   }
 
-  function sampleLetterPoints() {
-    // Offscreen canvas: stroke "ESOTERICA" and read pixels along the outline
-    var off = document.createElement('canvas');
-    off.width = W * dpr;
-    off.height = H * dpr;
-    var offCtx = off.getContext('2d');
-    offCtx.setTransform(1, 0, 0, 1, 0, 0);
-    offCtx.scale(dpr, dpr);
+  // Hand-authored letter polylines (normalized to a 1.0 unit height per letter).
+  // Each entry has `width` (relative to the unit height) and `strokes` — each
+  // stroke is a polyline (array of [x,y] vertices) traced in order.
+  var LETTERS = {
+    E: {
+      width: 0.62,
+      strokes: [
+        [[0, 0], [0.62, 0]],
+        [[0, 0], [0, 1]],
+        [[0, 0.5], [0.5, 0.5]],
+        [[0, 1], [0.62, 1]]
+      ]
+    },
+    S: {
+      width: 0.62,
+      strokes: [
+        [
+          [0.62, 0.13], [0.55, 0.03], [0.4, 0], [0.2, 0], [0.06, 0.05],
+          [0, 0.18], [0, 0.32], [0.08, 0.43], [0.22, 0.48], [0.42, 0.52],
+          [0.55, 0.57], [0.62, 0.68], [0.62, 0.82], [0.55, 0.95], [0.42, 1],
+          [0.2, 1], [0.06, 0.97], [0, 0.87]
+        ]
+      ]
+    },
+    O: {
+      width: 0.78,
+      strokes: [
+        [
+          [0.39, 0], [0.55, 0.02], [0.7, 0.12], [0.78, 0.3], [0.78, 0.7],
+          [0.7, 0.88], [0.55, 0.98], [0.39, 1], [0.23, 0.98], [0.08, 0.88],
+          [0, 0.7], [0, 0.3], [0.08, 0.12], [0.23, 0.02], [0.39, 0]
+        ]
+      ]
+    },
+    T: {
+      width: 0.66,
+      strokes: [
+        [[0, 0], [0.66, 0]],
+        [[0.33, 0], [0.33, 1]]
+      ]
+    },
+    R: {
+      width: 0.66,
+      strokes: [
+        [[0, 0], [0, 1]],
+        [
+          [0, 0], [0.45, 0], [0.6, 0.06], [0.66, 0.18], [0.66, 0.36],
+          [0.6, 0.48], [0.45, 0.54], [0, 0.54]
+        ],
+        [[0.38, 0.54], [0.66, 1]]
+      ]
+    },
+    I: {
+      width: 0.36,
+      strokes: [
+        [[0, 0], [0.36, 0]],
+        [[0.18, 0], [0.18, 1]],
+        [[0, 1], [0.36, 1]]
+      ]
+    },
+    C: {
+      width: 0.7,
+      strokes: [
+        [
+          [0.7, 0.15], [0.6, 0.05], [0.45, 0], [0.25, 0], [0.1, 0.08],
+          [0.02, 0.22], [0, 0.4], [0, 0.6], [0.02, 0.78], [0.1, 0.92],
+          [0.25, 1], [0.45, 1], [0.6, 0.95], [0.7, 0.85]
+        ]
+      ]
+    },
+    A: {
+      width: 0.78,
+      strokes: [
+        [[0, 1], [0.39, 0]],
+        [[0.39, 0], [0.78, 1]],
+        [[0.18, 0.6], [0.6, 0.6]]
+      ]
+    }
+  };
 
-    var fontSize = Math.min(W * 0.13, H * 0.78);
-    offCtx.font = '600 ' + fontSize + 'px Cinzel, serif';
-    offCtx.textAlign = 'center';
-    offCtx.textBaseline = 'middle';
-    offCtx.lineWidth = Math.max(2, fontSize * 0.045);
-    offCtx.strokeStyle = '#fff';
-    offCtx.strokeText('ESOTERICA', W / 2, H / 2);
+  var WORD = ['E', 'S', 'O', 'T', 'E', 'R', 'I', 'C', 'A'];
 
-    var imageData = offCtx.getImageData(0, 0, off.width, off.height);
-    var pixels = imageData.data;
-    var candidates = [];
-    var sampleStep = Math.max(3, Math.floor(fontSize / 14));
-    var stepPx = Math.max(1, Math.floor(sampleStep * dpr));
+  function samplePolyline(pts, pxPerSample) {
+    var cumLen = [0];
+    for (var i = 1; i < pts.length; i++) {
+      var dx = pts[i][0] - pts[i - 1][0];
+      var dy = pts[i][1] - pts[i - 1][1];
+      cumLen.push(cumLen[i - 1] + Math.sqrt(dx * dx + dy * dy));
+    }
+    var totalLen = cumLen[cumLen.length - 1];
+    if (totalLen === 0) return [pts[0]];
 
-    for (var py = 0; py < off.height; py += stepPx) {
-      for (var px = 0; px < off.width; px += stepPx) {
-        var idx = (py * off.width + px) * 4;
-        if (pixels[idx + 3] > 100) {
-          candidates.push({ x: px / dpr, y: py / dpr });
+    var n = Math.max(2, Math.round(totalLen / pxPerSample) + 1);
+    var out = [];
+    for (var k = 0; k < n; k++) {
+      var target = (k / (n - 1)) * totalLen;
+      var seg = 0;
+      while (seg < cumLen.length - 2 && cumLen[seg + 1] < target) seg++;
+      var segLen = cumLen[seg + 1] - cumLen[seg];
+      var localT = segLen > 0 ? (target - cumLen[seg]) / segLen : 0;
+      out.push([
+        pts[seg][0] + (pts[seg + 1][0] - pts[seg][0]) * localT,
+        pts[seg][1] + (pts[seg + 1][1] - pts[seg][1]) * localT
+      ]);
+    }
+    return out;
+  }
+
+  function buildConstellation() {
+    var letterHeight = Math.min(H * 0.72, W * 0.11);
+    var letterSpacing = letterHeight * 0.16;
+    var pxPerSample = letterHeight * 0.085;
+
+    var totalWidth = 0;
+    for (var wi = 0; wi < WORD.length; wi++) {
+      totalWidth += LETTERS[WORD[wi]].width * letterHeight;
+    }
+    totalWidth += (WORD.length - 1) * letterSpacing;
+
+    var cursorX = (W - totalWidth) / 2;
+    var startY = (H - letterHeight) / 2;
+
+    var points = [];
+    var edges = [];
+
+    for (var li = 0; li < WORD.length; li++) {
+      var def = LETTERS[WORD[li]];
+      var letterPxWidth = def.width * letterHeight;
+
+      for (var si = 0; si < def.strokes.length; si++) {
+        var pxPts = [];
+        var stroke = def.strokes[si];
+        for (var pi = 0; pi < stroke.length; pi++) {
+          pxPts.push([
+            cursorX + stroke[pi][0] * letterHeight,
+            startY + stroke[pi][1] * letterHeight
+          ]);
+        }
+
+        var samples = samplePolyline(pxPts, pxPerSample);
+        var firstIdx = points.length;
+
+        for (var sp = 0; sp < samples.length; sp++) {
+          points.push({ x: samples[sp][0], y: samples[sp][1] });
+          if (sp > 0) {
+            edges.push({ a: firstIdx + sp - 1, b: firstIdx + sp });
+          }
         }
       }
+
+      cursorX += letterPxWidth + letterSpacing;
     }
 
-    // Poisson-like minimum distance filter — even spacing along the outline
-    var minDist = fontSize * 0.07;
-    var minDistSq = minDist * minDist;
-    var filtered = [];
-    for (var i = 0; i < candidates.length; i++) {
-      var ok = true;
-      for (var j = 0; j < filtered.length; j++) {
-        var fdx = candidates[i].x - filtered[j].x;
-        var fdy = candidates[i].y - filtered[j].y;
-        if (fdx * fdx + fdy * fdy < minDistSq) { ok = false; break; }
-      }
-      if (ok) filtered.push(candidates[i]);
-    }
-
-    var targetCount = W < 768
-      ? Math.min(Math.max(80, Math.floor(W / 6)), 130)
-      : Math.min(Math.max(140, Math.floor(W / 5)), 220);
-
-    while (filtered.length > targetCount) {
-      filtered.splice(Math.floor(Math.random() * filtered.length), 1);
-    }
-    return filtered;
+    return { points: points, edges: edges };
   }
 
   function init() {
@@ -245,10 +353,10 @@
     wordmark.classList.add('es-ft-wordmark--hidden');
     wordmark.classList.remove('es-ft-wordmark--revealed');
 
-    var letterPoints = sampleLetterPoints();
+    var built = buildConstellation();
+    var letterPoints = built.points;
     if (!letterPoints.length) return;
 
-    // Build star data: each one starts above the canvas with a random X
     stars = letterPoints.map(function(p) {
       return {
         trueX: p.x,
@@ -262,12 +370,15 @@
       };
     });
 
+    lines = built.edges;
+
     if (reduce) {
-      // Reduced motion: snap stars to position immediately, reveal text instantly
       stars.forEach(function(s) {
         s.currentX = s.trueX;
         s.currentY = s.trueY;
       });
+      lineAlpha = lineAlphaTarget;
+      lineAlphaProxy.v = lineAlphaTarget;
       hasSettled = true;
       animationStarted = true;
       wordmark.classList.remove('es-ft-wordmark--hidden');
@@ -295,11 +406,12 @@
 
   function startAnimation() {
     if (typeof gsap === 'undefined') {
-      // No GSAP — snap and reveal as fallback
       stars.forEach(function(s) {
         s.currentX = s.trueX;
         s.currentY = s.trueY;
       });
+      lineAlpha = lineAlphaTarget;
+      lineAlphaProxy.v = lineAlphaTarget;
       hasSettled = true;
       animationStarted = true;
       wordmark.classList.remove('es-ft-wordmark--hidden');
@@ -318,7 +430,6 @@
     // Start the draw loop immediately so we see falling stars
     startTwinkleLoop();
 
-    // Tween each star to its true letter position
     stars.forEach(function(s, idx) {
       gsap.to(s, {
         currentX: s.trueX,
@@ -329,8 +440,19 @@
       });
     });
 
-    // After all stars have settled, reveal the text underneath
-    gsap.delayedCall(2.6, function() {
+    lineAlphaProxy.v = 0;
+    lineAlpha = 0;
+    gsap.to(lineAlphaProxy, {
+      v: lineAlphaTarget,
+      duration: 0.55,
+      delay: 2.2,
+      ease: 'power2.out',
+      onUpdate: function() {
+        lineAlpha = lineAlphaProxy.v;
+      }
+    });
+
+    gsap.delayedCall(3.2, function() {
       hasSettled = true;
       wordmark.classList.remove('es-ft-wordmark--hidden');
       wordmark.classList.add('es-ft-wordmark--revealed');
@@ -350,6 +472,23 @@
   function drawFrame() {
     if (!ctx) return;
     ctx.clearRect(0, 0, W, H);
+
+    if (lineAlpha > 0.001 && lines.length) {
+      ctx.lineWidth = 0.8;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = 'rgba(' + goldR + ',' + goldG + ',' + goldB + ',1)';
+      for (var li = 0; li < lines.length; li++) {
+        var sa = stars[lines[li].a];
+        var sb = stars[lines[li].b];
+        if (!sa || !sb) continue;
+        ctx.globalAlpha = lineAlpha;
+        ctx.beginPath();
+        ctx.moveTo(sa.currentX, sa.currentY);
+        ctx.lineTo(sb.currentX, sb.currentY);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
 
     for (var i = 0; i < stars.length; i++) {
       var s = stars[i];
