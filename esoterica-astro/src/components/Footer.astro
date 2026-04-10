@@ -100,10 +100,9 @@
 
   </div>
 
-  <!-- Full-width wordmark: canvas constellation + revealed text -->
+  <!-- Full-width wordmark: interactive constellation canvas only -->
   <div class="es-ft-wordmark-wrap">
     <canvas class="es-ft-constellation" aria-hidden="true"></canvas>
-    <div class="es-ft-wordmark es-ft-wordmark--hidden" aria-hidden="true">ESOTERICA</div>
   </div>
 
 </footer>
@@ -154,7 +153,6 @@
   var observer;
   var resizeTimer;
   var wrap;
-  var wordmark;
   var wrapClickHandler;
   var reduceClickHandler;
 
@@ -191,7 +189,6 @@
 
     canvas = document.querySelector('.es-ft-constellation');
     wrap = document.querySelector('.es-ft-wordmark-wrap');
-    wordmark = document.querySelector('.es-ft-wordmark');
     if (!canvas || !wrap) return;
 
     ctx = canvas.getContext('2d');
@@ -201,11 +198,6 @@
     time = 0;
     lineAlpha = 0.08;
     starBaseAlpha = 0.55;
-
-    if (wordmark) {
-      wordmark.classList.add('es-ft-wordmark--hidden');
-      wordmark.classList.remove('es-ft-wordmark--revealed');
-    }
 
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     var rect = canvas.getBoundingClientRect();
@@ -386,10 +378,6 @@
         starBaseAlpha = 0.95;
         draw();
         cancelLoop();
-        if (wordmark) {
-          wordmark.classList.remove('es-ft-wordmark--hidden');
-          wordmark.classList.add('es-ft-wordmark--revealed');
-        }
       };
       wrap.addEventListener('click', reduceClickHandler);
       return;
@@ -431,10 +419,6 @@
       });
 
       gsap.delayedCall(1.8, function() {
-        if (wordmark) {
-          wordmark.classList.remove('es-ft-wordmark--hidden');
-          wordmark.classList.add('es-ft-wordmark--revealed');
-        }
         animating = false;
         revealed = true;
       });

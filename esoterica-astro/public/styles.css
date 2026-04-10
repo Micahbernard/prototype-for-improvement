@@ -2633,7 +2633,7 @@ footer a:hover {
   font-size: 0.75rem;
 }
 
-/* Wordmark — constellation canvas + optional revealed outline text */
+/* Footer constellation wordmark — canvas only (no HTML text overlay) */
 .es-ft-wordmark-wrap {
   position: relative;
   border-top: 1px solid rgba(var(--es-gold-rgb), 0.06);
@@ -2649,45 +2649,6 @@ footer a:hover {
   height: 160px;
   margin: 0 auto;
   max-width: 900px;
-}
-
-.es-ft-wordmark {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: inline-block;
-  font-family: var(--es-font-display);
-  font-size: clamp(2.5rem, 13vw, 11rem);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  line-height: 0.9;
-  color: transparent;
-  -webkit-text-stroke: 0px transparent;
-  user-select: none;
-  white-space: nowrap;
-  pointer-events: none;
-  transition:
-    -webkit-text-stroke-color 0.8s ease,
-    -webkit-text-stroke-width 0.8s ease,
-    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.es-ft-wordmark--hidden {
-  opacity: 0;
-  transform: translate(-50%, calc(-50% + 8px));
-  -webkit-text-stroke: 0px transparent;
-}
-
-.es-ft-wordmark--revealed {
-  opacity: 1;
-  transform: translate(-50%, -50%);
-  -webkit-text-stroke: 1px rgba(var(--es-gold-rgb), 0.18);
-}
-
-.es-ft-wordmark--revealed:hover {
-  -webkit-text-stroke-color: rgba(var(--es-gold-rgb), 0.4);
 }
 
 /* Mobile */
