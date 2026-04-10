@@ -71,8 +71,11 @@ const {
     <script is:inline src="https://unpkg.com/splitting/dist/splitting.js"></script>
   </head>
   <body class={`esoterica ${bodyClass ?? ''}`.trim()}>
+    <!-- Background starfield: must stay outside .es-site-chrome so it stacks below .page (see #starfield in styles.css) -->
+    <canvas id="starfield"></canvas>
+
     <div class="es-site-chrome">
-      <!-- ===== SITE CHROME (hoisted — every page gets this) ===== -->
+      <!-- ===== SITE CHROME (hoisted — cursor, orbs, dust, loader above .page) ===== -->
       <a href={skipTarget} class="skip-to-content">Skip to content</a>
 
       <div class="es-dust" aria-hidden="true">
@@ -97,8 +100,6 @@ const {
           <div class="cursor-rune-center"></div>
         </div>
       </div>
-
-      <canvas id="starfield"></canvas>
 
       <div class="orb orb-1"></div>
       <div class="orb orb-2"></div>

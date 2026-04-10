@@ -293,7 +293,7 @@ body.esoterica .page {
   z-index: 2;
 }
 
-/* Cursor, starfield, orbs, loader: one layer above .page so fixed UI is never buried */
+/* Cursor, orbs, dust, loader: above .page so fixed UI is never buried (starfield is a body child, not here) */
 body.esoterica > .es-site-chrome {
   position: relative;
   z-index: 3;
@@ -731,7 +731,9 @@ video {
   height: auto;
 }
 
-/* ===== STARFIELD CANVAS ===== */
+/* ===== STARFIELD CANVAS =====
+   Lives as a direct child of <body> (not inside .es-site-chrome) so z-index: 0 stacks
+   below body::before/::after grain (1) and below .page content (2). */
 #starfield {
   position: fixed;
   top: 0;
