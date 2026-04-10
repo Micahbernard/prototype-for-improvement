@@ -100,9 +100,10 @@
 
   </div>
 
-  <!-- Full-width wordmark -->
+  <!-- Full-width wordmark: canvas constellation + revealed text -->
   <div class="es-ft-wordmark-wrap">
-    <div class="es-ft-wordmark" aria-hidden="true">Esoterica</div>
+    <canvas class="es-ft-constellation" aria-hidden="true"></canvas>
+    <div class="es-ft-wordmark es-ft-wordmark--hidden" aria-hidden="true">ESOTERICA</div>
   </div>
 
 </footer>
@@ -121,6 +122,344 @@
     row.addEventListener('mouseleave', function() {
       gsap.to(label, { x: 0, duration: 0.5, ease: 'power2.out' });
     });
+  });
+})();
+</script>
+
+<script is:inline>
+(function() {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var goldR = 212;
+  var goldG = 168;
+  var goldB = 83;
+  var textR = 232;
+  var textG = 224;
+  var textB = 212;
+
+  var canvas;
+  var ctx;
+  var W;
+  var H;
+  var dpr;
+  var stars;
+  var lines;
+  var time;
+  var lineAlpha;
+  var starBaseAlpha;
+  var revealed;
+  var animating;
+  var rafId;
+  var stopRaf;
+  var footerVisible;
+  var observer;
+  var resizeTimer;
+  var wrap;
+  var wordmark;
+  var wrapClickHandler;
+  var reduceClickHandler;
+
+  function cancelLoop() {
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
+  function teardown() {
+    cancelLoop();
+    if (typeof gsap !== 'undefined' && stars && stars.length) {
+      stars.forEach(function(s) {
+        gsap.killTweensOf(s);
+      });
+    }
+    if (wrap && wrapClickHandler) {
+      wrap.removeEventListener('click', wrapClickHandler);
+      wrapClickHandler = null;
+    }
+    if (wrap && reduceClickHandler) {
+      wrap.removeEventListener('click', reduceClickHandler);
+      reduceClickHandler = null;
+    }
+    if (observer) {
+      observer.disconnect();
+      observer = null;
+    }
+  }
+
+  function init() {
+    teardown();
+
+    canvas = document.querySelector('.es-ft-constellation');
+    wrap = document.querySelector('.es-ft-wordmark-wrap');
+    wordmark = document.querySelector('.es-ft-wordmark');
+    if (!canvas || !wrap) return;
+
+    ctx = canvas.getContext('2d');
+    revealed = false;
+    animating = false;
+    stopRaf = false;
+    time = 0;
+    lineAlpha = 0.08;
+    starBaseAlpha = 0.55;
+
+    if (wordmark) {
+      wordmark.classList.add('es-ft-wordmark--hidden');
+      wordmark.classList.remove('es-ft-wordmark--revealed');
+    }
+
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var rect = canvas.getBoundingClientRect();
+    W = rect.width;
+    H = rect.height;
+    if (W < 8 || H < 8) return;
+
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+
+    var offscreen = document.createElement('canvas');
+    offscreen.width = W * dpr;
+    offscreen.height = H * dpr;
+    var offCtx = offscreen.getContext('2d');
+    offCtx.setTransform(1, 0, 0, 1, 0, 0);
+    offCtx.scale(dpr, dpr);
+
+    var fontSize = Math.min(W * 0.13, H * 0.7);
+    offCtx.font = '600 ' + fontSize + 'px Cinzel, serif';
+    offCtx.textAlign = 'center';
+    offCtx.textBaseline = 'middle';
+    offCtx.fillStyle = '#fff';
+    offCtx.fillText('ESOTERICA', W / 2, H / 2);
+
+    var imageData = offCtx.getImageData(0, 0, offscreen.width, offscreen.height);
+    var pixels = imageData.data;
+    var truePoints = [];
+    var sampleStep = Math.max(4, Math.floor(fontSize / 8));
+    var stepPx = Math.max(1, Math.floor(sampleStep * dpr));
+
+    for (var py = 0; py < offscreen.height; py += stepPx) {
+      for (var px = 0; px < offscreen.width; px += stepPx) {
+        var idx = (py * offscreen.width + px) * 4;
+        if (pixels[idx + 3] > 128) {
+          truePoints.push({ x: px / dpr, y: py / dpr });
+        }
+      }
+    }
+
+    var targetCount =
+      W < 768
+        ? Math.min(Math.max(50, Math.floor(W / 10)), 80)
+        : Math.min(Math.max(80, Math.floor(W / 8)), 140);
+    while (truePoints.length > targetCount) {
+      truePoints.splice(Math.floor(Math.random() * truePoints.length), 1);
+    }
+
+    if (!truePoints.length) {
+      return;
+    }
+
+    stars = truePoints.map(function(p) {
+      var dx = p.x - W / 2;
+      var dy = p.y - H / 2;
+      var angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 1.2;
+      var scatter = 8 + Math.random() * 18;
+
+      return {
+        trueX: p.x,
+        trueY: p.y,
+        scatterX: p.x + Math.cos(angle) * scatter,
+        scatterY: p.y + Math.sin(angle) * scatter,
+        currentX: 0,
+        currentY: 0,
+        size: 1.0 + Math.random() * 1.5,
+        twinkleSpeed: 0.01 + Math.random() * 0.02,
+        twinklePhase: Math.random() * Math.PI * 2,
+        brightness: 0.5 + Math.random() * 0.5
+      };
+    });
+
+    for (var i = 0; i < stars.length; i++) {
+      stars[i].currentX = stars[i].scatterX;
+      stars[i].currentY = stars[i].scatterY;
+    }
+
+    lines = [];
+    var lineThreshold = fontSize * 0.55;
+    for (var i = 0; i < stars.length; i++) {
+      for (var j = i + 1; j < stars.length; j++) {
+        var dx = stars[i].scatterX - stars[j].scatterX;
+        var dy = stars[i].scatterY - stars[j].scatterY;
+        var d = Math.sqrt(dx * dx + dy * dy);
+        if (d < lineThreshold) {
+          lines.push({ a: i, b: j, dist: d });
+        }
+      }
+    }
+    lines.sort(function(a, b) {
+      return a.dist - b.dist;
+    });
+    if (lines.length > stars.length * 1.8) {
+      lines = lines.slice(0, Math.floor(stars.length * 1.8));
+    }
+
+    function draw() {
+      if (stopRaf) {
+        cancelLoop();
+        return;
+      }
+      time++;
+      ctx.clearRect(0, 0, W, H);
+
+      for (var li = 0; li < lines.length; li++) {
+        var a = stars[lines[li].a];
+        var b = stars[lines[li].b];
+        ctx.globalAlpha = lineAlpha;
+        ctx.strokeStyle = 'rgba(' + goldR + ',' + goldG + ',' + goldB + ', 1)';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(a.currentX, a.currentY);
+        ctx.lineTo(b.currentX, b.currentY);
+        ctx.stroke();
+      }
+
+      for (var si = 0; si < stars.length; si++) {
+        var s = stars[si];
+        var twinkle = Math.sin(time * s.twinkleSpeed + s.twinklePhase) * 0.3 + 0.7;
+        var alpha = starBaseAlpha * s.brightness * twinkle;
+
+        ctx.globalAlpha = alpha * 0.3;
+        ctx.beginPath();
+        ctx.arc(s.currentX, s.currentY, s.size * 3, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + goldR + ',' + goldG + ',' + goldB + ', 1)';
+        ctx.fill();
+
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(s.currentX, s.currentY, s.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + textR + ',' + textG + ',' + textB + ', 1)';
+        ctx.fill();
+      }
+
+      ctx.globalAlpha = 1;
+
+      if (footerVisible && !stopRaf) {
+        rafId = requestAnimationFrame(draw);
+      }
+    }
+
+    function startLoopIfNeeded() {
+      if (reduce || stopRaf) return;
+      if (!footerVisible) return;
+      if (!rafId) {
+        rafId = requestAnimationFrame(draw);
+      }
+    }
+
+    observer = new IntersectionObserver(
+      function(entries) {
+        footerVisible = entries[0] && entries[0].isIntersecting;
+        if (footerVisible) {
+          startLoopIfNeeded();
+        } else {
+          cancelLoop();
+        }
+      },
+      { rootMargin: '100px' }
+    );
+    observer.observe(canvas);
+
+    var cr0 = canvas.getBoundingClientRect();
+    footerVisible = cr0.bottom > -100 && cr0.top < window.innerHeight + 100;
+
+    if (reduce) {
+      time = 0;
+      draw();
+      cancelLoop();
+
+      reduceClickHandler = function() {
+        if (revealed) return;
+        revealed = true;
+        for (var ri = 0; ri < stars.length; ri++) {
+          stars[ri].currentX = stars[ri].trueX;
+          stars[ri].currentY = stars[ri].trueY;
+        }
+        lineAlpha = 0.25;
+        starBaseAlpha = 0.95;
+        draw();
+        cancelLoop();
+        if (wordmark) {
+          wordmark.classList.remove('es-ft-wordmark--hidden');
+          wordmark.classList.add('es-ft-wordmark--revealed');
+        }
+      };
+      wrap.addEventListener('click', reduceClickHandler);
+      return;
+    }
+
+    wrapClickHandler = function() {
+      if (revealed || animating) return;
+      if (typeof gsap === 'undefined') return;
+      animating = true;
+
+      stars.forEach(function(s, idx) {
+        gsap.to(s, {
+          currentX: s.trueX,
+          currentY: s.trueY,
+          duration: 1.2 + Math.random() * 0.6,
+          ease: 'power3.inOut',
+          delay: idx * 0.008
+        });
+      });
+
+      var lineTween = { v: lineAlpha };
+      gsap.to(lineTween, {
+        v: 0.25,
+        duration: 1.5,
+        ease: 'power2.out',
+        onUpdate: function() {
+          lineAlpha = lineTween.v;
+        }
+      });
+
+      var starTween = { v: starBaseAlpha };
+      gsap.to(starTween, {
+        v: 0.95,
+        duration: 1.5,
+        ease: 'power2.out',
+        onUpdate: function() {
+          starBaseAlpha = starTween.v;
+        }
+      });
+
+      gsap.delayedCall(1.8, function() {
+        if (wordmark) {
+          wordmark.classList.remove('es-ft-wordmark--hidden');
+          wordmark.classList.add('es-ft-wordmark--revealed');
+        }
+        animating = false;
+        revealed = true;
+      });
+
+      gsap.delayedCall(4.8, function() {
+        stopRaf = true;
+        cancelLoop();
+      });
+    };
+    wrap.addEventListener('click', wrapClickHandler);
+
+    startLoopIfNeeded();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(init, 300);
   });
 })();
 </script>
