@@ -396,6 +396,7 @@ import Layout from '../layouts/Layout.astro';
       // Deferred: only initialize shader when entrance animation signals readiness
       function initShader() {
         const sandbox = new GlslCanvas(canvas);
+        window.__ESOTERICA_SHADER__ = sandbox;
 
         const dpr = Math.min(window.devicePixelRatio || 1, 1.0);
         canvas.width = canvas.offsetWidth * dpr;
@@ -408,6 +409,7 @@ precision mediump float;
 
 uniform vec2 u_resolution;
 uniform float u_time;
+uniform float u_scroll;
 
 float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -430,6 +432,9 @@ void main(void) {
     uv.x *= u_resolution.x / u_resolution.y;
     // Compress Y to create elliptical galaxy (replaces CSS rotateX tilt)
     uv.y *= 1.8;
+
+    float zoom = 1.0 - u_scroll * 0.55;
+    uv *= zoom;
 
     float r = length(uv);
     float angle = atan(uv.y, uv.x);
@@ -466,7 +471,8 @@ void main(void) {
     armCol = mix(armCol, armLavender, armBright);
     color += armCol * armBright * 1.2;
 
-    color += mix(vec3(1.0, 0.88, 0.60), hotWhite, core) * core * 0.9;
+    float coreBrightness = 0.9 + u_scroll * 0.6;
+    color += mix(vec3(1.0, 0.88, 0.60), hotWhite, core) * core * coreBrightness;
     color += hotWhite * hotSpot * 1.5;
 
     // Simple stars — single layer, no loop
@@ -480,6 +486,7 @@ void main(void) {
 
     gl_FragColor = vec4(color, 1.0);
 }`);
+        sandbox.setUniform("u_scroll", 0);
       }
 
       // Wait for entrance animation to signal readiness
@@ -693,8 +700,41 @@ void main(void) {
           Splitting({ target: ".quote-text", by: "words" });
         }
 
+        /* Galaxy zoom-through — drives u_scroll in the WebGL shader (only when sandbox exists) */
+        let galaxyScrollZoomAttached = false;
+        function attachGalaxyScrollZoomThrough() {
+          if (galaxyScrollZoomAttached || !window.__ESOTERICA_SHADER__) return;
+          galaxyScrollZoomAttached = true;
+          ScrollTrigger.create({
+            trigger: ".hero-scroll",
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+            onUpdate: function (self) {
+              const shader = window.__ESOTERICA_SHADER__;
+              if (shader) {
+                shader.setUniform("u_scroll", self.progress);
+              }
+            }
+          });
+        }
+        attachGalaxyScrollZoomThrough();
+        window.addEventListener("heroCanvasStart", attachGalaxyScrollZoomThrough, { once: true });
+
+        gsap.to(".hero-layout", {
+          "--es-hero-glow-boost": 0.08,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".hero-scroll",
+            start: "top top",
+            end: "bottom top",
+            scrub: 1
+          }
+        });
+
         gsap.to(".hero-content", {
           y: "30%",
+          opacity: 0,
           ease: "none",
           scrollTrigger: {
             trigger: ".hero-scroll",
@@ -715,11 +755,24 @@ void main(void) {
         });
         gsap.to(".hero-sun", {
           y: "10%",
+          scale: 1.3,
+          opacity: 1,
           ease: "none",
           scrollTrigger: {
             trigger: ".hero-scroll",
             start: "top top",
             end: "bottom top",
+            scrub: 1
+          }
+        });
+
+        gsap.to(".hero-lower", {
+          opacity: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".hero-scroll",
+            start: "top top",
+            end: "50% top",
             scrub: 1
           }
         });
