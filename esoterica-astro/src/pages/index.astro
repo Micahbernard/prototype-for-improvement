@@ -153,6 +153,7 @@ import Layout from '../layouts/Layout.astro';
 
     <!-- ===== QUOTE ===== -->
     <section class="quote-section">
+      <div class="es-ornament" aria-hidden="true"></div>
       <div class="quote-mark">"</div>
       <p class="quote-text">Magic is not about bending reality — it is about remembering that reality was never as rigid
         as you were told.</p>
@@ -847,6 +848,17 @@ void main(void) {
             { opacity: 0, duration: 0.6, ease: "power2.out" },
             "words+=0.5"
           );
+
+        gsap.to(".quote-mark", {
+          yPercent: -20,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".quote-section",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.2
+          }
+        });
 
         const storyParas = document.querySelectorAll(".story-text p");
         const storyTl = gsap.timeline({

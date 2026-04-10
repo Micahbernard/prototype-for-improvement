@@ -1593,11 +1593,33 @@ body.esoterica .nav-logo .nav-wordmark {
 
 /* ===== QUOTE ===== */
 .quote-section {
+  position: relative;
+  overflow: hidden;
   text-align: center;
   padding: 10rem 2rem;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(90, 50, 140, 0.05) 0%, transparent 65%);
+}
+
+.quote-section::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -60%);
+  background: radial-gradient(circle, rgba(var(--es-gold-rgb), 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .quote-mark {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
   font-family: 'Cinzel', serif;
   font-size: 5rem;
   color: color-mix(in srgb, var(--es-gold) 25%, transparent);
@@ -1605,7 +1627,24 @@ body.esoterica .nav-logo .nav-wordmark {
   margin-bottom: 1rem;
 }
 
+.quote-mark::before,
+.quote-mark::after {
+  content: '';
+  flex: 0 0 80px;
+  height: 1px;
+}
+
+.quote-mark::before {
+  background: linear-gradient(90deg, transparent, rgba(var(--es-gold-rgb), 0.35));
+}
+
+.quote-mark::after {
+  background: linear-gradient(90deg, rgba(var(--es-gold-rgb), 0.35), transparent);
+}
+
 .quote-text {
+  position: relative;
+  z-index: 1;
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(1.5rem, 3vw, 2.2rem);
   font-weight: 300;
@@ -1617,6 +1656,8 @@ body.esoterica .nav-logo .nav-wordmark {
 }
 
 .quote-author {
+  position: relative;
+  z-index: 1;
   font-family: 'Inter', sans-serif;
   font-size: 0.75rem;
   font-weight: 400;
@@ -2005,6 +2046,20 @@ footer a:hover {
   .es-dust span:nth-child(4),
   .es-dust span:nth-child(5) {
     display: none;
+  }
+
+  .quote-mark {
+    gap: 1rem;
+  }
+
+  .quote-mark::before,
+  .quote-mark::after {
+    flex: 0 0 40px;
+  }
+
+  .quote-section::before {
+    width: 180px;
+    height: 180px;
   }
 
   /* Product cards: full-width top hairline on touch (hover unreliable) */
@@ -3953,6 +4008,17 @@ body:is(.pg-tarot, .pg-classes, .pg-free-resources) .section-description {
 body:is(.pg-tarot, .pg-classes, .pg-free-resources) .quote-section {
   text-align: center;
   padding: 5rem 2rem;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(90, 50, 140, 0.03) 0%, transparent 65%);
+}
+
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .quote-section::before {
+  width: 200px;
+  height: 200px;
+}
+
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .quote-mark::before,
+body:is(.pg-tarot, .pg-classes, .pg-free-resources) .quote-mark::after {
+  flex: 0 0 50px;
 }
 
 body:is(.pg-tarot, .pg-classes, .pg-free-resources) .quote-mark {
