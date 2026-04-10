@@ -1765,10 +1765,18 @@ body.esoterica .nav-logo .nav-wordmark {
   box-shadow: var(--es-shadow-card-hover);
 }
 
+.es-star-icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
 .testimonial-stars {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
   color: var(--es-gold);
-  font-size: 0.9rem;
-  letter-spacing: 0.15em;
   margin-bottom: 1.2rem;
 }
 
